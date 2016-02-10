@@ -25,7 +25,7 @@ from django.db import transaction
 from django.core.files import File
 from django.http import JsonResponse
 from django.utils.encoding import smart_str
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
 from django.conf import settings
 import mimetypes
 import json
