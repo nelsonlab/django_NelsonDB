@@ -25,7 +25,7 @@ from django.db import transaction
 from django.core.files import File
 from django.http import JsonResponse
 from django.utils.encoding import smart_str
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
 from django.conf import settings
 import mimetypes
 import json
@@ -1657,7 +1657,9 @@ def browse_field_data(request):
 	context = RequestContext(request)
 	context_dict = {}
 	field_data = Field.objects.all()
+	field_map_file = FileDump.objects.filter(file_name="Musgrave Research Farm Field Map")
 	context_dict['field_data'] = field_data
+	context_dict['field_map_file'] = field_map_file
 	context_dict['logged_in_user'] = request.user.username
 	return render_to_response('lab/field_data.html', context_dict, context)
 

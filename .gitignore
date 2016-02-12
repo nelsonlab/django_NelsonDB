@@ -26,7 +26,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -47,6 +48,7 @@ webapp/nelson_db.sql
 
 # Ignoring settings.py as it is diff for local MySQL DB
 webapp/settings.py
+webapp/wsgi.py
 
 media/profile_images/underwater.jpg
 
@@ -61,3 +63,4 @@ media/files/
 media/chromatogram_files/
 media/fasta_files/
 media/profile_images/
+
