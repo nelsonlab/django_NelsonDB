@@ -890,10 +890,15 @@ def stock_page_measurement_plot(request):
 
 @login_required
 def stock_delete(request):
-	stock_id = request.POST.get('stock_id', False)
-	Stock.objects.get(id=stock_id).delete()
+	permissions = check_user_permissions(request)
+	if (permissions['is_superuser'] == True):
+		stock_id = request.POST.get('stock_id', False)
+		Stock.objects.get(id=stock_id).delete()
+		message = "Stock successfully deleted."
+	else:
+		message = "You do not have the correct permissions."
 
-	return JsonResponse({'data':True}, safe=True)
+	return JsonResponse({'message':message}, safe=True)
 
 @login_required
 def update_isolate_info(request, isolate_id):

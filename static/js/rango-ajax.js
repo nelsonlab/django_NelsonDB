@@ -97,6 +97,7 @@ $('#stock_detail_delete_button').click(function(){
 				}
 			},
 			success: function(data) {
+				alert(data.message);
 				location.reload();
 			}
 		});
