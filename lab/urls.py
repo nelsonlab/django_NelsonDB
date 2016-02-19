@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^checkbox_clear/(?P<clear_selected>\w+)/$', views.checkbox_clear, name='checkbox_clear'),
 
     url(r'^experiment/(?P<experiment_name_url>\w+)/$', views.experiment, name='experiment'),
+    url(r'^experiment_delete/$', views.experiment_delete, name='experiment_delete'),
     url(r'^experiment_edit/(?P<experiment_id>\d+)/$', views.experiment_edit, name='experiment_edit'),
     url(r'^profile/(?P<profile_name>\w+)/$', views.profile, name ='profile'),
 

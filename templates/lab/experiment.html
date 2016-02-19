@@ -23,6 +23,8 @@
 				<h3>Purpose: {{experiment.purpose}}</h3>
 				<h3>Comments: {{experiment.comments}}</h3>
 				<a href='/lab/experiment_edit/{{experiment.id}}'><input class="btn btn-info" type="submit" name="submit" value="Edit Information"/></a>
+				<input id="experiment_page_delete_experiment_button" class="btn btn-danger" type="submit" name="delete" value="Delete Experiment and Data"/>
+				<input id="experiment_page_experiment_id" type="hidden" value="{{ experiment.id }}" />
 			</div><br/><br/>
 			<div style="-webkit-box-shadow:2px 2px 3px 3px #888888; padding:15px">
 			{% if treatment_data %}
