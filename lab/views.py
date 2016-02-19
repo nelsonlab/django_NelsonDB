@@ -36,6 +36,13 @@ def encode_url(str):
 def decode_url(str):
 	return str.replace('_', ' ')
 
+def check_user_permissions(request):
+	permissions = {}
+	permissions['is_superuser'] = request.user.is_superuser
+	permissions['is_staff'] = request.user.is_staff
+	permissions['is_active'] = request.user.is_active
+	return permissions
+
 def get_experiment_list(max_results=0, starts_with=''):
 	exp_list = []
 	if starts_with:
@@ -302,6 +309,35 @@ def experiment(request, experiment_name_url):
 		context_dict['exp_list'] = exp_list
 	context_dict['logged_in_user'] = request.user.username
 	return render_to_response('lab/experiment.html', context_dict, context)
+
+@login_required
+def experiment_delete(request):
+	permissions = check_user_permissions(request)
+	if (permissions['is_superuser'] == True):
+		experiment_id = request.POST.get('experiment_id', False)
+		try:
+			obs_trackers = ObsTracker.objects.get(experiment_id=experiment_id)
+			for o in obs_trackers:
+				ObsRow.objects.get(id=o.obs_row_id).delete()
+				ObsPlant.objects.get(id=o.obs_plant_id).delete()
+				ObsTissue.objects.get(id=o.obs_tissue_id).delete()
+				ObsCulture.objects.get(id=o.obs_culture_id).delete()
+				ObsMicrobe.objects.get(id=o.obs_microbe_id).delete()
+				ObsPlate.objects.get(id=o.obs_plate_id).delete()
+				ObsDNA.objects.get(id=o.obs_dna_id).delete()
+				ObsWell.objects.get(id=o.obs_well_id).delete()
+				ObsSample.objects.get(id=o.obs_sample_id).delete()
+				ObsExtract.objects.get(id=o.obs_extract_id).delete()
+				ObsEnv.objects.get(id=o.obs_env_id).delete()
+				Measurement.objects.get(obs_tracker_id=o.id).delete()
+			obs_trackers.delete()
+		except ObsTracker.DoesNotExist:
+			pass
+		Experiment.objects.get(id=experiment_id).delete()
+		message = "Experiment and related data successfully deleted."
+	else:
+		message = "You do not have the correct permissions to do this."
+	return JsonResponse({'message':message}, safe=True)
 
 @login_required
 def experiment_edit(request, experiment_id):
