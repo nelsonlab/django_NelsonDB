@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 from lab import views, views_genotype, views_about
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^about/goals/$', views_about.about_goals, name='about_goals'),
     url(r'^about/help/$', views_about.about_help, name='about_help'),
@@ -246,4 +246,4 @@ urlpatterns = patterns('',
     url(r'^query/$', views.query_builder, name='query_builder'),
 
     url(r'^mycotoxin/templates/$', views.mycotoxin_templates, name='mycotoxin_templates'),
-    )
+    ]
