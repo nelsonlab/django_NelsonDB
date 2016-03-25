@@ -3684,9 +3684,12 @@ def get_obs_tracker(obs_type, obs_id):
 			tracker = make_obs_tracker_info(tracker)
 	return obs_tracker
 
-def get_obs_source(obs_type, obs_id):
+def get_obs_source(obs_type, obs_id, relationship):
 	obs_tracker_type = 'target_obs__%s'%(obs_type)
-	kwargs = {obs_tracker_type:obs_id}
+	if (relationship != ''):
+		kwargs = {obs_tracker_type:obs_id, 'relationship':relationship}
+	else:
+		kwargs = {obs_tracker_type:obs_id}
 	try:
 		obs_source = ObsTrackerSource.objects.filter(**kwargs)
 	except ObsTrackerSource.DoesNotExist:
@@ -3725,6 +3728,7 @@ def single_stock_info(request, stock_id):
 	context = RequestContext(request)
 	context_dict = {}
 	obs_tracker_seed = []
+	obs_source = []
 	try:
 		stock_info = Stock.objects.get(id=stock_id)
 	except Stock.DoesNotExist:
@@ -3734,7 +3738,10 @@ def single_stock_info(request, stock_id):
 		for t in obs_tracker:
 			if t.obs_id != stock_info.seed_id:
 				obs_tracker_seed.append(t)
-		obs_source = get_obs_source('stock_id', stock_id)
+		obs_source_row = get_obs_source('stock_id', stock_id, 'stock_from_row')
+		obs_source_plant = get_obs_source('stock_id', stock_id, 'stock_from_plant')
+		obs_source.append(obs_source_row)
+		obs_source.append(obs_source_plant)
 		obs_measurements = get_obs_measurements('stock_id', stock_id)
 		measured_parameters = {}
 		for mp in obs_measurements:
@@ -3866,7 +3873,7 @@ def single_sample_info(request, obs_sample_id):
 		sample_info = None
 	if sample_info is not None:
 		obs_tracker = get_obs_tracker('obs_sample_id', obs_sample_id)
-		obs_tracker_source_obs = get_obs_source('obs_sample_id', obs_sample_id)
+		obs_tracker_source_obs = get_obs_source('obs_sample_id', obs_sample_id, '')
 		obs_tracker_target_obs = get_obs_target('obs_sample_id', obs_sample_id)
 	context_dict['sample_info'] = sample_info
 	context_dict['obs_tracker'] = obs_tracker
@@ -4330,6 +4337,8 @@ def log_data_online(request, data_type):
 							new_obs_tracker, created = ObsTracker.objects.get_or_create(obs_entity_type='plant', stock=Stock.objects.get(seed_id=seed_id), experiment=experiment, user=user, field_id=field_id, glycerol_stock_id=1, isolate_id=1, location_id=1, maize_sample_id=1, obs_culture_id=1, obs_dna_id=1, obs_env_id=1, obs_extract_id=1, obs_microbe_id=1, obs_plant=new_obsplant, obs_plate_id=1, obs_row_id=obs_row_id, obs_sample_id=1, obs_tissue_id=1, obs_well_id=1)
 							if row_id !='':
 								new_source_row, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='row', obs_row__row_id=row_id), target_obs=new_obs_tracker, relationship="plant_from_row")
+							if seed_id !='':
+								new_source_stock, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='stock', stock__seed_id=seed_id), target_obs=new_obs_tracker, relationship="plant_from_stock")
 						except Exception as e:
 							print("Error: %s %s" % (e.message, e.args))
 							failed = True
@@ -4709,9 +4718,9 @@ def log_data_online(request, data_type):
 							if microbe_id !='' and microbe_id !='No Microbe':
 								new_source_microbe, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='microbe', obs_microbe__microbe_id=microbe_id), target_obs=new_obs_tracker, relationship="dna_from_microbe")
 							if plate_id !='' and plate_id != 'No Plate':
-								new_source_plate, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='plate', obs_plate__plate_id=plate_id), target_obs=new_obs_tracker, relationship="dna_from_plate")
+								new_source_plate, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='plate', obs_plate__plate_id=plate_id), target_obs=new_obs_tracker, relationship="dna_in_plate")
 							if well_id !='' and well_id !='No Well':
-								new_source_well, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='well', obs_well__well_id=well_id), target_obs=new_obs_tracker, relationship="dna_from_well")
+								new_source_well, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='well', obs_well__well_id=well_id), target_obs=new_obs_tracker, relationship="dna_in_well")
 							if sample_id !='' and sample_id != 'No Sample':
 								new_source_sample, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='sample', obs_sample__sample_id=sample_id), target_obs=new_obs_tracker, relationship="dna_from_sample")
 						except Exception as e:
@@ -4817,7 +4826,7 @@ def log_data_online(request, data_type):
 							if microbe_id !='' and microbe_id != 'No Microbe':
 								new_source_microbe, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='microbe', obs_microbe__microbe_id=microbe_id), target_obs=new_obs_tracker, relationship="well_from_microbe")
 							if plate_id !='' and plate_id != 'No Plate':
-								new_source_plate, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='plate', obs_plate__plate_id=plate_id), target_obs=new_obs_tracker, relationship="well_from_plate")
+								new_source_plate, created = ObsTrackerSource.objects.get_or_create(source_obs = ObsTracker.objects.get(obs_entity_type='plate', obs_plate__plate_id=plate_id), target_obs=new_obs_tracker, relationship="well_in_plate")
 
 						except Exception as e:
 							print("Error: %s %s" % (e.message, e.args))
