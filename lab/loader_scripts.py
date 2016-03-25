@@ -236,24 +236,39 @@ def seed_stock_loader_prep(upload_file, user):
             error_count = error_count + 1
 
         if experiment_used == '1':
-            obs_tracker_stock_hash = 'stock' + str(experiment_name_table[experiment_name][0]) + str(field_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(1) + str(1) + str(temp_stock_id) + str(user_hash_table[user.username])
+            obs_tracker_stock_hash = 'stock' + str(1) + str(field_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(1) + str(1) + str(temp_stock_id) + str(user_hash_table[user.username])
             obs_tracker_stock_hash_fix = obs_tracker_stock_hash + '\r'
             if obs_tracker_stock_hash not in obs_tracker_hash_table and obs_tracker_stock_hash_fix not in obs_tracker_hash_table:
                 obs_tracker_hash_table[obs_tracker_stock_hash] = obs_tracker_id
-                obs_tracker_new[(obs_tracker_id, 'stock', experiment_name_table[experiment_name][0], field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, 1, 1, temp_stock_id, user_hash_table[user.username])] = obs_tracker_id
+                obs_tracker_new[(obs_tracker_id, 'stock', 1, field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, 1, 1, temp_stock_id, user_hash_table[user.username])] = obs_tracker_id
                 obs_tracker_id = obs_tracker_id + 1
             else:
-                obs_tracker_hash_exists[('stock', experiment_name_table[experiment_name][0], field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, 1, 1, temp_stock_id, user_hash_table[user.username])] = obs_tracker_id
+                obs_tracker_hash_exists[('stock', 1, field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, 1, 1, temp_stock_id, user_hash_table[user.username])] = obs_tracker_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'stock_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'stock_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'stock_used_in_experiment')] = obs_tracker_source_id
+
 
         if experiment_collected == '1':
-            obs_tracker_stock_hash = 'stock' + str(experiment_name_table[experiment_name][0]) + str(field_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(1) + str(1) + str(temp_stock_id) + str(user_hash_table[user.username])
+            obs_tracker_stock_hash = 'stock' + str(1) + str(field_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(1) + str(1) + str(temp_stock_id) + str(user_hash_table[user.username])
             obs_tracker_stock_hash_fix = obs_tracker_stock_hash + '\r'
             if obs_tracker_stock_hash not in obs_tracker_hash_table and obs_tracker_stock_hash_fix not in obs_tracker_hash_table:
                 obs_tracker_hash_table[obs_tracker_stock_hash] = obs_tracker_id
-                obs_tracker_new[(obs_tracker_id, 'stock', experiment_name_table[experiment_name][0], field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, 1, 1, temp_stock_id, user_hash_table[user.username])] = obs_tracker_id
+                obs_tracker_new[(obs_tracker_id, 'stock', 1, field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, 1, 1, temp_stock_id, user_hash_table[user.username])] = obs_tracker_id
                 obs_tracker_id = obs_tracker_id + 1
             else:
-                obs_tracker_hash_exists[('stock', experiment_name_table[experiment_name][0], field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, 1, 1, temp_stock_id, user_hash_table[user.username])] = obs_tracker_id
+                obs_tracker_hash_exists[('stock', 1, field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, 1, 1, temp_stock_id, user_hash_table[user.username])] = obs_tracker_id
 
             if obs_tracker_stock_hash in obs_tracker_hash_table:
                 temp_targetobs_id = obs_tracker_hash_table[obs_tracker_stock_hash]
@@ -751,14 +766,14 @@ def row_loader_prep(upload_file, user):
             temp_obsrow_id = 1
             error_count = error_count + 1
 
-        obs_tracker_row_hash = 'row' + str(experiment_name_table[experiment_name][0]) + str(field_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsrow_id) + str(1) + str(1) + str(1) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_row_hash = 'row' + str(1) + str(field_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsrow_id) + str(1) + str(1) + str(1) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_row_hash_fix = obs_tracker_row_hash + '\r'
         if obs_tracker_row_hash not in obs_tracker_hash_table and obs_tracker_row_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_row_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'row', experiment_name_table[experiment_name][0], field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, temp_obsrow_id, 1, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'row', 1, field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, temp_obsrow_id, 1, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('row', experiment_name_table[experiment_name][0], field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, temp_obsrow_id, 1, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('row', 1, field_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, temp_obsrow_id, 1, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_row_hash]) + 'row_from_stock'
@@ -768,6 +783,20 @@ def row_loader_prep(upload_file, user):
                 obs_tracker_source_id = obs_tracker_source_id + 1
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_stock_id_table[stock_id][0], obs_tracker_hash_table[obs_tracker_row_hash], 'row_from_stock')] = obs_tracker_source_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'row_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'row_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'row_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -958,14 +987,14 @@ def plant_loader_prep(upload_file, user):
             temp_obsplant_id = 1
             error_count = error_count + 1
 
-        obs_tracker_plant_hash = 'plant' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsplant_id) + str(1) + str(obs_row_id) + str(1) + str(1) + str(1) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_plant_hash = 'plant' + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsplant_id) + str(1) + str(obs_row_id) + str(1) + str(1) + str(1) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_plant_hash_fix = obs_tracker_plant_hash + '\r'
         if obs_tracker_plant_hash not in obs_tracker_hash_table and obs_tracker_plant_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_plant_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'plant', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, temp_obsplant_id, 1, obs_row_id, 1, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'plant', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, temp_obsplant_id, 1, obs_row_id, 1, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('plant', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, temp_obsplant_id, 1, obs_row_id, 1, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('plant', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, temp_obsplant_id, 1, obs_row_id, 1, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_plant_hash]) + 'plant_from_stock'
@@ -984,6 +1013,20 @@ def plant_loader_prep(upload_file, user):
                 obs_tracker_source_id = obs_tracker_source_id + 1
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_obs_row_id_table[obs_row_id][0], obs_tracker_hash_table[obs_tracker_plant_hash], 'plant_from_row')] = obs_tracker_source_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'plant_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'plant_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'plant_used_in_experiment')] = obs_tracker_source_id
 
 
     end = time.clock()
@@ -1210,14 +1253,14 @@ def tissue_loader_prep(upload_file, user):
             temp_obstissue_id = 1
             error_count = error_count + 1
 
-        obs_tracker_tissue_hash = 'tissue' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_culture_id) + str(1) + str(1) + str(1) + str(1) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(temp_obstissue_id) + str(1) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_tissue_hash = 'tissue' + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_culture_id) + str(1) + str(1) + str(1) + str(1) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(temp_obstissue_id) + str(1) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_tissue_hash_fix = obs_tracker_tissue_hash + '\r'
         if obs_tracker_tissue_hash not in obs_tracker_hash_table and obs_tracker_tissue_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_tissue_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'tissue', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, temp_obstissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'tissue', 1, 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, temp_obstissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('tissue', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, temp_obstissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('tissue', 1, 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, 1, temp_obstissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_tissue_hash]) + 'tissue_from_stock'
@@ -1254,6 +1297,20 @@ def tissue_loader_prep(upload_file, user):
                 obs_tracker_source_id = obs_tracker_source_id + 1
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_obs_culture_id_table[obs_culture_id][0], obs_tracker_hash_table[obs_tracker_tissue_hash], 'tissue_from_culture')] = obs_tracker_source_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'tissue_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'tissue_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'tissue_used_in_experiment')] = obs_tracker_source_id
 
 
     end = time.clock()
@@ -1545,14 +1602,14 @@ def culture_loader_prep(upload_file, user):
             temp_obsculture_id = 1
             error_count = error_count + 1
 
-        obs_tracker_culture_hash = 'culture' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsculture_id) + str(1) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(obs_tissue_id) + str(1) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_culture_hash = 'culture' + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsculture_id) + str(1) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(obs_tissue_id) + str(1) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_culture_hash_fix = obs_tracker_culture_hash + '\r'
         if obs_tracker_culture_hash not in obs_tracker_hash_table and obs_tracker_culture_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_culture_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'culture', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, temp_obsculture_id, 1, 1, 1, obs_microbe_id, obs_plant_id, 1, obs_row_id, 1, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'culture', 1, 1, 1, 1, 1, 1, temp_obsculture_id, 1, 1, 1, obs_microbe_id, obs_plant_id, 1, obs_row_id, 1, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('culture', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, temp_obsculture_id, 1, 1, 1, obs_microbe_id, obs_plant_id, 1, obs_row_id, 1, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('culture', 1, 1, 1, 1, 1, 1, temp_obsculture_id, 1, 1, 1, obs_microbe_id, obs_plant_id, 1, obs_row_id, 1, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_culture_hash]) + 'culture_from_stock'
@@ -1598,6 +1655,20 @@ def culture_loader_prep(upload_file, user):
                 obs_tracker_source_id = obs_tracker_source_id + 1
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_obs_microbe_id_table[obs_microbe_id][0], obs_tracker_hash_table[obs_tracker_culture_hash], 'culture_from_microbe')] = obs_tracker_source_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'culture_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'culture_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'culture_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -1929,14 +2000,14 @@ def dna_loader_prep(upload_file, user):
             temp_obsdna_id = 1
             error_count = error_count + 1
 
-        obs_tracker_dna_hash = 'dna' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_culture_id) + str(temp_obsdna_id) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(obs_plate_id) + str(obs_row_id) + str(obs_sample_id) + str(obs_tissue_id) + str(1) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_dna_hash = 'dna' + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_culture_id) + str(temp_obsdna_id) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(obs_plate_id) + str(obs_row_id) + str(obs_sample_id) + str(obs_tissue_id) + str(1) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_dna_hash_fix = obs_tracker_dna_hash + '\r'
         if obs_tracker_dna_hash not in obs_tracker_hash_table and obs_tracker_dna_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_dna_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'dna', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, obs_culture_id, temp_obsdna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'dna', 1, 1, 1, 1, 1, 1, obs_culture_id, temp_obsdna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('dna', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, obs_culture_id, temp_obsdna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('dna', 1, 1, 1, 1, 1, 1, obs_culture_id, temp_obsdna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_dna_hash]) + 'culture_from_stock'
@@ -2019,6 +2090,19 @@ def dna_loader_prep(upload_file, user):
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_obs_plate_id_table[obs_plate_id][0], obs_tracker_hash_table[obs_tracker_dna_hash], 'dna_in_plate')] = obs_tracker_source_id
 
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'dna_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'dna_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'dna_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -2301,14 +2385,14 @@ def microbe_loader_prep(upload_file, user):
             temp_obsmicrobe_id = 1
             error_count = error_count + 1
 
-        obs_tracker_microbe_hash = 'microbe' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_culture_id) + str(1) + str(1) + str(1) + str(temp_obsmicrobe_id) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(obs_tissue_id) + str(1) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_microbe_hash = 'microbe' + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_culture_id) + str(1) + str(1) + str(1) + str(temp_obsmicrobe_id) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(1) + str(obs_tissue_id) + str(1) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_microbe_hash_fix = obs_tracker_microbe_hash + '\r'
         if obs_tracker_microbe_hash not in obs_tracker_hash_table and obs_tracker_microbe_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_microbe_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'microbe', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, temp_obsmicrobe_id, obs_plant_id, 1, obs_row_id, 1, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'microbe', 1, 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, temp_obsmicrobe_id, obs_plant_id, 1, obs_row_id, 1, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('microbe', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, temp_obsmicrobe_id, obs_plant_id, 1, obs_row_id, 1, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('microbe', 1, 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, temp_obsmicrobe_id, obs_plant_id, 1, obs_row_id, 1, obs_tissue_id, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_microbe_hash]) + 'microbe_from_stock'
@@ -2354,6 +2438,20 @@ def microbe_loader_prep(upload_file, user):
                 obs_tracker_source_id = obs_tracker_source_id + 1
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_obs_culture_id_table[obs_culture_id][0], obs_tracker_hash_table[obs_tracker_microbe_hash], 'microbe_from_culture')] = obs_tracker_source_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'microbe_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'microbe_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'microbe_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -2542,14 +2640,28 @@ def plate_loader_prep(upload_file, user):
             temp_obsplate_id = 1
             error_count = error_count + 1
 
-        obs_tracker_plate_hash = 'plate' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(location_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsplate_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        obs_tracker_plate_hash = 'plate' + str(1) + str(1) + str(1) + str(1) + str(location_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsplate_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
         obs_tracker_plate_hash_fix = obs_tracker_plate_hash + '\r'
         if obs_tracker_plate_hash not in obs_tracker_hash_table and obs_tracker_plate_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_plate_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'plate', experiment_name_table[experiment_name][0], 1, 1, 1, location_id, 1, 1, 1, 1, 1, 1, 1, temp_obsplate_id, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'plate', 1, 1, 1, 1, location_id, 1, 1, 1, 1, 1, 1, 1, temp_obsplate_id, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('plate', experiment_name_table[experiment_name][0], 1, 1, 1, location_id, 1, 1, 1, 1, 1, 1, 1, temp_obsplate_id, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('plate', 1, 1, 1, 1, location_id, 1, 1, 1, 1, 1, 1, 1, temp_obsplate_id, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'plate_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'plate_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'plate_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -2692,14 +2804,28 @@ def env_loader_prep(upload_file, user):
             temp_obsenv_id = 1
             error_count = error_count + 1
 
-        obs_tracker_env_hash = 'environment' + str(experiment_name_table[experiment_name][0]) + str(field_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsenv_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        obs_tracker_env_hash = 'environment' + str(1) + str(field_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_obsenv_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
         obs_tracker_env_hash_fix = obs_tracker_env_hash + '\r'
         if obs_tracker_env_hash not in obs_tracker_hash_table and obs_tracker_env_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_env_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'environment', experiment_name_table[experiment_name][0], field_id, 1, 1, 1, 1, 1, 1, temp_obsenv_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'environment', 1, field_id, 1, 1, 1, 1, 1, 1, temp_obsenv_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('environment', experiment_name_table[experiment_name][0], field_id, 1, 1, 1, 1, 1, 1, temp_obsenv_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('environment', 1, field_id, 1, 1, 1, 1, 1, 1, temp_obsenv_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'env_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'env_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'env_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -2952,14 +3078,14 @@ def well_loader_prep(upload_file, user):
             temp_obswell_id = 1
             error_count = error_count + 1
 
-        obs_tracker_well_hash = 'well' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_culture_id) + str(1) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(obs_plate_id) + str(obs_row_id) + str(1) + str(obs_tissue_id) + str(temp_obswell_id) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_well_hash = 'well' + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_culture_id) + str(1) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(obs_plate_id) + str(obs_row_id) + str(1) + str(obs_tissue_id) + str(temp_obswell_id) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_well_hash_fix = obs_tracker_well_hash + '\r'
         if obs_tracker_well_hash not in obs_tracker_hash_table and obs_tracker_well_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_well_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'well', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, 1, obs_tissue_id, temp_obswell_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'well', 1, 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, 1, obs_tissue_id, temp_obswell_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('well', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, 1, obs_tissue_id, temp_obswell_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('well', 1, 1, 1, 1, 1, 1, obs_culture_id, 1, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, 1, obs_tissue_id, temp_obswell_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_hash_table[obs_tracker_well_hash]) + str(obs_tracker_stock_id_table[stock_id][0]) + 'stock_in_well'
@@ -3024,6 +3150,19 @@ def well_loader_prep(upload_file, user):
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_obs_plate_id_table[obs_plate_id][0], obs_tracker_hash_table[obs_tracker_well_hash], 'well_in_plate')] = obs_tracker_source_id
 
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'well_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'well_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'well_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -3269,15 +3408,15 @@ def samples_loader_prep(upload_file, user):
             temp_obssample_id = 1
             error_count = error_count + 1
 
-        obs_tracker_sample_hash = 'sample' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(temp_obssample_id) + str(1) + str(1) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_sample_hash = 'sample' + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(obs_plant_id) + str(1) + str(obs_row_id) + str(temp_obssample_id) + str(1) + str(1) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_sample_hash_fix = obs_tracker_sample_hash + '\r'
         if obs_tracker_sample_hash not in obs_tracker_hash_table and obs_tracker_sample_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_sample_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'sample', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, temp_obssample_id, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'sample', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, temp_obssample_id, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_sample_id_table[(sample_id)] = (obs_tracker_id, 'sample', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, temp_obssample_id, 1, 1, stock_id, user_hash_table[user.username])
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('sample', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, temp_obssample_id, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('sample', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, obs_plant_id, 1, obs_row_id, temp_obssample_id, 1, 1, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_sample_hash]) + 'sample_from_stock'
@@ -3321,6 +3460,20 @@ def samples_loader_prep(upload_file, user):
             else:
                 source_sample_id_error[(sample_id, experiment_name, sample_type, sample_name, kernel_num, weight, volume, density, photo, sample_comments, row_id, seed_id, plant_id, source_sample_id)] = error_count
                 error_count = error_count + 1
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'sample_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'sample_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'sample_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -3497,14 +3650,28 @@ def maize_loader_prep(upload_file, user):
             temp_maizesample_id = 1
             error_count = error_count + 1
 
-        tracker_maize_sample_hash = 'maize' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(temp_maizesample_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        tracker_maize_sample_hash = 'maize' + str(1) + str(1) + str(1) + str(1) + str(1) + str(temp_maizesample_id) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
         tracker_maize_sample_hash_fix = tracker_maize_sample_hash + '\r'
         if tracker_maize_sample_hash not in obs_tracker_hash_table and tracker_maize_sample_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[tracker_maize_sample_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'maize', experiment_name_table[experiment_name][0], 1, 1, 1, 1, temp_maizesample_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'maize', 1, 1, 1, 1, 1, temp_maizesample_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('maize', experiment_name_table[experiment_name][0], 1, 1, 1, 1, temp_maizesample_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('maize', 1, 1, 1, 1, 1, temp_maizesample_id, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'maize_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'maize_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'maize_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -4055,14 +4222,14 @@ def isolate_loader_prep(upload_file, user):
             temp_isolate_id = 1
             error_count = error_count + 1
 
-        obs_tracker_isolate_hash = 'isolate' + str(experiment_name_table[experiment_name][0]) + str(field_id) + str(1) + str(temp_isolate_id) + str(location_id) + str(1) + str(obs_culture_id) + str(obs_dna_id) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(obs_plate_id) + str(obs_row_id) + str(1) + str(obs_tissue_id) + str(obs_well_id) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_isolate_hash = 'isolate' + str(1) + str(field_id) + str(1) + str(temp_isolate_id) + str(location_id) + str(1) + str(obs_culture_id) + str(obs_dna_id) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(obs_plate_id) + str(obs_row_id) + str(1) + str(obs_tissue_id) + str(obs_well_id) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_isolate_hash_fix = obs_tracker_isolate_hash + '\r'
         if obs_tracker_isolate_hash not in obs_tracker_hash_table and obs_tracker_isolate_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_isolate_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'isolate', experiment_name_table[experiment_name][0], field_id, 1, temp_isolate_id, location_id, 1, obs_culture_id, obs_dna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, 1, obs_tissue_id, obs_well_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'isolate', 1, field_id, 1, temp_isolate_id, location_id, 1, obs_culture_id, obs_dna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, 1, obs_tissue_id, obs_well_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('isolate', experiment_name_table[experiment_name][0], field_id, 1, temp_isolate_id, location_id, 1, obs_culture_id, obs_dna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, 1, obs_tissue_id, obs_well_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('isolate', 1, field_id, 1, temp_isolate_id, location_id, 1, obs_culture_id, obs_dna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, 1, obs_tissue_id, obs_well_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_isolate_hash]) + 'isolate_from_stock'
@@ -4144,6 +4311,20 @@ def isolate_loader_prep(upload_file, user):
                 obs_tracker_source_id = obs_tracker_source_id + 1
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_obs_dna_id_table[obs_dna_id][0], obs_tracker_hash_table[obs_tracker_isolate_hash], 'isolate_from_dna')] = obs_tracker_source_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'isolate_used_in_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'isolate_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'isolate_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
@@ -4649,14 +4830,14 @@ def glycerol_stock_loader_prep(upload_file, user):
             temp_glycerol_id = 1
             error_count = error_count + 1
 
-        obs_tracker_glycerol_hash = 'glycerol_stock' + str(experiment_name_table[experiment_name][0]) + str(field_id) + str(temp_glycerol_id) + str(isolate_table_id) + str(location_id) + str(1) + str(obs_culture_id) + str(obs_dna_id) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(obs_plate_id) + str(obs_row_id) + str(obs_sample_id) + str(obs_tissue_id) + str(obs_well_id) + str(stock_id) + str(user_hash_table[user.username])
+        obs_tracker_glycerol_hash = 'glycerol_stock' + str(1) + str(field_id) + str(temp_glycerol_id) + str(isolate_table_id) + str(location_id) + str(1) + str(obs_culture_id) + str(obs_dna_id) + str(1) + str(1) + str(obs_microbe_id) + str(obs_plant_id) + str(obs_plate_id) + str(obs_row_id) + str(obs_sample_id) + str(obs_tissue_id) + str(obs_well_id) + str(stock_id) + str(user_hash_table[user.username])
         obs_tracker_glycerol_hash_fix = obs_tracker_glycerol_hash + '\r'
         if obs_tracker_glycerol_hash not in obs_tracker_hash_table and obs_tracker_glycerol_hash_fix not in obs_tracker_hash_table:
             obs_tracker_hash_table[obs_tracker_glycerol_hash] = obs_tracker_id
-            obs_tracker_new[(obs_tracker_id, 'glycerol_stock', experiment_name_table[experiment_name][0], field_id, temp_glycerol_id, isolate_table_id, location_id, 1, obs_culture_id, obs_dna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, obs_well_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'glycerol_stock', 1, field_id, temp_glycerol_id, isolate_table_id, location_id, 1, obs_culture_id, obs_dna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, obs_well_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
         else:
-            obs_tracker_hash_exists[('glycerol_stock', experiment_name_table[experiment_name][0], field_id, temp_glycerol_id, isolate_table_id, location_id, 1, obs_culture_id, obs_dna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, obs_well_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_hash_exists[('glycerol_stock', 1, field_id, temp_glycerol_id, isolate_table_id, location_id, 1, obs_culture_id, obs_dna_id, 1, 1, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, obs_well_id, stock_id, user_hash_table[user.username])] = obs_tracker_id
 
         if stock_id != 1:
             obs_tracker_source_stock_hash = str(obs_tracker_stock_id_table[stock_id][0]) + str(obs_tracker_hash_table[obs_tracker_glycerol_hash]) + 'isolate_stock_from_stock'
@@ -4756,6 +4937,20 @@ def glycerol_stock_loader_prep(upload_file, user):
                 obs_tracker_source_id = obs_tracker_source_id + 1
             else:
                 obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_isolate_table_id_table[isolate_table_id][0], obs_tracker_hash_table[obs_tracker_glycerol_hash], 'isolate_stock_from_isolate')] = obs_tracker_source_id
+
+        obs_tracker_exp_hash = 'experiment' + str(experiment_name_table[experiment_name][0]) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(user_hash_table[user.username])
+        if obs_tracker_exp_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_exp_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'isolate_stock_from_experiment'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'isolate_stock_from_experiment')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'isolate_stock_from_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
