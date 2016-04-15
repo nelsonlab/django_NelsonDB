@@ -497,6 +497,7 @@ def seed_packet_loader_prep(upload_file, user):
     location_hash_table = loader_db_mirror.location_hash_mirror()
     location_id = loader_db_mirror.location_id_mirror()
     locality_hash_table = loader_db_mirror.locality_hash_mirror()
+    location_name_table = loader_db_mirror.location_name_mirror()
     locality_id = loader_db_mirror.locality_id_mirror()
     seed_id_table = loader_db_mirror.seed_id_mirror()
 
@@ -558,14 +559,16 @@ def seed_packet_loader_prep(upload_file, user):
 
         location_hash = str(temp_locality_id) + building_name + location_name + room + shelf + column + box_name + location_comments
         location_hash_fix = location_hash + '\r'
-        if location_hash not in location_hash_table and location_hash_fix not in location_hash_table:
+        if location_name not in location_name_table and location_hash not in location_hash_table and location_hash_fix not in location_hash_table:
             location_hash_table[location_hash] = location_id
             location_new[(location_id, temp_locality_id, location_name, building_name, room, shelf, column, box_name, location_comments)] = location_id
             location_id = location_id + 1
         else:
             location_hash_exists[(temp_locality_id, location_name, building_name, room, shelf, column, box_name, location_comments)] = location_id
 
-        if location_hash in location_hash_table:
+        if location_name in location_name_table:
+            temp_location_id = location_name_table[location_name][0]
+        elif location_hash in location_hash_table:
             temp_location_id = location_hash_table[location_hash]
         elif location_hash_fix in location_hash_table:
             temp_location_id = location_hash_table[location_hash_fix]
