@@ -455,7 +455,7 @@ def seed_stock_loader(results_dict):
         for key in results_dict['stock_new'].iterkeys():
             try:
                 with transaction.atomic():
-                    new_stock = Stock.objects.update_or_create(id=key[0], seed_id=key[2], defaults= { 'passport_id':key[1], 'seed_name':key[3], 'cross_type':key[4], 'pedigree':key[5], 'stock_status':key[6], 'stock_date':key[7], 'inoculated':key[8], 'comments':key[9] } )
+                    new_stock, create = Stock.objects.update_or_create(id=key[0], seed_id=key[2], defaults= { 'passport_id':key[1], 'seed_name':key[3], 'cross_type':key[4], 'pedigree':key[5], 'stock_status':key[6], 'stock_date':key[7], 'inoculated':key[8], 'comments':key[9] } )
             except Exception as e:
                 print("Stock Error: %s %s" % (e.message, e.args))
                 return False

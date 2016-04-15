@@ -393,8 +393,9 @@ def experiment_edit(request, experiment_id):
 
 def find_stock_collected_from_experiment(experiment_name):
 	try:
-		collected_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='stock', relationship='stock_from_experiment')
+		collected_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='stock', relationship='stock_from_experiment')
 	except ObsTracker.DoesNotExist:
+		print("HERE")
 		try:
 			collected_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='stock')
 		except ObsTracker.DoesNotExist:
@@ -504,7 +505,7 @@ def checkbox_seed_inventory_sort(request):
 				selected_stocks=unique_selected_stocks(selected_stocks)
 				return_type='measurement'
 			else:
-				selected_stocks = list(Stock.objects.all().exclude(seed_id='0').exclude(id=1))[:1000]
+				selected_stocks = list(Stock.objects.all().exclude(seed_id='0').exclude(passport_id='2').exclude(id=1))[:1000]
 				return_type='stock'
 	return (selected_stocks, return_type)
 
@@ -3433,10 +3434,7 @@ def stock_for_experiment(request, experiment_name):
 def stock_collected_from_experiment(request, experiment_name):
 	context = RequestContext(request)
 	context_dict = {}
-	try:
-		collected_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='stock')
-	except ObsTracker.DoesNotExist:
-		collected_stock_data = None
+	collected_stock_data = find_stock_collected_from_experiment(experiment_name)
 	context_dict['collected_stock_data'] = collected_stock_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -4006,6 +4004,10 @@ def log_data_online(request, data_type):
 								new_collecting, created = Collecting.objects.get_or_create(user=collection_user, collection_date=collection_date, collection_method=collection_method, comments=collection_comments)
 								new_passport, created = Passport.objects.get_or_create(collecting=new_collecting, taxonomy=new_taxonomy, people=new_people)
 								new_stock, created = Stock.objects.get_or_create(seed_id=seed_id, defaults={'passport':new_passport, 'seed_name':seed_name, 'cross_type':cross_type, 'pedigree':pedigree, 'stock_status':stock_status, 'stock_date':stock_date, 'inoculated':inoculated, 'comments':stock_comments})
+								if experiment_used == True:
+									new_stock.stock_status = stock_status
+									new_stock.save()
+
 								if row_id != '':
 									obs_row = ObsRow.objects.get(row_id=row_id)
 								else:
@@ -4014,13 +4016,13 @@ def log_data_online(request, data_type):
 									obs_plant = ObsPlant.objects.get(plant_id=plant_id)
 								else:
 									obs_plant = ObsPlant.objects.get(id=1)
+
+								new_obs_tracker, created = ObsTracker.objects.get_or_create(obs_entity_type='stock', stock=new_stock, experiment_id=1, user=user, field=field, glycerol_stock_id=1, isolate_id=1, location_id=1, maize_sample_id=1, obs_culture_id=1, obs_dna_id=1, obs_env_id=1, obs_extract_id=1, obs_microbe_id=1, obs_plant=obs_plant, obs_plate_id=1, obs_row=obs_row, obs_sample_id=1, obs_tissue_id=1, obs_well_id=1)
+								new_obs_tracker_exp, created = ObsTracker.objects.get_or_create(obs_entity_type='experiment', stock_id=1, experiment=experiment, user=user, field_id=1, glycerol_stock_id=1, isolate_id=1, location_id=1, maize_sample_id=1, obs_culture_id=1, obs_dna_id=1, obs_env_id=1, obs_extract_id=1, obs_microbe_id=1, obs_plant_id=1, obs_plate_id=1, obs_row_id=1, obs_sample_id=1, obs_tissue_id=1, obs_well_id=1)
+
 								if experiment_used == True:
-									new_obs_tracker, created = ObsTracker.objects.get_or_create(obs_entity_type='stock', stock=new_stock, experiment_id=1, user=user, field=field, glycerol_stock_id=1, isolate_id=1, location_id=1, maize_sample_id=1, obs_culture_id=1, obs_dna_id=1, obs_env_id=1, obs_extract_id=1, obs_microbe_id=1, obs_plant=obs_plant, obs_plate_id=1, obs_row=obs_row, obs_sample_id=1, obs_tissue_id=1, obs_well_id=1)
-									new_obs_tracker_exp, created = ObsTracker.objects.get_or_create(obs_entity_type='experiment', stock_id=1, experiment=experiment, user=user, field_id=1, glycerol_stock_id=1, isolate_id=1, location_id=1, maize_sample_id=1, obs_culture_id=1, obs_dna_id=1, obs_env_id=1, obs_extract_id=1, obs_microbe_id=1, obs_plant_id=1, obs_plate_id=1, obs_row_id=1, obs_sample_id=1, obs_tissue_id=1, obs_well_id=1)
 									new_obs_tracker_source, created = ObsTrackerSource.objects.get_or_create(source_obs=new_obs_tracker_exp, target_obs=new_obs_tracker, relationship='stock_used_in_experiment')
 								if experiment_collected == True:
-									new_obs_tracker, created = ObsTracker.objects.get_or_create(obs_entity_type='stock', stock=new_stock, experiment_id=1, user=user, field=field, glycerol_stock_id=1, isolate_id=1, location_id=1, maize_sample_id=1, obs_culture_id=1, obs_dna_id=1, obs_env_id=1, obs_extract_id=1, obs_microbe_id=1, obs_plant=obs_plant, obs_plate_id=1, obs_row=obs_row, obs_sample_id=1, obs_tissue_id=1, obs_well_id=1)
-									new_obs_tracker_exp, created = ObsTracker.objects.get_or_create(obs_entity_type='experiment', stock_id=1, experiment=experiment, user=user, field_id=1, glycerol_stock_id=1, isolate_id=1, location_id=1, maize_sample_id=1, obs_culture_id=1, obs_dna_id=1, obs_env_id=1, obs_extract_id=1, obs_microbe_id=1, obs_plant_id=1, obs_plate_id=1, obs_row_id=1, obs_sample_id=1, obs_tissue_id=1, obs_well_id=1)
 									new_obs_tracker_source, created = ObsTrackerSource.objects.get_or_create(source_obs=new_obs_tracker_exp, target_obs=new_obs_tracker, relationship='stock_from_experiment')
 									if row_id != '':
 										source_row, created = ObsTracker.objects.get_or_create(obs_entity_type='row', obs_row=obs_row)
