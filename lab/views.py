@@ -267,6 +267,17 @@ def experiment(request, experiment_name_url):
 				except ObsTracker.DoesNotExist:
 					obs_type_data = None
 
+				if obs_type == 'row':
+					obs_type_data = find_row_for_experiment(experiment_name)
+					if obs_type_data is not None:
+						context_dict[obs_data] = obs_type_data
+					#For data loaded in old way.
+					else:
+						try:
+							obs_type_data = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type=obs_type)
+						except ObsTracker.DoesNotExist:
+							obs_type_data = None
+
 				if obs_type == 'stock':
 					obs_type_data = find_stock_for_experiment(experiment_name)
 					stockpackets_used = find_seedpackets_from_obstracker_stock(obs_type_data)
@@ -1300,19 +1311,12 @@ def download_stock_collected_experiment(request, experiment_name):
 		writer.writerow([data.target_obs.stock.seed_id, data.target_obs.stock.seed_name, data.target_obs.stock.cross_type, data.target_obs.stock.pedigree, data.target_obs.stock.passport.taxonomy.population, data.target_obs.stock.stock_status, data.target_obs.stock.inoculated, data.target_obs.stock.passport.collecting.user, data.target_obs.stock.comments])
 	return response
 
-def find_row_from_experiment(experiment_name):
-	try:
-		row_data = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type='row')
-	except ObsTracker.DoesNotExist:
-		row_data = None
-	return row_data
-
 @login_required
 def row_data_from_experiment(request, experiment_name):
 	context = RequestContext(request)
 	context_dict = {}
 	context_dict = checkbox_session_variable_check(request)
-	row_data = find_row_from_experiment(experiment_name)
+	row_data = find_row_for_experiment(experiment_name)
 	context_dict['row_data'] = row_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -1322,7 +1326,7 @@ def row_data_from_experiment(request, experiment_name):
 def download_row_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_rows.csv"' % (experiment_name)
-	row_data = find_row_from_experiment(experiment_name)
+	row_data = find_row_for_experiment(experiment_name)
 	writer = csv.writer(response)
 	writer.writerow(['Row ID', 'Row Name', 'Field', 'Source Stock', 'Range', 'Plot', 'Block', 'Rep', 'Kernel Num', 'Planting Date', 'Harvest Date', 'Comments'])
 	for row in row_data:
@@ -3464,15 +3468,23 @@ def find_stock_for_experiment(experiment_name):
 	try:
 		used_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='stock', relationship='stock_used_in_experiment')
 	except ObsTrackerSource.DoesNotExist:
-		try:
-			used_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='stock', target_obs__obs_entity_type='stock')
-		except ObsTrackerSource.DoesNotExist:
-			used_stock_data = []
+		used_stock_data = None
 	stock_for_experiment = []
 	if used_stock_data is not None:
 		for s in used_stock_data:
 			stock_for_experiment.append(s.target_obs)
 	return stock_for_experiment
+
+def find_row_for_experiment(experiment_name):
+	try:
+		row_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='row', relationship='row_used_in_experiment')
+	except ObsTrackerSource.DoesNotExist:
+		row_data = None
+	row_for_experiment = []
+	if row_data is not None:
+		for s in row_data:
+			row_for_experiment.append(s.target_obs)
+	return row_for_experiment
 
 @login_required
 def stockpackets_for_experiment(request, experiment_name):

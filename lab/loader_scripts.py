@@ -798,13 +798,13 @@ def row_loader_prep(upload_file, user):
             obs_tracker_new[(obs_tracker_id, 'experiment', experiment_name_table[experiment_name][0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, user_hash_table[user.username])] = obs_tracker_id
             obs_tracker_id = obs_tracker_id + 1
 
-        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(temp_targetobs_id) + 'row_used_in_experiment'
+        obs_tracker_source_hash = str(obs_tracker_hash_table[obs_tracker_exp_hash]) + str(obs_tracker_hash_table[obs_tracker_row_hash]) + 'row_used_in_experiment'
         if obs_tracker_source_hash not in obs_tracker_source_hash_table:
             obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
-            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'row_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], obs_tracker_hash_table[obs_tracker_row_hash], 'row_used_in_experiment')] = obs_tracker_source_id
             obs_tracker_source_id = obs_tracker_source_id + 1
         else:
-            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], temp_targetobs_id, 'row_used_in_experiment')] = obs_tracker_source_id
+            obs_tracker_source_hash_exists[(obs_tracker_source_id, obs_tracker_hash_table[obs_tracker_exp_hash], obs_tracker_hash_table[obs_tracker_row_hash], 'row_used_in_experiment')] = obs_tracker_source_id
 
     end = time.clock()
     stats = {}
