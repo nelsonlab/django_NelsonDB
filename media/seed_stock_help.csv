@@ -8,7 +8,7 @@ DataBase Header Dictionary,,,,,,
 ,,,,,,
 Seed Stocks,For recording seed stock information.,,,,,
 Template Header,Dependent,Required,Unique,Database Table,Database Field,Definition
-Used,..,1,..,..,..,"If the seed was used in this experiment, as in planted or grinded, place 1 in this fied. Leave blank otherwise."
+Used,..,1,..,..,..,"If the seed was used in this experiment, as in planted or grinded, place 1 in this fied. Leave blank otherwise. WITH THIS OPTION, if the seed_id exists in the database already, only fill in the experiment name that the seed was used in, the seed_id, and the stock_status."
 Collected,..,1,..,..,..,"If the seed was collected in this experiment, as in harvested or sourced, place 1 in this field. Leave blank otherwise."
 Experiment Name,1,1,0,lab_obstracker,experiment_id = Experiment(experiment_name).id,The experiment's name to which this seed is being used for OR collected from. The upload method is different for if seed is being used or collected. Leave blank if not applicable.
 Seed ID,0,1,1,lab_stock,seed_id,A unique ID in the format 08PN0023_001x. This is the ID that is printed on seed packets. MUST BE UNIQUE
@@ -23,7 +23,7 @@ Genus,0,0,0,lab_taxonomy,genus,The genus of the seed. Example: Zea
 Species,0,0,0,lab_taxonomy,species,The species of the seed. Example: Mays
 Population,0,0,0,lab_taxonomy,population,A more general classification of the seed's genotype. Example: NAM
 Row ID,1,0,0,lab_obstracker,obs_row_id = ObsRow(row_id).id,The Row ID from which the seed was collected. Example 08PN0023. Leave blank if seed not collected from a row.
-Field Name,1,0,0,lab_obstracker,field_id = Field(field_name).id,The Field Name from which the seed was collected. Example Aurora NY. Leave blank if not relevant. 
+Field Name,1,0,0,lab_obstracker,field_id = Field(field_name).id,The Field Name from which the seed was collected. Example Aurora NY. Leave blank if not relevant.
 Plant ID,1,0,0,lab_obstracker,obs_plant_id = ObsPlant(plant_id).id,The Plant ID from which the seed was collected. Example 08PN0023_001. Leave blank if seed not collected from a plant.
 Username,1,0,0,lab_collecting,user_id = User(username).id,The username of the person which collected the seed. Example: firstname_lastname. Leave blank if seed not collected.
 Collection Date,0,0,0,lab_collecting,collection_date,The date when the seed was collected. Format 2015-01-30. Leave blank if seed not collected

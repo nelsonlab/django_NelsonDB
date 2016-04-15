@@ -422,8 +422,8 @@ TRUNCATE TABLE `lab_obstrackersource`;
 -- Dumping data for table `lab_obstrackersource`
 --
 
-INSERT INTO `lab_obstrackersource` (`id`, `source_obs_id`, `target_obs_id`) VALUES
-(1, 1, 1);
+INSERT INTO `lab_obstrackersource` (`id`, `source_obs_id`, `target_obs_id`, `relationship`) VALUES
+(1, 1, 1, 'none');
 
 --
 -- Truncate table before insert `lab_obswell`

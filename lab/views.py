@@ -504,7 +504,7 @@ def checkbox_seed_inventory_sort(request):
 				selected_stocks=unique_selected_stocks(selected_stocks)
 				return_type='measurement'
 			else:
-				selected_stocks = list(Stock.objects.exclude(seed_id='0').exclude(passport_id='2').exclude(id=1))[:1000]
+				selected_stocks = list(Stock.objects.all().exclude(seed_id='0').exclude(id=1))[:1000]
 				return_type='stock'
 	return (selected_stocks, return_type)
 
@@ -3464,7 +3464,7 @@ def find_seedpackets_from_obstrackersource_stock(stock_query):
 
 def find_stock_for_experiment(experiment_name):
 	try:
-		used_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='stock', relationship='stock_used_in_experiment')
+		used_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='stock', relationship='stock_used_in_experiment')
 	except ObsTrackerSource.DoesNotExist:
 		try:
 			used_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='stock', target_obs__obs_entity_type='stock')
