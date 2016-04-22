@@ -4408,7 +4408,7 @@ def isolate_loader_prep_output(results_dict, new_upload_exp, template_type):
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
-    writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'target_obs_id'])
+    writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'target_obs_id', 'relationship'])
     for key in results_dict['obs_tracker_source_new'].iterkeys():
         writer.writerow(key)
     writer.writerow([''])
@@ -4550,7 +4550,7 @@ def isolate_loader(results_dict):
         for key in results_dict['obs_tracker_source_new'].iterkeys():
             try:
                 with transaction.atomic():
-                    new_obstrackersource = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2])
+                    new_obstrackersource = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
             except Exception as e:
                 print("ObsTrackerSource Error: %s %s" % (e.message, e.args))
                 return False

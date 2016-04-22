@@ -365,20 +365,34 @@ def experiment_delete(request):
 	if (permissions['is_superuser'] == True):
 		experiment_id = request.POST.get('experiment_id', False)
 		try:
-			obs_trackers = ObsTracker.objects.get(experiment_id=experiment_id)
+			obs_trackers = ObsTracker.objects.filter(experiment_id=experiment_id)
 			for o in obs_trackers:
-				ObsRow.objects.get(id=o.obs_row_id).delete()
-				ObsPlant.objects.get(id=o.obs_plant_id).delete()
-				ObsTissue.objects.get(id=o.obs_tissue_id).delete()
-				ObsCulture.objects.get(id=o.obs_culture_id).delete()
-				ObsMicrobe.objects.get(id=o.obs_microbe_id).delete()
-				ObsPlate.objects.get(id=o.obs_plate_id).delete()
-				ObsDNA.objects.get(id=o.obs_dna_id).delete()
-				ObsWell.objects.get(id=o.obs_well_id).delete()
-				ObsSample.objects.get(id=o.obs_sample_id).delete()
-				ObsExtract.objects.get(id=o.obs_extract_id).delete()
-				ObsEnv.objects.get(id=o.obs_env_id).delete()
-				Measurement.objects.get(obs_tracker_id=o.id).delete()
+				if (o.obs_row_id != 1):
+					ObsRow.objects.get(id=o.obs_row_id).delete()
+				if (o.obs_plant_id != 1):
+					ObsPlant.objects.get(id=o.obs_plant_id).delete()
+				if (o.obs_tissue_id != 1):
+					ObsTissue.objects.get(id=o.obs_tissue_id).delete()
+				if (o.obs_culture_id != 1):
+					ObsCulture.objects.get(id=o.obs_culture_id).delete()
+				if (o.obs_microbe_id != 1):
+					ObsMicrobe.objects.get(id=o.obs_microbe_id).delete()
+				if (o.obs_plate_id != 1):
+					ObsPlate.objects.get(id=o.obs_plate_id).delete()
+				if (o.obs_dna_id != 1):
+					ObsDNA.objects.get(id=o.obs_dna_id).delete()
+				if (o.obs_well_id != 1):
+					ObsWell.objects.get(id=o.obs_well_id).delete()
+				if (o.obs_sample_id != 1):
+					ObsSample.objects.get(id=o.obs_sample_id).delete()
+				if (o.obs_extract_id != 1):
+					ObsExtract.objects.get(id=o.obs_extract_id).delete()
+				if (o.obs_env_id != 1):
+					ObsEnv.objects.get(id=o.obs_env_id).delete()
+				try:
+					Measurement.objects.get(obs_tracker_id=o.id).delete()
+				except Measurement.DoesNotExist:
+					pass
 			obs_trackers.delete()
 		except ObsTracker.DoesNotExist:
 			pass
@@ -3691,6 +3705,22 @@ def make_obs_tracker_info(tracker):
 	tracker.obs_id_url = '/lab/%s/%s/' % (obs_tracker_id_info[1], obs_tracker_id_info[2])
 	return tracker
 
+def get_obs_relationships(obs_type, obs_id, relationships):
+	search = 'target_obs__%s' % (obs_type)
+	print(search)
+	obs_trackers = []
+	for r in relationships:
+		kwargs = {search:obs_id, 'relationship':r}
+		try:
+			obs_tracker_source = ObsTrackerSource.objects.filter(**kwargs)
+		except ObsTrackerSource.DoesNotExist:
+			obs_tracker_source = None
+		if obs_tracker_source is not None:
+			for s in obs_tracker_source:
+				s = make_obs_tracker_info(s.source_obs)
+				obs_trackers.append(s)
+	return obs_trackers
+
 def get_obs_tracker(obs_type, obs_id):
 	kwargs = {obs_type:obs_id}
 	try:
@@ -3830,7 +3860,10 @@ def single_isolate_info(request, isolate_table_id):
 	except Isolate.DoesNotExist:
 		isolate_info = None
 	if isolate_info is not None:
-		obs_tracker = get_obs_tracker('isolate_id', isolate_table_id)
+		relationships = ['isolate_from_stock', 'isolate_from_row', 'isolate_from_plant', 'isolate_from_tissue', 'isolate_from_culture', 'isolate_from_microbe', 'isolate_from_plate', 'isolate_from_well', 'isolate_from_dna', 'isolate_used_in_experiment']
+		obs_tracker = get_obs_relationships('isolate_id', isolate_table_id, relationships)
+		print(obs_tracker)
+		#obs_tracker = get_obs_tracker('isolate_id', isolate_table_id)
 	context_dict['isolate_info'] = isolate_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
