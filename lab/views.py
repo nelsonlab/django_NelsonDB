@@ -259,32 +259,58 @@ def experiment(request, experiment_name_url):
 				treatment_data = None
 			context_dict['treatment_data'] = treatment_data
 
-			obs_type_list = ['stock', 'isolate', 'glycerol_stock', 'maize', 'row', 'plant', 'sample', 'environment', 'dna', 'tissue', 'plate', 'well', 'microbe', 'culture', 'extract', 'maize']
+			obs_type_list = ['stock', 'isolate', 'glycerol_stock', 'maize', 'row', 'plant', 'sample', 'environment', 'dna', 'tissue', 'plate', 'well', 'microbe', 'culture', 'extract']
 			for obs_type in obs_type_list:
 				obs_data = "%s_data" % (obs_type)
-				try:
-					obs_type_data = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type=obs_type)
-				except ObsTracker.DoesNotExist:
-					obs_type_data = None
 
 				if obs_type == 'row':
-					obs_type_data = find_row_for_experiment(experiment_name)
-					if obs_type_data is not None:
-						context_dict[obs_data] = obs_type_data
-					#For data loaded in old way.
-					else:
-						try:
-							obs_type_data = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type=obs_type)
-						except ObsTracker.DoesNotExist:
-							obs_type_data = None
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'row', 'row_used_in_experiment')
+
+				if obs_type == 'plant':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'plant', 'plant_used_in_experiment')
+
+				if obs_type == 'environment':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'environment', 'env_used_in_experiment')
+
+				if obs_type == 'dna':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'dna', 'dna_used_in_experiment')
+
+				if obs_type == 'tissue':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'tissue', 'tissue_used_in_experiment')
+
+				if obs_type == 'plate':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'plate', 'plate_used_in_experiment')
+
+				if obs_type == 'well':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'well', 'well_used_in_experiment')
+
+				if obs_type == 'microbe':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'microbe', 'microbe_used_in_experiment')
+
+				if obs_type == 'culture':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'culture', 'culture_used_in_experiment')
+
+				if obs_type == 'extract':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'extract', 'extract_used_in_experiment')
+
+				if obs_type == 'isolate':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'isolate', 'isolate_used_in_experiment')
+
+				if obs_type == 'glycerol_stock':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'glycerol_stock', 'isolate_stock_from_experiment')
+
+				if obs_type == 'maize':
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'maize', 'maize_from_experiment')
 
 				if obs_type == 'stock':
-					obs_type_data = find_stock_for_experiment(experiment_name)
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'stock', 'stock_used_in_experiment')
+
 					stockpackets_used = find_seedpackets_from_obstracker_stock(obs_type_data)
 					context_dict['stockpackets_used'] = stockpackets_used
 
 				if obs_type == 'sample':
 					separations = []
+					obs_type_data = old_data_lookup(experiment_name, obs_type)
 					for sample in obs_type_data:
 						try:
 							separation = Separation.objects.filter(obs_sample_id=sample.obs_sample_id)
@@ -293,7 +319,11 @@ def experiment(request, experiment_name_url):
 						separations = list(chain(separation, separations))
 					context_dict['separation_data'] = separations
 
+				if obs_type_data is None:
+					obs_type_data = old_data_lookup(experiment_name, obs_type)
+
 				context_dict[obs_data] = obs_type_data
+
 
 			collected_stock_data = find_stock_collected_from_experiment(experiment_name)
 			context_dict['collected_stock_data'] = collected_stock_data
@@ -320,6 +350,14 @@ def experiment(request, experiment_name_url):
 		context_dict['exp_list'] = exp_list
 	context_dict['logged_in_user'] = request.user.username
 	return render_to_response('lab/experiment.html', context_dict, context)
+
+#For data loaded in old way. Need to redo loading on data into ObsTrackerSource
+def old_data_lookup (experiment_name, obs_entity_type):
+	try:
+		obs_type_data = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type=obs_entity_type)
+	except ObsTracker.DoesNotExist:
+		obs_type_data = None
+	return obs_type_data
 
 @login_required
 def experiment_delete(request):
@@ -1316,7 +1354,7 @@ def row_data_from_experiment(request, experiment_name):
 	context = RequestContext(request)
 	context_dict = {}
 	context_dict = checkbox_session_variable_check(request)
-	row_data = find_row_for_experiment(experiment_name)
+	row_data = find_relationship_for_experiment(experiment_name, 'row', 'row_used_in_experiment')
 	context_dict['row_data'] = row_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -1326,7 +1364,7 @@ def row_data_from_experiment(request, experiment_name):
 def download_row_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_rows.csv"' % (experiment_name)
-	row_data = find_row_for_experiment(experiment_name)
+	row_data = find_relationship_for_experiment(experiment_name, 'row', 'row_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Row ID', 'Row Name', 'Field', 'Source Stock', 'Range', 'Plot', 'Block', 'Rep', 'Kernel Num', 'Planting Date', 'Harvest Date', 'Comments'])
 	for row in row_data:
@@ -3429,7 +3467,7 @@ def download_measurement_experiment(request, experiment_name):
 def stock_for_experiment(request, experiment_name):
 	context = RequestContext(request)
 	context_dict = {}
-	context_dict['stock_for_experiment'] = find_stock_for_experiment(experiment_name)
+	context_dict['stock_for_experiment'] = find_relationship_for_experiment(experiment_name, 'stock', 'stock_used_in_experiment')
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
 	return render_to_response('lab/seed_for_experiment.html', context_dict, context)
@@ -3464,33 +3502,22 @@ def find_seedpackets_from_obstrackersource_stock(stock_query):
 		seed_packet_list = list(chain(seed_packet, seed_packet_list))
 	return seed_packet_list
 
-def find_stock_for_experiment(experiment_name):
+def find_relationship_for_experiment(experiment_name, obs_entity_type, relationship):
 	try:
-		used_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='stock', relationship='stock_used_in_experiment')
+		used_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type=obs_entity_type, relationship=relationship)
 	except ObsTrackerSource.DoesNotExist:
-		used_stock_data = None
-	stock_for_experiment = []
-	if used_stock_data is not None:
-		for s in used_stock_data:
-			stock_for_experiment.append(s.target_obs)
-	return stock_for_experiment
-
-def find_row_for_experiment(experiment_name):
-	try:
-		row_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='row', relationship='row_used_in_experiment')
-	except ObsTrackerSource.DoesNotExist:
-		row_data = None
-	row_for_experiment = []
-	if row_data is not None:
-		for s in row_data:
-			row_for_experiment.append(s.target_obs)
-	return row_for_experiment
+		used_data = None
+	data_for_experiment = []
+	if used_data is not None:
+		for s in used_data:
+			data_for_experiment.append(s.target_obs)
+	return data_for_experiment
 
 @login_required
 def stockpackets_for_experiment(request, experiment_name):
 	context = RequestContext(request)
 	context_dict = {}
-	stock_data = find_stock_for_experiment(experiment_name)
+	stock_data = find_relationship_for_experiment(experiment_name, 'stock', 'stock_used_in_experiment')
 	if stock_data is not None:
 		stockpackets_used = find_seedpackets_from_obstracker_stock(stock_data)
 	else:
@@ -3504,7 +3531,7 @@ def stockpackets_for_experiment(request, experiment_name):
 def download_stockpackets_for_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_measurements.csv"' % (experiment_name)
-	stock_data = find_stock_for_experiment(experiment_name)
+	stock_data = find_relationship_for_experiment(experiment_name, 'stock', 'stock_used_in_experiment')
 	if stock_data is not None:
 		stockpackets_used = find_seedpackets_from_obstracker_stock(stock_data)
 	else:
