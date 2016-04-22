@@ -3717,7 +3717,9 @@ def get_obs_relationships(obs_type, obs_id, relationships):
 			obs_tracker_source = None
 		if obs_tracker_source is not None:
 			for s in obs_tracker_source:
+				o = s
 				s = make_obs_tracker_info(s.source_obs)
+				s.relationship = o.relationship
 				obs_trackers.append(s)
 	return obs_trackers
 

@@ -43,11 +43,6 @@
     </tbody>
   </table>
 
-  {% for t in obs_tracker %}
-    {% if t.obs_entity_type == 'isolate' %}
-      {% include 'lab/tracker_info_table.html' with obs_tracker=obs_tracker %}
-    {% endif %}
-  {% endfor %}
   <br/>
 
   {% if obs_tracker %}
@@ -57,7 +52,7 @@
       <tr>
         <td>Obs Type</td>
         <td>Obs ID</td>
-        <td>Experiment</td>
+        <td>Relationship</td>
       </tr>
     </thead>
     <tbody>
@@ -65,7 +60,7 @@
       <tr>
         <td>{{ t.obs_entity_type }}</td>
         <td><a href='{{ t.obs_id_url }}'>{{ t.obs_id }}</a></td>
-        <td><a href='/lab/experiment/{{t.experiment}}/'>{{ t.experiment }}</a></td>
+        <td>{{ t.relationship }}</td>
       </tr>
       {% endfor %}
     </tbody>
