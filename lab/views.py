@@ -4,10 +4,10 @@ import csv
 import loader_scripts
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.conf import settings
 from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, FileDump
-from lab.forms import UserForm, UserProfileForm, ChangePasswordForm, EditUserForm, EditUserProfileForm, NewExperimentForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, LogPlantsOnlineForm, LogRowsOnlineForm, LogEnvironmentsOnlineForm, LogSamplesOnlineForm, LogMeasurementsOnlineForm, NewTreatmentForm, UploadQueueForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, NewFieldForm, NewLocalityForm, NewMeasurementParameterForm, NewLocationForm, NewDiseaseInfoForm, NewTaxonomyForm, NewMediumForm, NewCitationForm, UpdateSeedDataOnlineForm, LogTissuesOnlineForm, LogCulturesOnlineForm, LogMicrobesOnlineForm, LogDNAOnlineForm, LogPlatesOnlineForm, LogWellOnlineForm, LogIsolatesOnlineForm, LogSeparationsOnlineForm, LogMaizeSurveyOnlineForm, LogGlycerolStocksOnlineForm, FileDumpForm
+from lab.forms import UserForm, UserProfileForm, ChangePasswordForm, EditUserForm, EditUserProfileForm, NewExperimentForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, LogPlantsOnlineForm, LogRowsOnlineForm, LogEnvironmentsOnlineForm, LogSamplesOnlineForm, LogMeasurementsOnlineForm, NewTreatmentForm, UploadQueueForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, NewFieldForm, NewLocalityForm, NewMeasurementParameterForm, NewLocationForm, NewDiseaseInfoForm, NewTaxonomyForm, NewMediumForm, NewCitationForm, UpdateSeedDataOnlineForm, LogTissuesOnlineForm, LogCulturesOnlineForm, LogMicrobesOnlineForm, LogDNAOnlineForm, LogPlatesOnlineForm, LogWellOnlineForm, LogIsolatesOnlineForm, LogSeparationsOnlineForm, LogMaizeSurveyOnlineForm, LogGlycerolStocksOnlineForm, FileDumpForm, SequenceZipfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -29,6 +29,7 @@ from wsgiref.util import FileWrapper
 from django.conf import settings
 import mimetypes
 import json
+import zipfile
 
 def encode_url(str):
 	return str.replace(' ', '_')
@@ -101,6 +102,78 @@ def register(request):
 		user_form = UserForm()
 		profile_form = UserProfileForm()
 	return render_to_response('lab/register.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered}, context)
+
+def upload_sequence_zipfile(request):
+	context_dict = {}
+	if request.method == 'POST':
+		fileform = SequenceZipfileForm(request.POST, request.FILES)
+		if fileform.is_valid():
+			user = fileform.cleaned_data['user']
+			experiment = fileform.cleaned_data['experiment']
+			file_name = fileform.cleaned_data['file_name']
+			comments = fileform.cleaned_data['comments']
+			zip_file = fileform.cleaned_data['file']
+			parameter = fileform.cleaned_data['measurement_parameter']
+
+			if zipfile.is_zipfile(zip_file):
+				zf = zipfile.ZipFile(zip_file, 'r')
+
+				check_filecontent_ext = True
+				for filename in zf.namelist():
+					if filename.lower().endswith('.ab1') or filename.lower().endswith('.seq'):
+						print(filename)
+					else:
+						print(filename)
+						check_filecontent_ext = False
+
+				if check_filecontent_ext == True:
+
+					unique_names = []
+					for filename in zf.namelist():
+						filename = filename.replace(".ab1", "")
+						filename = filename.replace(".seq", "")
+						if filename not in unique_names:
+							unique_names.append(filename)
+
+					#print(unique_names)
+					for name in unique_names:
+						#print(name)
+						obs_sample = ObsSample.objects.get(sample_id=name)
+						sample = ObsTracker.objects.get(obs_entity_type='sample', obs_sample=obs_sample)
+
+						fasta_file = "%s.seq" % name
+						chromatogram_file = "%s.ab1" % name
+
+						sequence = zf.read(fasta_file)
+						#print(sequence)
+
+						sequence_name = sequence.splitlines()[0]
+						if sequence_name.lower().endswith('.ab1'):
+							sequence_name = sequence_name.replace(".ab1", "")
+						if sequence_name.lower().startswith('>'):
+							sequence_name = sequence_name.replace(">", "")
+
+						print(sequence_name)
+
+						#marker = Marker.objects.get(marker_id=sequence_name)
+						#GenotypeResults.objects.create(obs_tracker=sample, marker=marker, parameter=parameter, sequence=sequence, comments=comments, fasta_file=fasta_file, chromatogram_file=chromatogram_file)
+
+					#FileDump.objects.create(user=user, experiment=experiment, file_name=file_name, file=zip_file, comments=comments)
+
+					complete = True
+				else :
+					complete = False
+
+
+		else:
+			print(fileform.errors)
+			complete = False
+		context_dict['complete'] = complete
+	else:
+		fileform = SequenceZipfileForm()
+	context_dict['fileform'] = fileform
+	context_dict['logged_in_user'] = request.user.username
+	return render(request, 'lab/upload_sequence_zipfile.html', context_dict)
 
 @login_required
 def file_storage(request):
@@ -244,7 +317,6 @@ def track_url(request):
 
 @login_required
 def experiment(request, experiment_name_url):
-	context = RequestContext(request)
 	experiment_name = decode_url(experiment_name_url)
 	context_dict = {'experiment_name': experiment_name}
 	if experiment_name is not 'search':
@@ -302,22 +374,26 @@ def experiment(request, experiment_name_url):
 				if obs_type == 'maize':
 					obs_type_data = find_relationship_for_experiment(experiment_name, 'maize', 'maize_from_experiment')
 
+				if obs_type == 'sample':
+					print("HERE")
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'sample', 'sample_used_in_experiment')
+
 				if obs_type == 'stock':
 					obs_type_data = find_relationship_for_experiment(experiment_name, 'stock', 'stock_used_in_experiment')
 
 					stockpackets_used = find_seedpackets_from_obstracker_stock(obs_type_data)
 					context_dict['stockpackets_used'] = stockpackets_used
 
-				if obs_type == 'sample':
-					separations = []
-					obs_type_data = old_data_lookup(experiment_name, obs_type)
-					for sample in obs_type_data:
-						try:
-							separation = Separation.objects.filter(obs_sample_id=sample.obs_sample_id)
-						except Separation.DoesNotExist:
-							separation = None
-						separations = list(chain(separation, separations))
-					context_dict['separation_data'] = separations
+				#if obs_type == 'sample':
+				#	separations = []
+				#	obs_type_data = old_data_lookup(experiment_name, obs_type)
+				#	for sample in obs_type_data:
+				#		try:
+				#			separation = Separation.objects.filter(obs_sample_id=sample.obs_sample_id)
+				#		except Separation.DoesNotExist:
+				#			separation = None
+				#		separations = list(chain(separation, separations))
+				#	context_dict['separation_data'] = separations
 
 				if obs_type_data is None:
 					obs_type_data = old_data_lookup(experiment_name, obs_type)
@@ -349,7 +425,7 @@ def experiment(request, experiment_name_url):
 		exp_list = get_experiment_list()
 		context_dict['exp_list'] = exp_list
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/experiment.html', context_dict, context)
+	return render(request, 'lab/experiment.html', context_dict)
 
 #For data loaded in old way. Need to redo loading on data into ObsTrackerSource
 def old_data_lookup (experiment_name, obs_entity_type):
@@ -1835,11 +1911,9 @@ def new_experiment(request):
 
 @login_required
 def log_data_select_obs(request):
-	context = RequestContext(request)
 	context_dict = {}
-
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/log_data.html', context_dict, context)
+	return render(request, 'lab/log_data.html', context_dict)
 
 @login_required
 def serve_data_template_file(request, filename):

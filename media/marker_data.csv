@@ -1,1 +1,1 @@
-Marker ID,Map Feature ID,F Primer ID,R Primer ID,Length,BAC,Nam Marker,Poly Type,Ref Seq,Comments
+marker_id,map_feature_interval_id,marker_map_feature_id,primer_f_id,primer_r_id,marker_name,length,bac,nam_marker,poly_type,ref_seq,comments,strand,allele

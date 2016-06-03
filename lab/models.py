@@ -1,3 +1,8 @@
+import filebrowser
+from filebrowser.fields import FileBrowseField
+#from filebrowser.views import filebrowser_post_upload
+import sys, zipfile, os, os.path
+import shutil
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -462,6 +467,7 @@ class MapFeatureAnnotation(models.Model):
 class MapFeatureInterval(models.Model):
 	map_feature_start = models.ForeignKey(MapFeature, related_name='map_feature_interval_start')
 	map_feature_end = models.ForeignKey(MapFeature, related_name='map_feature_interval_end')
+	map_feature_interval_id = models.CharField(max_length=200, unique=True)
 	interval_type = models.CharField(max_length=200, blank=True)
 	interval_name = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
@@ -517,6 +523,7 @@ class MapFeatureExpression(models.Model):
 		return self.map_feature_interval.interval_name
 
 class GenotypeResults(models.Model):
+	obs_tracker = models.ForeignKey(ObsTracker)
 	marker = models.ForeignKey(Marker)
 	parameter = models.ForeignKey(MeasurementParameter)
 	sequence = models.TextField(blank=True)

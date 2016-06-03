@@ -205,6 +205,7 @@ urlpatterns = [
     url(r'^log_data/(?P<data_type>\w+)/$', views.log_data_online, name='log_data_online'),
 
     url(r'^download/template/(?P<filename>\w+)/', views.serve_data_template_file, name='serve_data_template_file'),
+    url(r'^upload_seq/sequence_zipfile/$', views.upload_sequence_zipfile, name='upload_sequence_zipfile'),
     url(r'^upload/(?P<data_type>\w+)/$', views.queue_upload_file, name='queue_upload_file'),
 
     url(r'^download/measurement/(?P<experiment_name>\w+)/', views.download_measurement_experiment, name='download_measurement_experiment'),

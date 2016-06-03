@@ -1,0 +1,27 @@
+{% extends 'lab/base.html' %}
+{% block title %}Upload Sequence Zipfile{% endblock %}
+{% block body_block %}
+<div class="hero-unit">
+  <h1>Upload Template Zipfile</h1>
+  <br />
+  <div class="container-fluid">
+    {% if complete %}
+      <p>Zip file contents unzipped and saved to server. The .seq and .ab1 file associated with the sample name in their filename.</p>
+    {% else %}
+    <form class="form-signin" id="upload_seq_zipfile" method="post" action="/lab/upload_seq/sequence_zipfile/" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h2 class="form-signin-heading">Genotyping Info Form</h2><br/>
+      {% for field in fileform.visible_fields %}
+      	<div class="row">
+      		<div class="span4 offset1"><font color="247eca">{{ field.help_text }}</font></div>
+      		<div class="span3">{{ field }}</div>
+      		<div class="span4"><font color="red">{{ field.errors }}</font></div>
+      	</div>
+      {% endfor %}
+      <br />
+      <input class="btn btn-primary" type="submit" name="submit" value="Submit"/>
+    </form>
+    {% endif %}
+	</div>
+</div>
+{% endblock %}
