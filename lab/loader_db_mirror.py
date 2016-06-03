@@ -62,6 +62,33 @@ def experiment_name_mirror():
         experiment_name_table[row.name] = (row.id, row.user_id, row.field_id, row.name, row.start_date, row.purpose, row.comments)
     return experiment_name_table
 
+def primer_id_mirror():
+    primer_id_table = OrderedDict({})
+    #--- Key = (primer_id)
+    #--- Value = (id, primer_id, primer_name, primer_tail, size_range, temp_min, temp_max, order_date, comments)
+
+    primer_file = Primer.objects.all()
+    for row in primer_file:
+        primer_id_table[row.primer_id] = (row.id, row.primer_id, row.primer_name, row.primer_tail, row.size_range, row.temp_min, row.temp_max, row.order_date, row.comments)
+    return primer_id_table
+
+def primer_table_id_mirror():
+    primer_table_id = Primer.objects.latest('id').id + 1
+    return primer_table_id
+
+def primer_hash_mirror():
+    primer_hash_table = OrderedDict({})
+    #--- Key = (primer_id + primer_name + primer_tail + size_range + temp_min + temp_max + order_date + comments)
+    #--- Value = (id)
+
+    primer_file = Primer.objects.all()
+    for row in primer_file:
+        primer_hash = row.primer_id + row.primer_name + row.primer_tail + row.size_range + row.temp_min + row.temp_max + row.order_date + row.comments
+        primer_hash.rstrip('\r')
+        primer_hash.rstrip('\n')
+        primer_hash_table[primer_hash] = row.id
+    return primer_hash_table
+
 def field_name_mirror():
     field_name_table = OrderedDict({})
     #--- Key = (field_name)

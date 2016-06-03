@@ -5273,3 +5273,84 @@ def measurement_loader(results_dict):
         print("Error: %s %s" % (e.message, e.args))
         return False
     return True
+
+
+def primer_loader_prep(upload_file, user):
+    start = time.clock()
+
+    primer_new = OrderedDict({})
+    #--- Key = (primer_table_id, primer_id, primer_name, primer_tail, size_range, temp_min, temp_max, order_date, comments)
+    #--- Value = (primer_table_id)
+
+    user_hash_table = loader_db_mirror.user_hash_mirror()
+    primer_hash_table = loader_db_mirror.primer_hash_mirror()
+    primer_id_table = loader_db_mirror.primer_id_mirror()
+    primer_table_id = loader_db_mirror.primer_table_id_mirror()
+
+    error_count = 0
+    primer_hash_exists = OrderedDict({})
+
+    primer_file = csv.DictReader(upload_file)
+    for row in primer_file:
+        primer_id = row["Primer ID"]
+        primer_name = row["Primer Name"]
+        primer_tail = row["Primer Tail"]
+        size_range = row["Size Range"]
+        temp_min = row["Temp Min"]
+        temp_max = row["Temp Max"]
+        order_date = row["Order Date"]
+        comments = row["Comments"]
+
+        primer_hash = primer_id + primer_name + primer_tail + size_range + temp_min + temp_max + order_date + comments
+        if primer_id not in primer_id_table and primer_hash not in primer_hash_table:
+            primer_hash_table[primer_hash] = primer_table_id
+            primer_new[(primer_table_id, primer_id, primer_name, primer_tail, size_range, temp_min, temp_max, order_date, comments)] = primer_table_id
+            primer_id_table[primer_id] = (primer_table_id, primer_id, primer_name, primer_tail, size_range, temp_min, temp_max, order_date, comments)
+            primer_table_id = primer_table_id + 1
+        else:
+            primer_hash_exists[(primer_id, primer_name, primer_tail, size_range, temp_min, temp_max, order_date, comments)] = primer_table_id
+
+    end = time.clock()
+    stats = {}
+    stats[("Time: %s" % (end-start), "Errors: %s" % (error_count))] = error_count
+
+    results_dict = {}
+    results_dict['primer_new'] = primer_new
+    results_dict['primer_hash_exists'] = primer_hash_exists
+    results_dict['stats'] = stats
+    return results_dict
+
+def primer_loader_prep_output(results_dict, new_upload_exp, template_type):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_%s_prep.csv"' % (new_upload_exp, template_type)
+    writer = csv.writer(response)
+    writer.writerow(['Stats'])
+    writer.writerow([''])
+    for key in results_dict['stats'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Primer Table'])
+    writer.writerow(['primer_table_id', 'primer_id', 'primer_name', 'primer_tail', 'size_range', 'temp_min', 'temp_max', 'order_date', 'comments'])
+    for key in results_dict['primer_new'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['---------------------------------------------------------------------------------------------------'])
+    writer.writerow([''])
+    writer.writerow(['Primer Entry Already Exists'])
+    for key in results_dict['primer_hash_exists'].iterkeys():
+        writer.writerow(key)
+    return response
+
+def primer_loader(results_dict):
+    try:
+        for key in results_dict['primer_new'].iterkeys():
+            try:
+                with transaction.atomic():
+                    new_primer = Primer.objects.create(id=key[0], primer_id=key[1], primer_name=key[2], primer_tail=key[3], size_range=key[4], temp_min=key[5], temp_max=key[6], order_date=key[7], comments=key[8])
+            except Exception as e:
+                print("Primer Error: %s %s" % (e.message, e.args))
+                return False
+    except Exception as e:
+        print("Error: %s %s" % (e.message, e.args))
+        return False
+    return True

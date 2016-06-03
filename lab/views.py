@@ -153,7 +153,7 @@ def upload_sequence_zipfile(request):
 						if sequence_name.lower().startswith('>'):
 							sequence_name = sequence_name.replace(">", "")
 
-						print(sequence_name)
+						#print(sequence_name)
 
 						#marker = Marker.objects.get(marker_id=sequence_name)
 						#GenotypeResults.objects.create(obs_tracker=sample, marker=marker, parameter=parameter, sequence=sequence, comments=comments, fasta_file=fasta_file, chromatogram_file=chromatogram_file)
@@ -6095,6 +6095,8 @@ def upload_online(request, template_type):
 				results_dict = loader_scripts.maize_loader_prep(request.FILES['file_name'], new_upload_user)
 			elif template_type == 'glycerol_stock_data':
 				results_dict = loader_scripts.glycerol_stock_loader_prep(request.FILES['file_name'], new_upload_user)
+			elif template_type == 'primer_data':
+				results_dict = loader_scripts.primer_loader_prep(request.FILES['file_name'], new_upload_user)
 			else:
 				results_dict = None
 			if results_dict is not None:
@@ -6135,6 +6137,8 @@ def upload_online(request, template_type):
 						output = loader_scripts.maize_loader_prep_output(results_dict, new_upload_exp, template_type)
 					elif template_type == 'glycerol_stock_data':
 						output = loader_scripts.glycerol_stock_loader_prep_output(results_dict, new_upload_exp, template_type)
+					elif template_type == 'primer_data':
+						output = loader_scripts.primer_loader_prep_output(results_dict, new_upload_exp, template_type)
 					else:
 						output = None
 					return output
@@ -6174,6 +6178,8 @@ def upload_online(request, template_type):
 						uploaded = loader_scripts.maize_loader(results_dict)
 					elif template_type == 'glycerol_stock_data':
 						uploaded = loader_scripts.glycerol_stock_loader(results_dict)
+					elif template_type == 'primer_data':
+						uploaded = loader_scripts.primer_loader(results_dict)
 					else:
 						uploaded = False
 
