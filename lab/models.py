@@ -445,7 +445,6 @@ class Primer(models.Model):
 		return self.primer_id
 
 class MapFeature(models.Model):
-	map_feature_id = models.CharField(max_length=200, unique=True)
 	chromosome = models.CharField(max_length=200, blank=True)
 	genetic_bin = models.CharField(max_length=200, blank=True)
 	physical_map = models.CharField(max_length=200, blank=True)
@@ -467,7 +466,6 @@ class MapFeatureAnnotation(models.Model):
 class MapFeatureInterval(models.Model):
 	map_feature_start = models.ForeignKey(MapFeature, related_name='map_feature_interval_start')
 	map_feature_end = models.ForeignKey(MapFeature, related_name='map_feature_interval_end')
-	map_feature_interval_id = models.CharField(max_length=200, unique=True)
 	interval_type = models.CharField(max_length=200, blank=True)
 	interval_name = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)

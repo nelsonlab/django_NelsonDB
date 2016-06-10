@@ -9,7 +9,7 @@ sys.path.append('C:/Users/Nicolas/Documents/GitHub/django_NelsonDB')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webapp.settings')
 import django
 django.setup()
-from lab.models import User, Experiment, Locality, MaizeSample, ObsTracker, ObsTrackerSource, ObsSample, Separation, ObsExtract, MeasurementParameter, Measurement, Medium, Citation, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsMicrobe, ObsCulture, ObsDNA, ObsExtract, ObsPlate, ObsWell, ObsTissue, Stock, Location, Locality, Field, Collecting, Isolate, Passport, People, Taxonomy, DiseaseInfo, GlycerolStock, StockPacket, ObsTrackerSource
+from lab.models import User, Experiment, Locality, MaizeSample, ObsTracker, ObsTrackerSource, ObsSample, Separation, ObsExtract, MeasurementParameter, Measurement, Medium, Citation, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsMicrobe, ObsCulture, ObsDNA, ObsExtract, ObsPlate, ObsWell, ObsTissue, Stock, Location, Locality, Field, Collecting, Isolate, Passport, People, Taxonomy, DiseaseInfo, GlycerolStock, StockPacket, ObsTrackerSource, Primer, Marker, MapFeature, MapFeatureInterval
 
 def user_id_mirror():
     user_id = User.objects.latest('id').id + 1
@@ -88,6 +88,67 @@ def primer_hash_mirror():
         primer_hash.rstrip('\n')
         primer_hash_table[primer_hash] = row.id
     return primer_hash_table
+
+def marker_hash_mirror():
+    marker_hash_table = OrderedDict({})
+    #--- Key = (marker_map_feature_id + primer_f_id + primer_r_id + marker_id + marker_name + length + bac + nam_marker + poly_type + ref_seq + comments + strand + allele)
+    #--- Value = (id)
+
+    marker_file = Marker.objects.all()
+    for row in marker_file:
+        marker_hash = str(row.map_feature_interval_id) + str(row.marker_map_feature_id) + str(row.primer_f_id) + str(row.primer_r_id) + row.marker_id + row.marker_name + row.length + row.bac + row.nam_marker + row.poly_type + row.ref_seq + row.comments + row.strand + row.allele
+        marker_hash.rstrip('\r')
+        marker_hash.rstrip('\n')
+        marker_hash_table[marker_hash] = row.id
+    return marker_hash_table
+
+def marker_id_mirror():
+    marker_id_table = OrderedDict({})
+    #--- Key = (marker_id)
+    #--- Value = (id, map_feature_interval_id, marker_map_feature_id, primer_f_id, primer_r_id, marker_id, marker_name, length, bac, nam_marker, poly_type, ref_seq, comments, strand, allele)
+
+    marker_file = Marker.objects.all()
+    for row in marker_file:
+        marker_id_table[row.marker_id] = (row.id, row.map_feature_interval_id, row.marker_map_feature_id, row.primer_f_id, row.primer_r_id, row.marker_id, row.marker_name, row.length, row.bac, row.nam_marker, row.poly_type, row.ref_seq, row.comments, row.strand, row.allele)
+    return marker_id_table
+
+def marker_table_id_mirror():
+    marker_table_id = Marker.objects.latest('id').id + 1
+    return marker_table_id
+
+def map_feature_hash_mirror():
+    map_feature_hash_table = OrderedDict({})
+    #--- Key = (chromosome + genetic_bin + physical_map + genetic_position + physical_position + comments)
+    #--- Value = (id)
+
+    map_feature_file = MapFeature.objects.all()
+    for row in map_feature_file:
+        map_feature_hash = row.chromosome + row.genetic_bin + row.physical_map + row.genetic_position + row.physical_position + row.comments
+        map_feature_hash.rstrip('\r')
+        map_feature_hash.rstrip('\n')
+        map_feature_hash_table[map_feature_hash] = row.id
+    return map_feature_hash_table
+
+def map_feature_table_id_mirror():
+    map_feature_table_id = MapFeature.objects.latest('id').id + 1
+    return map_feature_table_id
+
+def map_feature_interval_hash_mirror():
+    map_feature_interval_hash_table = OrderedDict({})
+    #--- Key = (chromosome + genetic_bin + physical_map + genetic_position + physical_position + comments)
+    #--- Value = (id)
+
+    map_feature_file = MapFeatureInterval.objects.all()
+    for row in map_feature_file:
+        interval_hash = str(row.map_feature_start_id) + str(row.map_feature_end_id) + row.interval_type + row.interval_name + row.comments
+        interval_hash.rstrip('\r')
+        interval_hash.rstrip('\n')
+        map_feature_interval_hash_table[interval_hash] = row.id
+    return map_feature_interval_hash_table
+
+def map_feature_interval_table_id_mirror():
+    map_feature_int_table_id = MapFeatureInterval.objects.latest('id').id + 1
+    return map_feature_int_table_id
 
 def field_name_mirror():
     field_name_table = OrderedDict({})

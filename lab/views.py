@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render
 from django.conf import settings
-from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, FileDump
+from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, FileDump, Marker, GenotypeResults
 from lab.forms import UserForm, UserProfileForm, ChangePasswordForm, EditUserForm, EditUserProfileForm, NewExperimentForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, LogPlantsOnlineForm, LogRowsOnlineForm, LogEnvironmentsOnlineForm, LogSamplesOnlineForm, LogMeasurementsOnlineForm, NewTreatmentForm, UploadQueueForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, NewFieldForm, NewLocalityForm, NewMeasurementParameterForm, NewLocationForm, NewDiseaseInfoForm, NewTaxonomyForm, NewMediumForm, NewCitationForm, UpdateSeedDataOnlineForm, LogTissuesOnlineForm, LogCulturesOnlineForm, LogMicrobesOnlineForm, LogDNAOnlineForm, LogPlatesOnlineForm, LogWellOnlineForm, LogIsolatesOnlineForm, LogSeparationsOnlineForm, LogMaizeSurveyOnlineForm, LogGlycerolStocksOnlineForm, FileDumpForm, SequenceZipfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -155,8 +155,8 @@ def upload_sequence_zipfile(request):
 
 						#print(sequence_name)
 
-						#marker = Marker.objects.get(marker_id=sequence_name)
-						#GenotypeResults.objects.create(obs_tracker=sample, marker=marker, parameter=parameter, sequence=sequence, comments=comments, fasta_file=fasta_file, chromatogram_file=chromatogram_file)
+						marker = Marker.objects.get(marker_id=sequence_name)
+						GenotypeResults.objects.create(obs_tracker=sample, marker=marker, parameter=parameter, sequence=sequence, comments=comments, fasta_file=fasta_file, chromatogram_file=chromatogram_file)
 
 					#FileDump.objects.create(user=user, experiment=experiment, file_name=file_name, file=zip_file, comments=comments)
 
@@ -6097,6 +6097,8 @@ def upload_online(request, template_type):
 				results_dict = loader_scripts.glycerol_stock_loader_prep(request.FILES['file_name'], new_upload_user)
 			elif template_type == 'primer_data':
 				results_dict = loader_scripts.primer_loader_prep(request.FILES['file_name'], new_upload_user)
+			elif template_type == 'marker_data':
+				results_dict = loader_scripts.marker_loader_prep(request.FILES['file_name'], new_upload_user)
 			else:
 				results_dict = None
 			if results_dict is not None:
@@ -6139,6 +6141,8 @@ def upload_online(request, template_type):
 						output = loader_scripts.glycerol_stock_loader_prep_output(results_dict, new_upload_exp, template_type)
 					elif template_type == 'primer_data':
 						output = loader_scripts.primer_loader_prep_output(results_dict, new_upload_exp, template_type)
+					elif template_type == 'marker_data':
+						output = loader_scripts.marker_loader_prep_output(results_dict, new_upload_exp, template_type)
 					else:
 						output = None
 					return output
@@ -6180,6 +6184,8 @@ def upload_online(request, template_type):
 						uploaded = loader_scripts.glycerol_stock_loader(results_dict)
 					elif template_type == 'primer_data':
 						uploaded = loader_scripts.primer_loader(results_dict)
+					elif template_type == 'marker_data':
+						uploaded = loader_scripts.marker_loader(results_dict)
 					else:
 						uploaded = False
 

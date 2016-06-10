@@ -4,7 +4,7 @@ from collections import OrderedDict
 import time
 import loader_db_mirror
 from django.http import HttpResponseRedirect, HttpResponse
-from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, ObsTrackerSource
+from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, ObsTrackerSource, Primer, Marker, MapFeature, MapFeatureInterval
 from django.db import IntegrityError, transaction
 
 def seed_stock_loader_prep(upload_file, user):
@@ -5349,6 +5349,207 @@ def primer_loader(results_dict):
                     new_primer = Primer.objects.create(id=key[0], primer_id=key[1], primer_name=key[2], primer_tail=key[3], size_range=key[4], temp_min=key[5], temp_max=key[6], order_date=key[7], comments=key[8])
             except Exception as e:
                 print("Primer Error: %s %s" % (e.message, e.args))
+                return False
+    except Exception as e:
+        print("Error: %s %s" % (e.message, e.args))
+        return False
+    return True
+
+
+def marker_loader_prep(upload_file, user):
+    start = time.clock()
+
+    marker_new = OrderedDict({})
+    #--- Key = (marker_table_id, map_feature_interval_id, marker_map_feature_id, primer_f_id, primer_r_id, marker_id, marker_name, length, bac, nam_marker, poly_type, ref_seq, comments, strand, allele)
+    #--- Value = (marker_table_id)
+    map_feature_new = OrderedDict({})
+    #--- Key = (map_feature_table_id, chromosome, genetic_bin, physical_map, genetic_position, physical_position, comments)
+    #--- Value = (map_feature_table_id)
+    map_feature_interval_new = OrderedDict({})
+    #--- Key = (map_feature_interval_table_id, map_feature_start_id, map_feature_end_id, interval_type, interval_name, comments)
+    #--- Value = (map_feature_table_id)
+
+    user_hash_table = loader_db_mirror.user_hash_mirror()
+    marker_hash_table = loader_db_mirror.marker_hash_mirror()
+    map_feature_hash_table = loader_db_mirror.map_feature_hash_mirror()
+    map_feature_interval_hash_table = loader_db_mirror.map_feature_interval_hash_mirror()
+    marker_id_table = loader_db_mirror.marker_id_mirror()
+    primer_id_table = loader_db_mirror.primer_id_mirror()
+    marker_table_id = loader_db_mirror.marker_table_id_mirror()
+    map_feature_table_id = loader_db_mirror.map_feature_table_id_mirror()
+    map_feature_interval_table_id = loader_db_mirror.map_feature_interval_table_id_mirror()
+
+    error_count = 0
+    marker_hash_exists = OrderedDict({})
+    map_feature_hash_exists = OrderedDict({})
+    map_feature_interval_hash_exists = OrderedDict({})
+    primer_error = OrderedDict({})
+
+    marker_file = csv.DictReader(upload_file)
+    for row in marker_file:
+        marker_id = row["Marker ID"]
+        interval_type = row["Interval Type"]
+        interval_name = row["Interval Name"]
+        interval_comments = row["Interval Comments"]
+        chromosome = row["Chromosome"]
+        genetic_bin = row["Genetic Bin"]
+        physical_map = row["Physical Map"]
+        start_physical_position = row["Start Physical Position"]
+        end_physical_position = row["End Physical Position"]
+        start_genetic_position = row["Start Genetic Position"]
+        end_genetic_position = row["End Genetic Position"]
+        marker_physical_position = row["Marker Physical Position"]
+        marker_genetic_position = row["Marker Genetic Position"]
+        primer_f_id = row["Primer F ID"]
+        primer_r_id = row["Primer R ID"]
+        marker_name = row["Marker Name"]
+        length = row["Length"]
+        bac = row["BAC"]
+        nam_marker = row["NAM Marker"]
+        poly_type = row["Poly Type"]
+        ref_seq = row["Ref Seq"]
+        strand = row["Strand"]
+        allele = row["Allele"]
+        marker_comments = row["Marker Comments"]
+
+        if primer_f_id != '':
+            if primer_f_id in primer_id_table:
+                primer_f_table_id = primer_id_table[primer_f_id][0]
+            else:
+                error_count = error_count + 1
+                primer_f_table_id = 1
+                primer_error[(marker_id, interval_type, interval_name, interval_comments, chromosome, genetic_bin, physical_map, start_physical_pos, end_physical_pos, start_genetic_pos, end_genetic_pos, marker_physical_pos, marker_genetic_pos, primer_f_id, primer_r_id, marker_name, length, bac, nam_marker, poly_type, ref_seq, strand, allele, marker_comments)] = error_count
+
+        if primer_r_id != '':
+            if primer_r_id in primer_id_table:
+                primer_r_table_id = primer_id_table[primer_r_id][0]
+            else:
+                error_count = error_count + 1
+                primer_r_table_id = 1
+                primer_error[(marker_id, interval_type, interval_name, interval_comments, chromosome, genetic_bin, physical_map, start_physical_pos, end_physical_pos, start_genetic_pos, end_genetic_pos, marker_physical_pos, marker_genetic_pos, primer_f_id, primer_r_id, marker_name, length, bac, nam_marker, poly_type, ref_seq, strand, allele, marker_comments)] = error_count
+
+        map_feature_start_hash = chromosome + genetic_bin + physical_map + start_genetic_position + start_physical_position + interval_comments
+        if map_feature_start_hash not in map_feature_hash_table:
+            map_feature_hash_table[map_feature_start_hash] = map_feature_table_id
+            map_feature_new[(map_feature_table_id, chromosome, genetic_bin, physical_map, start_genetic_position, start_physical_position, interval_comments)] = map_feature_table_id
+            map_feature_table_id = map_feature_table_id + 1
+        else:
+            map_feature_hash_exists[(chromosome, genetic_bin, physical_map, start_genetic_position, start_physical_position, interval_comments)] = map_feature_table_id
+
+        map_feature_end_hash = chromosome + genetic_bin + physical_map + end_genetic_position + end_physical_position + interval_comments
+        if map_feature_end_hash not in map_feature_hash_table:
+            map_feature_hash_table[map_feature_end_hash] = map_feature_table_id
+            map_feature_new[(map_feature_table_id, chromosome, genetic_bin, physical_map, end_genetic_position, end_physical_position, interval_comments)] = map_feature_table_id
+            map_feature_table_id = map_feature_table_id + 1
+        else:
+            map_feature_hash_exists[(chromosome, genetic_bin, physical_map, end_genetic_position, end_physical_position, interval_comments)] = map_feature_table_id
+
+        marker_map_feature_hash = chromosome + genetic_bin + physical_map + marker_genetic_position + marker_physical_position + ''
+        if marker_map_feature_hash not in map_feature_hash_table:
+            map_feature_hash_table[marker_map_feature_hash] = map_feature_table_id
+            map_feature_new[(map_feature_table_id, chromosome, genetic_bin, physical_map, marker_genetic_position, marker_physical_position, interval_comments)] = map_feature_table_id
+            map_feature_table_id = map_feature_table_id + 1
+        else:
+            map_feature_hash_exists[(chromosome, genetic_bin, physical_map, marker_genetic_position, marker_physical_position, interval_comments)] = map_feature_table_id
+
+        map_feature_interval_hash = str(map_feature_hash_table[map_feature_start_hash]) + str(map_feature_hash_table[map_feature_end_hash]) + interval_type + interval_name + interval_comments
+        if map_feature_interval_hash not in map_feature_hash_table:
+            map_feature_interval_hash_table[map_feature_interval_hash] = map_feature_interval_table_id
+            map_feature_interval_new[(map_feature_interval_table_id, map_feature_hash_table[map_feature_start_hash], map_feature_hash_table[map_feature_end_hash], interval_type, interval_name, interval_comments)] = map_feature_interval_table_id
+            map_feature_interval_table_id = map_feature_interval_table_id + 1
+        else:
+            map_feature_interval_hash_exists[(map_feature_hash_table[map_feature_start_hash], map_feature_hash_table[map_feature_end_hash], interval_type, interval_name, interval_comments)] = map_feature_interval_table_id
+
+        marker_hash = str(map_feature_interval_hash_table[map_feature_interval_hash]) + str(map_feature_hash_table[marker_map_feature_hash]) + str(primer_f_table_id) + str(primer_r_table_id) + marker_id + marker_name + length + bac + nam_marker + poly_type + ref_seq + marker_comments + strand + allele
+        if marker_hash not in marker_hash_table and marker_id not in marker_id_table:
+            marker_hash_table[marker_hash] = marker_table_id
+            marker_id_table[marker_id] = (map_feature_interval_hash_table[map_feature_interval_hash], map_feature_hash_table[marker_map_feature_hash], primer_f_table_id, primer_r_table_id, marker_id, marker_name, length, bac, nam_marker, poly_type, ref_seq, marker_comments, strand, allele)
+            marker_new[(marker_table_id, map_feature_interval_hash_table[map_feature_interval_hash], map_feature_hash_table[marker_map_feature_hash], primer_f_table_id, primer_r_table_id, marker_id, marker_name, length, bac, nam_marker, poly_type, ref_seq, marker_comments, strand, allele)] = marker_table_id
+            marker_table_id = marker_table_id + 1
+        else:
+            marker_hash_exists[(map_feature_interval_hash_table[map_feature_interval_hash], map_feature_hash_table[marker_map_feature_hash], primer_f_table_id, primer_r_table_id, marker_id, marker_name, length, bac, nam_marker, poly_type, ref_seq, marker_comments, strand, allele)] = marker_table_id
+            error_count = error_count + 1;
+
+    end = time.clock()
+    stats = {}
+    stats[("Time: %s" % (end-start), "Errors: %s" % (error_count))] = error_count
+
+    results_dict = {}
+    results_dict['marker_new'] = marker_new
+    results_dict['map_feature_new'] = map_feature_new
+    results_dict['map_feature_interval_new'] = map_feature_interval_new
+    results_dict['marker_hash_exists'] = marker_hash_exists
+    results_dict['map_feature_hash_exists'] = map_feature_hash_exists
+    results_dict['map_feature_interval_hash_exists'] = map_feature_interval_hash_exists
+    results_dict['primer_error'] = primer_error
+    results_dict['stats'] = stats
+    return results_dict
+
+def marker_loader_prep_output(results_dict, new_upload_exp, template_type):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_%s_prep.csv"' % (new_upload_exp, template_type)
+    writer = csv.writer(response)
+    writer.writerow(['Stats'])
+    writer.writerow([''])
+    for key in results_dict['stats'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Marker Table'])
+    writer.writerow(['marker_table_id', 'map_feature_interval_table_id', 'marker_map_feature_table_id', 'primer_f_table_id', 'primer_r_table_id', 'marker_id', 'marker_name', 'length', 'bac', 'nam_marker', 'poly_type', 'ref_seq', 'comments', 'strand', 'allele'])
+    for key in results_dict['marker_new'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Map Feature Table'])
+    writer.writerow(['map_feature_table_id', 'chromosome', 'genetic_bin', 'physical_map', 'genetic_position', 'physical_position', 'comments'])
+    for key in results_dict['map_feature_new'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Map Feature Interval Table'])
+    writer.writerow(['map_feature_interval_table_id', 'map_feature_start_id', 'map_feature_end_id', 'interval_type', 'interval_name', 'comments'])
+    for key in results_dict['map_feature_interval_new'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['---------------------------------------------------------------------------------------------------'])
+    writer.writerow([''])
+    writer.writerow(['Marker Entry Already Exists'])
+    for key in results_dict['marker_hash_exists'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['Map Feature Already Exists'])
+    for key in results_dict['map_feature_hash_exists'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['Map Feature Interval Already Exists'])
+    for key in results_dict['map_feature_interval_hash_exists'].iterkeys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['Primer Error'])
+    for key in results_dict['primer_error'].iterkeys():
+        writer.writerow(key)
+    return response
+
+def marker_loader(results_dict):
+    try:
+        for key in results_dict['map_feature_new'].iterkeys():
+            try:
+                with transaction.atomic():
+                    new_primer = MapFeature.objects.create(id=key[0], chromosome=key[1], genetic_bin=key[2], physical_map=key[3], genetic_position=key[4], physical_position=key[5], comments=key[6])
+            except Exception as e:
+                print("MapFeature Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['map_feature_interval_new'].iterkeys():
+            try:
+                with transaction.atomic():
+                    new_primer = MapFeatureInterval.objects.create(id=key[0], map_feature_start_id=key[1], map_feature_end_id=key[2], interval_type=key[3], interval_name=key[4], comments=key[5])
+            except Exception as e:
+                print("MapFeatureInterval Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['marker_new'].iterkeys():
+            try:
+                with transaction.atomic():
+                    new_primer = Marker.objects.create(id=key[0], map_feature_interval_id=key[1], marker_map_feature_id=key[2], primer_f_id=key[3], primer_r_id=key[4], marker_id=key[5], marker_name=key[6], length=key[7], bac=key[8], nam_marker=key[9], poly_type=key[10], ref_seq=key[11], comments=key[12], strand=key[13], allele=key[13])
+            except Exception as e:
+                print("Marker Error: %s %s" % (e.message, e.args))
                 return False
     except Exception as e:
         print("Error: %s %s" % (e.message, e.args))
