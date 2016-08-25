@@ -1,5 +1,5 @@
-import filebrowser
-from filebrowser.fields import FileBrowseField
+#import filebrowser
+#from filebrowser.fields import FileBrowseField
 from django import forms
 from lab.models import UserProfile, Experiment, Field, ObsRow, ObsPlant, Locality, Stock, ObsRow, ObsPlant, ObsSample, ObsEnv, MeasurementParameter, Citation, Medium, Location, DiseaseInfo, FileDump
 from django.contrib.auth.models import User

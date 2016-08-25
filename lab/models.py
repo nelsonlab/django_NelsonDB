@@ -1,5 +1,5 @@
-import filebrowser
-from filebrowser.fields import FileBrowseField
+#import filebrowser
+#from filebrowser.fields import FileBrowseField
 #from filebrowser.views import filebrowser_post_upload
 import sys, zipfile, os, os.path
 import shutil
