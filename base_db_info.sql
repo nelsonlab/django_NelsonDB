@@ -194,8 +194,8 @@ TRUNCATE TABLE `lab_mapfeature`;
 -- Dumping data for table `lab_mapfeature`
 --
 
-INSERT INTO `lab_mapfeature` (`id`, `map_feature_id`, `chromosome`, `genetic_bin`, `physical_map`, `genetic_position`, `physical_position`, `comments`) VALUES
-(1, 'No Map Feature', 'No Map Feature', 'No Map Feature', 'No Map Feature', 'No Map Feature', 'No Map Feature', '');
+INSERT INTO `lab_mapfeature` (`id`, `chromosome`, `genetic_bin`, `physical_map`, `genetic_position`, `physical_position`, `comments`) VALUES
+(1, 'No Map Feature', 'No Map Feature', 'No Map Feature', 'No Map Feature', 'No Map Feature', '');
 
 --
 -- Truncate table before insert `lab_mapfeatureannotation`
