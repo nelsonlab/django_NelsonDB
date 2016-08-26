@@ -58,7 +58,6 @@ def get_experiment_list(max_results=0, starts_with=''):
 	return exp_list
 
 def index(request):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.session.get('last_visit'):
 		last_visit = request.session.get('last_visit')
@@ -70,7 +69,7 @@ def index(request):
 		request.session['last_visit'] = str(datetime.now())
 		request.session['visits'] = 1
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/index.html', context_dict, context)
+	return render(request, 'lab/index.html', context=context_dict)
 
 def error_prelim(request, error_message):
 	context = RequestContext(request)
@@ -78,7 +77,6 @@ def error_prelim(request, error_message):
 	return render_to_response('lab/error_prelim.html', context_dict, context)
 
 def register(request):
-	context = RequestContext(request)
 	registered = False
 	if request.method == 'POST':
 		user_form = UserForm(data=request.POST)
@@ -101,7 +99,7 @@ def register(request):
 	else:
 		user_form = UserForm()
 		profile_form = UserProfileForm()
-	return render_to_response('lab/register.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered}, context)
+	return render(request, 'lab/register.html', context={'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 def upload_sequence_zipfile(request):
 	context_dict = {}
@@ -177,7 +175,6 @@ def upload_sequence_zipfile(request):
 
 @login_required
 def file_storage(request):
-	context = RequestContext(request)
 	saved = False
 	if request.method == 'POST':
 		file_form = FileDumpForm(request.POST, request.FILES)
@@ -193,7 +190,7 @@ def file_storage(request):
 		file_form = FileDumpForm()
 
 	all_files = FileDump.objects.all()
-	return render_to_response('lab/file_storage.html', {'file_form': file_form, 'saved': saved, 'all_files': all_files}, context)
+	return render(request, 'lab/file_storage.html', context={'file_form': file_form, 'saved': saved, 'all_files': all_files})
 
 @login_required
 def download_file_dump(request, file_id):
@@ -231,7 +228,6 @@ def user_logout(request):
 	return HttpResponseRedirect('/lab/')
 
 def profile(request, profile_name):
-	context = RequestContext(request)
 	context_dict = {}
 	u = User.objects.get(username=profile_name)
 	try:
@@ -243,11 +239,10 @@ def profile(request, profile_name):
 	if User.is_authenticated and profile_name == request.user.username:
 		context_dict['checked_user'] = True
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/profile.html', context_dict, context)
+	return render(request, 'lab/profile.html', context=context_dict)
 
 @login_required
 def profile_change_password(request):
-  context = RequestContext(request)
   context_dict = {}
   if request.method == 'POST':
     change_password_form = ChangePasswordForm(data=request.POST)
@@ -269,11 +264,10 @@ def profile_change_password(request):
     change_password_form = ChangePasswordForm()
   context_dict['change_password_form'] = change_password_form
   context_dict['logged_in_user'] = request.user.username
-  return render_to_response('lab/profile_change_password.html', context_dict, context)
+  return render(request, 'lab/profile_change_password.html', context=context_dict)
 
 @login_required
 def edit_profile(request):
-	context = RequestContext(request)
 	context_dict = {}
 	user_instance = request.user
 	profile_instance = UserProfile.objects.get(user=user_instance)
@@ -296,7 +290,7 @@ def edit_profile(request):
 	context_dict['user_form'] = user_form
 	context_dict['profile_form'] = profile_form
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/edit_profile.html', context_dict, context)
+	return render(request, 'lab/edit_profile.html', context=context_dict)
 
 def track_url(request):
 	context = RequestContext(request)
@@ -424,7 +418,7 @@ def experiment(request, experiment_name_url):
 		exp_list = get_experiment_list()
 		context_dict['exp_list'] = exp_list
 	context_dict['logged_in_user'] = request.user.username
-	return render(request, 'lab/experiment.html', context_dict)
+	return render(request, 'lab/experiment.html', context=context_dict)
 
 #For data loaded in old way. Need to redo loading on data into ObsTrackerSource
 def old_data_lookup (experiment_name, obs_entity_type):
@@ -479,7 +473,6 @@ def experiment_delete(request):
 
 @login_required
 def experiment_edit(request, experiment_id):
-	context = RequestContext(request)
 	context_dict = {}
 	experiment = Experiment.objects.get(id=experiment_id)
 	experiment_name = experiment.name
@@ -527,7 +520,7 @@ def experiment_edit(request, experiment_id):
 	context_dict['logged_in_user'] = request.user.username
 	context_dict['experiment_id'] = experiment_id
 	context_dict['experiment_name'] = experiment_name
-	return render_to_response('lab/experiment_edit.html', context_dict, context)
+	return render(request, 'lab/experiment_edit.html', context=context_dict)
 
 def find_stock_collected_from_experiment(experiment_name):
 	try:
@@ -693,11 +686,10 @@ def checkbox_session_variable_check(request):
 
 @login_required
 def seed_inventory(request):
-	context = RequestContext(request)
 	context_dict = {}
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/seed_inventory.html', context_dict, context)
+	return render(request, 'lab/seed_inventory.html', context=context_dict)
 
 def show_all_seedinv_taxonomy(request):
 	taxonomy_list = []
@@ -903,7 +895,6 @@ def seed_set_download(request, set_type):
 
 @login_required
 def update_seed_info(request, stock_id):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.method == 'POST':
 		obs_tracker_stock_form = UpdateSeedDataOnlineForm(data=request.POST)
@@ -951,11 +942,10 @@ def update_seed_info(request, stock_id):
 	context_dict['stock_id'] = stock_id
 	context_dict['obs_tracker_stock_form'] = obs_tracker_stock_form
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/stock_info_update.html', context_dict, context)
+	return render(request, 'lab/stock_info_update.html', context=context_dict)
 
 @login_required
 def update_seed_packet_info(request, stock_id):
-	context = RequestContext(request)
 	context_dict = {}
 	num_packets = StockPacket.objects.filter(stock_id=stock_id).count()
 	EditStockPacketFormSet = formset_factory(LogStockPacketOnlineForm, extra=0)
@@ -990,7 +980,7 @@ def update_seed_packet_info(request, stock_id):
 	context_dict['edit_packet_form_set'] = edit_packet_form_set
 	context_dict['stock_id'] = stock_id
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/stockpacket_info_update.html', context_dict, context)
+	return render(request, 'lab/stockpacket_info_update.html', context=context_dict)
 
 
 def stock_page_measurement_plot(request):
@@ -1044,7 +1034,6 @@ def stock_delete(request):
 
 @login_required
 def update_isolate_info(request, isolate_id):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.method == 'POST':
 		obs_tracker_isolate_form = LogIsolatesOnlineForm(data=request.POST)
@@ -1116,11 +1105,10 @@ def update_isolate_info(request, isolate_id):
 	context_dict['isolate_id'] = isolate_id
 	context_dict['obs_tracker_isolate_form'] = obs_tracker_isolate_form
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/isolate_info_update.html', context_dict, context)
+	return render(request, 'lab/isolate_info_update.html', context=context_dict)
 
 @login_required
 def update_glycerol_stock_info(request, glycerol_stock_id):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.method == 'POST':
 		obs_tracker_glycerol_stock_form = LogGlycerolStocksOnlineForm(data=request.POST)
@@ -1196,11 +1184,10 @@ def update_glycerol_stock_info(request, glycerol_stock_id):
 	context_dict['glycerol_stock_id'] = glycerol_stock_id
 	context_dict['obs_tracker_glycerol_stock_form'] = obs_tracker_glycerol_stock_form
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/glycerol_stock_info_update.html', context_dict, context)
+	return render(request, 'lab/glycerol_stock_info_update.html', context=context_dict)
 
 @login_required
 def edit_info(request, obj_type, obj_id):
-	context = RequestContext(request)
 	context_dict = {}
 	if obj_type == 'measurement_parameter':
 		if request.method == 'POST':
@@ -1226,7 +1213,7 @@ def edit_info(request, obj_type, obj_id):
 		context_dict['measurement_parameter_id'] = obj_id
 		context_dict['measurement_parameter_form'] = measurement_parameter_form
 		context_dict['logged_in_user'] = request.user.username
-		return render_to_response('lab/edit_measurement_parameter.html', context_dict, context)
+		return render(request, 'lab/edit_measurement_parameter.html', context=context_dict)
 
 	elif obj_type == 'medium':
 		if request.method == 'POST':
@@ -1253,7 +1240,7 @@ def edit_info(request, obj_type, obj_id):
 		context_dict['medium_id'] = obj_id
 		context_dict['medium_form'] = medium_form
 		context_dict['logged_in_user'] = request.user.username
-		return render_to_response('lab/edit_medium.html', context_dict, context)
+		return render(request, 'lab/edit_medium.html', context=context_dict)
 
 	elif obj_type == 'field':
 		if request.method == 'POST':
@@ -1278,7 +1265,7 @@ def edit_info(request, obj_type, obj_id):
 		context_dict['field_id'] = obj_id
 		context_dict['field_form'] = field_form
 		context_dict['logged_in_user'] = request.user.username
-		return render_to_response('lab/edit_field.html', context_dict, context)
+		return render(request, 'lab/edit_field.html', context=context_dict)
 
 	elif obj_type == 'locality':
 		if request.method == 'POST':
@@ -1303,7 +1290,7 @@ def edit_info(request, obj_type, obj_id):
 		context_dict['locality_id'] = obj_id
 		context_dict['locality_form'] = locality_form
 		context_dict['logged_in_user'] = request.user.username
-		return render_to_response('lab/edit_locality.html', context_dict, context)
+		return render(request, 'lab/edit_locality.html', context=context_dict)
 
 	elif obj_type == 'location':
 		if request.method == 'POST':
@@ -1332,7 +1319,7 @@ def edit_info(request, obj_type, obj_id):
 		context_dict['location_id'] = obj_id
 		context_dict['location_form'] = location_form
 		context_dict['logged_in_user'] = request.user.username
-		return render_to_response('lab/edit_location.html', context_dict, context)
+		return render(request, 'lab/edit_location.html', context=context_dict)
 
 	elif obj_type == 'disease':
 		if request.method == 'POST':
@@ -1356,7 +1343,7 @@ def edit_info(request, obj_type, obj_id):
 		context_dict['disease_info_id'] = obj_id
 		context_dict['disease_form'] = disease_form
 		context_dict['logged_in_user'] = request.user.username
-		return render_to_response('lab/edit_disease.html', context_dict, context)
+		return render(request, 'lab/edit_disease.html', context=context_dict)
 
 	elif obj_type == 'taxonomy':
 		if request.method == 'POST':
@@ -1383,10 +1370,9 @@ def edit_info(request, obj_type, obj_id):
 		context_dict['taxonomy_id'] = obj_id
 		context_dict['taxonomy_form'] = taxonomy_form
 		context_dict['logged_in_user'] = request.user.username
-		return render_to_response('lab/edit_taxonomy.html', context_dict, context)
+		return render(request, 'lab/edit_taxonomy.html', context=context_dict)
 
 def select_stockpacket_from_stock(request):
-	context = RequestContext(request)
 	context_dict = {}
 	selected_packets = []
 	checkbox_stock_list = request.POST.getlist('checkbox_stock')
@@ -1397,7 +1383,7 @@ def select_stockpacket_from_stock(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['selected_packets'] = selected_packets
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/stock.html', context_dict, context)
+	return render(request, 'lab/stock.html', context=context_dict)
 
 @login_required
 def download_stock_used_experiment(request, experiment_name):
@@ -1440,14 +1426,13 @@ def download_stock_collected_experiment(request, experiment_name):
 
 @login_required
 def row_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	context_dict = checkbox_session_variable_check(request)
 	row_data = find_relationship_for_experiment(experiment_name, 'row', 'row_used_in_experiment')
 	context_dict['row_data'] = row_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/row_experiment_data.html', context_dict, context)
+	return render(request, 'lab/row_experiment_data.html', context=context_dict)
 
 @login_required
 def download_row_experiment(request, experiment_name):
@@ -1462,7 +1447,6 @@ def download_row_experiment(request, experiment_name):
 
 @login_required
 def passport(request, passport_id):
-	context = RequestContext(request)
 	context_dict = {}
 	passport = Passport.objects.get(id=passport_id)
 	obs_type_list = ['row', 'plant', 'sample', 'env', 'dna', 'tissue', 'plate', 'well', 'microbe', 'culture']
@@ -1487,7 +1471,7 @@ def passport(request, passport_id):
 	context_dict['collecting_field'] = collecting_field
 	context_dict['collecting_source'] = collecting_source
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/passport.html', context_dict, context)
+	return render(request, 'lab/passport.html', context=context_dict)
 
 def datatable_glycerol_inventory(request):
 	glycerol_stocks = ObsTracker.objects.filter(obs_entity_type='glycerol_stock')
@@ -1524,10 +1508,9 @@ def datatable_glycerol_inventory(request):
 
 @login_required
 def glycerol_stock_inventory(request):
-	context = RequestContext(request)
 	context_dict = {}
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/glycerol_stock_inventory.html', context_dict, context)
+	return render(request, 'lab/glycerol_stock_inventory.html', context=context_dict)
 
 def datatable_isolate_inventory(request):
 	selected_isolates = checkbox_isolate_sort(request)
@@ -1552,11 +1535,10 @@ def datatable_isolate_inventory(request):
 
 @login_required
 def isolate_inventory(request):
-	context = RequestContext(request)
 	context_dict = {}
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/isolate_inventory.html', context_dict, context)
+	return render(request, 'lab/isolate_inventory.html', context=context_dict)
 
 def checkbox_isolate_sort(request):
 	selected_isolates = {}
@@ -1695,7 +1677,6 @@ def select_isolate_disease(request):
 	return JsonResponse({'success':True})
 
 def select_isolates(request):
-	context = RequestContext(request)
 	context_dict = {}
 	selected_isolates = []
 	checkbox_isolates_list = request.POST.getlist('checkbox_isolates')
@@ -1706,11 +1687,10 @@ def select_isolates(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['selected_isolates'] = selected_isolates
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/isolate.html', context_dict, context)
+	return render(request, 'lab/isolate.html', context=context_dict)
 
 @login_required
 def single_disease_info(request, disease_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		disease_info = DiseaseInfo.objects.get(id=disease_id)
@@ -1718,11 +1698,10 @@ def single_disease_info(request, disease_id):
 		disease_info = None
 	context_dict['disease_info'] = disease_info
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/disease_info.html', context_dict, context)
+	return render(request, 'lab/disease_info.html', context=context_dict)
 
 @login_required
 def single_field_info(request, field_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		field_info = Field.objects.get(id=field_id)
@@ -1730,11 +1709,10 @@ def single_field_info(request, field_id):
 		field_info = None
 	context_dict['field_info'] = field_info
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/field.html', context_dict, context)
+	return render(request, 'lab/field.html', context=context_dict)
 
 @login_required
 def single_parameter_info(request, parameter_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		parameter_info = MeasurementParameter.objects.get(id=parameter_id)
@@ -1742,11 +1720,10 @@ def single_parameter_info(request, parameter_id):
 		parameter_info = None
 	context_dict['parameter_info'] = parameter_info
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/measurement_parameter.html', context_dict, context)
+	return render(request, 'lab/measurement_parameter.html', context=context_dict)
 
 @login_required
 def single_medium_info(request, medium_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		medium_info = Medium.objects.get(id=medium_id)
@@ -1754,11 +1731,10 @@ def single_medium_info(request, medium_id):
 		medium_info = None
 	context_dict['medium_info'] = medium_info
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/medium.html', context_dict, context)
+	return render(request, 'lab/medium.html', context=context_dict)
 
 @login_required
 def single_location_info(request, location_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		location_info = Location.objects.get(id=location_id)
@@ -1766,11 +1742,10 @@ def single_location_info(request, location_id):
 		location_info = None
 	context_dict['location_info'] = location_info
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/location.html', context_dict, context)
+	return render(request, 'lab/location.html', context=context_dict)
 
 @login_required
 def single_locality_info(request, locality_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		locality_info = Locality.objects.get(id=locality_id)
@@ -1778,11 +1753,10 @@ def single_locality_info(request, locality_id):
 		locality_info = None
 	context_dict['locality_info'] = locality_info
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/locality.html', context_dict, context)
+	return render(request, 'lab/locality.html', context=context_dict)
 
 @login_required
 def single_taxonomy_info(request, taxonomy_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		taxonomy_info = Taxonomy.objects.get(id=taxonomy_id)
@@ -1790,92 +1764,82 @@ def single_taxonomy_info(request, taxonomy_id):
 		taxonomy_info = None
 	context_dict['taxonomy_info'] = taxonomy_info
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/taxonomy.html', context_dict, context)
+	return render(request, 'lab/taxonomy.html', context=context_dict)
 
 @login_required
 def browse_medium_data(request):
-	context = RequestContext(request)
 	context_dict = {}
 	medium_data = Medium.objects.all()
 	context_dict['medium_data'] = medium_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/medium_data.html', context_dict, context)
+	return render(request, 'lab/medium_data.html', context=context_dict)
 
 @login_required
 def browse_parameter_data(request):
-	context = RequestContext(request)
 	context_dict = {}
 	parameter_data = MeasurementParameter.objects.all()
 	context_dict['parameter_data'] = parameter_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/parameter_data.html', context_dict, context)
+	return render(requset, 'lab/parameter_data.html', context=context_dict)
 
 @login_required
 def browse_location_data(request):
-	context = RequestContext(request)
 	context_dict = {}
 	location_data = Location.objects.all().exclude(location_name='')
 	context_dict['location_data'] = location_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/location_data.html', context_dict, context)
+	return render(requset, 'lab/location_data.html', context=context_dict)
 
 @login_required
 def browse_locality_data(request):
-	context = RequestContext(request)
 	context_dict = {}
 	locality_data = Locality.objects.all()
 	context_dict['locality_data'] = locality_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/locality_data.html', context_dict, context)
+	return render(request, 'lab/locality_data.html', context=context_dict)
 
 @login_required
 def browse_field_data(request):
-	context = RequestContext(request)
 	context_dict = {}
 	field_data = Field.objects.all()
 	field_map_file = FileDump.objects.filter(file_name="Musgrave Research Farm Field Map")
 	context_dict['field_data'] = field_data
 	context_dict['field_map_file'] = field_map_file
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/field_data.html', context_dict, context)
+	return render(request, 'lab/field_data.html', context=context_dict)
 
 @login_required
 def browse_disease_info_data(request):
-	context = RequestContext(request)
 	context_dict = {}
 	disease_data = DiseaseInfo.objects.all()
 	context_dict['disease_data'] = disease_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/disease_data.html', context_dict, context)
+	return render(request, 'lab/disease_data.html', context=context_dict)
 
 @login_required
 def browse_taxonomy_data(request):
-	context = RequestContext(request)
 	context_dict = {}
 	taxonomy_data = Taxonomy.objects.filter().exclude(genus='').exclude(genus=0)
 	context_dict['taxonomy_data'] = taxonomy_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/taxonomy_data.html', context_dict, context)
+	return render(request, 'lab/taxonomy_data.html', context=context_dict)
 
 @login_required
 def browse_publication_data(request):
-	context = RequestContext(request)
 	context_dict = {}
 	publication_data = Publication.objects.filter()
 	context_dict['publication_data'] = publication_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/publication_data.html', context_dict, context)
+	return render(request, 'lab/publication_data.html', context=context_dict)
 
 @login_required
 def browse_downloads(request):
-	context = RequestContext(request)
 	context_dict = {}
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/downloads.html', context_dict, context)
+	return render(request, 'lab/downloads.html', context=context_dict)
 
 @login_required
 def new_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.method == 'POST':
 		new_experiment_form = NewExperimentForm(data=request.POST)
@@ -1906,7 +1870,7 @@ def new_experiment(request):
 	context_dict['name_check_fail'] = name_check_fail
 	context_dict['experiment_added'] = experiment_added
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/new_experiment.html', context_dict, context)
+	return render(requset, 'lab/new_experiment.html', context=context_dict)
 
 @login_required
 def log_data_select_obs(request):
@@ -1925,13 +1889,12 @@ def serve_data_template_file(request, filename):
 
 @login_required
 def maize_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	maize_data = sort_maize_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['maize_data'] = maize_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/maize_data.html', context_dict, context)
+	return render(request, 'lab/maize_data.html', context=context_dict)
 
 def sort_maize_data(request):
 	maize_data = {}
@@ -1945,7 +1908,6 @@ def sort_maize_data(request):
 	return maize_data
 
 def suggest_maize_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	tissue_experiment_list = []
 	starts_with = ''
@@ -1959,10 +1921,9 @@ def suggest_maize_experiment(request):
 		maize_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['maize_experiment_list'] = maize_experiment_list
-	return render_to_response('lab/maize_experiment_list.html', context_dict, context)
+	return render(request, 'lab/maize_experiment_list.html', context=context_dict)
 
 def select_maize_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plant_data = []
 	checkbox_maize_experiment_name_list = []
@@ -1976,10 +1937,9 @@ def select_maize_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['maize_data'] = maize_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/maize_data.html', context_dict, context)
+	return render(requset, 'lab/maize_data.html', context=context_dict)
 
 def checkbox_maize_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_maize_experiment']
 	del request.session['checkbox_maize_experiment_id_list']
@@ -1987,15 +1947,14 @@ def checkbox_maize_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['maize_data'] = maize_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/maize_data.html', context_dict, context)
+	return render(request, 'lab/maize_data.html', context=context_dict)
 
 def show_all_maize_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	maize_experiment_list = ObsTracker.objects.filter(obs_entity_type='maize').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['maize_experiment_list'] = maize_experiment_list
-	return render_to_response('lab/maize_experiment_list.html', context_dict, context)
+	return render(request, 'lab/maize_experiment_list.html', context=context_dict)
 
 def find_maize_from_experiment(experiment_name):
 	try:
@@ -2006,13 +1965,12 @@ def find_maize_from_experiment(experiment_name):
 
 @login_required
 def maize_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	maize_data = find_maize_from_experiment(experiment_name)
 	context_dict['maize_data'] = maize_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/maize_experiment_data.html', context_dict, context)
+	return render(request, 'lab/maize_experiment_data.html', context=context_dict)
 
 @login_required
 def download_maize_experiment(request, experiment_name):
@@ -2045,13 +2003,12 @@ def find_glycerol_stock_from_experiment(experiment_name):
 
 @login_required
 def glycerol_stock_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	glycerol_stock_data = find_glycerol_stock_from_experiment(experiment_name)
 	context_dict['glycerol_stock_data'] = glycerol_stock_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/glycerol_stock_experiment_data.html', context_dict, context)
+	return render(request, 'lab/glycerol_stock_experiment_data.html', context=context_dict)
 
 @login_required
 def download_glycerol_stocks_experiment(request, experiment_name):
@@ -2066,13 +2023,12 @@ def download_glycerol_stocks_experiment(request, experiment_name):
 
 @login_required
 def microbe_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	microbe_data = sort_microbe_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['microbe_data'] = microbe_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/microbe_data.html', context_dict, context)
+	return render(request, 'lab/microbe_data.html', context=context_dict)
 
 def sort_microbe_data(request):
 	microbe_data = {}
@@ -2097,7 +2053,6 @@ def download_microbe_data(request):
 	return response
 
 def suggest_microbe_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	microbe_experiment_list = []
 	starts_with = ''
@@ -2111,10 +2066,9 @@ def suggest_microbe_experiment(request):
 		microbe_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['microbe_experiment_list'] = microbe_experiment_list
-	return render_to_response('lab/microbe_experiment_list.html', context_dict, context)
+	return render(request, 'lab/microbe_experiment_list.html', context=context_dict)
 
 def select_microbe_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	microbe_data = []
 	checkbox_microbe_experiment_name_list = []
@@ -2130,10 +2084,9 @@ def select_microbe_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['microbe_data'] = microbe_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/microbe_data.html', context_dict, context)
+	return render(request, 'lab/microbe_data.html', context=context_dict)
 
 def checkbox_microbe_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_microbe_experiment']
 	del request.session['checkbox_microbe_experiment_id_list']
@@ -2141,15 +2094,14 @@ def checkbox_microbe_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['microbe_data'] = microbe_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/microbe_data.html', context_dict, context)
+	return render(request, 'lab/microbe_data.html', context=context_dict)
 
 def show_all_microbe_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	microbe_experiment_list = ObsTracker.objects.filter(obs_entity_type='microbe').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['microbe_experiment_list'] = microbe_experiment_list
-	return render_to_response('lab/microbe_experiment_list.html', context_dict, context)
+	return render(request, 'lab/microbe_experiment_list.html', context=context_dict)
 
 def find_microbe_from_experiment(experiment_name):
 	try:
@@ -2160,13 +2112,12 @@ def find_microbe_from_experiment(experiment_name):
 
 @login_required
 def microbe_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	microbe_data = find_microbe_from_experiment(experiment_name)
 	context_dict['microbe_data'] = microbe_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/microbe_experiment_data.html', context_dict, context)
+	return render(request, 'lab/microbe_experiment_data.html', context=context_dict)
 
 @login_required
 def download_microbe_experiment(request, experiment_name):
@@ -2181,13 +2132,12 @@ def download_microbe_experiment(request, experiment_name):
 
 @login_required
 def env_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	env_data = sort_env_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['env_data'] = env_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/env_data.html', context_dict, context)
+	return render(request, 'lab/env_data.html', context=context_dict)
 
 def sort_env_data(request):
 	env_data = {}
@@ -2212,7 +2162,6 @@ def download_env_data(request):
 	return response
 
 def suggest_env_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	env_experiment_list = []
 	starts_with = ''
@@ -2226,10 +2175,9 @@ def suggest_env_experiment(request):
 		env_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['env_experiment_list'] = env_experiment_list
-	return render_to_response('lab/env_experiment_list.html', context_dict, context)
+	return render(request, 'lab/env_experiment_list.html', context=context_dict)
 
 def select_env_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	env_data = []
 	checkbox_env_experiment_name_list = []
@@ -2245,10 +2193,9 @@ def select_env_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['env_data'] = env_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/env_data.html', context_dict, context)
+	return render(request, 'lab/env_data.html', context=context_dict)
 
 def checkbox_env_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_env_experiment']
 	del request.session['checkbox_env_experiment_id_list']
@@ -2256,15 +2203,14 @@ def checkbox_env_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['env_data'] = env_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/env_data.html', context_dict, context)
+	return render(request, 'lab/env_data.html', context=context_dict)
 
 def show_all_env_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	env_experiment_list = ObsTracker.objects.filter(obs_entity_type='environment').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['env_experiment_list'] = env_experiment_list
-	return render_to_response('lab/env_experiment_list.html', context_dict, context)
+	return render(request, 'lab/env_experiment_list.html', context=context_dict)
 
 def find_env_from_experiment(experiment_name):
 	try:
@@ -2275,13 +2221,12 @@ def find_env_from_experiment(experiment_name):
 
 @login_required
 def env_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	env_data = find_env_from_experiment(experiment_name)
 	context_dict['env_data'] = env_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/env_experiment_data.html', context_dict, context)
+	return render(request, 'lab/env_experiment_data.html', context=context_dict)
 
 @login_required
 def download_env_experiment(request, experiment_name):
@@ -2296,13 +2241,12 @@ def download_env_experiment(request, experiment_name):
 
 @login_required
 def row_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	row_data = sort_row_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['row_data'] = row_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/row_data.html', context_dict, context)
+	return render(request, 'lab/row_data.html', context=context_dict)
 
 def sort_row_data(request):
 	row_data = {}
@@ -2327,7 +2271,6 @@ def download_row_data(request):
 	return response
 
 def suggest_row_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	row_experiment_list = []
 	starts_with = ''
@@ -2341,10 +2284,9 @@ def suggest_row_experiment(request):
 		row_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['row_experiment_list'] = row_experiment_list
-	return render_to_response('lab/row_experiment_list.html', context_dict, context)
+	return render(request, 'lab/row_experiment_list.html', context=context_dict)
 
 def select_row_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	row_data = []
 	checkbox_row_experiment_name_list = []
@@ -2360,10 +2302,9 @@ def select_row_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['row_data'] = row_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/row_data.html', context_dict, context)
+	return render(request, 'lab/row_data.html', context=context_dict)
 
 def checkbox_row_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_row_experiment']
 	del request.session['checkbox_row_experiment_id_list']
@@ -2371,25 +2312,23 @@ def checkbox_row_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['row_data'] = row_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/row_data.html', context_dict, context)
+	return render(request, 'lab/row_data.html', context=context_dict)
 
 def show_all_row_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	row_experiment_list = ObsTracker.objects.filter(obs_entity_type='row').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['row_experiment_list'] = row_experiment_list
-	return render_to_response('lab/row_experiment_list.html', context_dict, context)
+	return render(request, 'lab/row_experiment_list.html', context=context_dict)
 
 @login_required
 def sample_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	sample_data = sort_sample_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['sample_data'] = sample_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/sample_data.html', context_dict, context)
+	return render(request, 'lab/sample_data.html', context=context_dict)
 
 def sort_sample_data(request):
 	sample_data = {}
@@ -2414,7 +2353,6 @@ def download_sample_data(request):
 	return response
 
 def suggest_sample_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	sample_experiment_list = []
 	starts_with = ''
@@ -2428,10 +2366,9 @@ def suggest_sample_experiment(request):
 		sample_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['sample_experiment_list'] = sample_experiment_list
-	return render_to_response('lab/sample_experiment_list.html', context_dict, context)
+	return render(request, 'lab/sample_experiment_list.html', context=context_dict)
 
 def select_sample_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	sample_data = []
 	checkbox_sample_experiment_name_list = []
@@ -2445,10 +2382,9 @@ def select_sample_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['sample_data'] = sample_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/sample_data.html', context_dict, context)
+	return render(request, 'lab/sample_data.html', context=context_dict)
 
 def checkbox_sample_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_sample_experiment']
 	del request.session['checkbox_sample_experiment_id_list']
@@ -2456,15 +2392,14 @@ def checkbox_sample_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['sample_data'] = sample_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/sample_data.html', context_dict, context)
+	return render(request, 'lab/sample_data.html', context=context_dict)
 
 def show_all_sample_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	sample_experiment_list = ObsTracker.objects.filter(obs_entity_type='sample').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['sample_experiment_list'] = sample_experiment_list
-	return render_to_response('lab/sample_experiment_list.html', context_dict, context)
+	return render(request, 'lab/sample_experiment_list.html', context=context_dict)
 
 def find_sample_from_experiment(experiment_name):
 	try:
@@ -2475,13 +2410,12 @@ def find_sample_from_experiment(experiment_name):
 
 @login_required
 def sample_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	sample_data = find_sample_from_experiment(experiment_name)
 	context_dict['sample_data'] = sample_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/sample_experiment_data.html', context_dict, context)
+	return render(request, 'lab/sample_experiment_data.html', context=context_dict)
 
 @login_required
 def download_sample_experiment(request, experiment_name):
@@ -2496,7 +2430,6 @@ def download_sample_experiment(request, experiment_name):
 
 @login_required
 def update_sample_info(request, obs_sample_id):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.method == 'POST':
 		obs_tracker_samples_form = LogSamplesOnlineForm(data=request.POST)
@@ -2576,17 +2509,16 @@ def update_sample_info(request, obs_sample_id):
 	context_dict['obs_sample_id'] = obs_sample_id
 	context_dict['obs_tracker_samples_form'] = obs_tracker_samples_form
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/samples_info_update.html', context_dict, context)
+	return render(request, 'lab/samples_info_update.html', context=context_dict)
 
 @login_required
 def tissue_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	tissue_data = sort_tissue_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['tissue_data'] = tissue_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/tissue_data.html', context_dict, context)
+	return render(request, 'lab/tissue_data.html', context=context_dict)
 
 def sort_tissue_data(request):
 	tissue_data = {}
@@ -2611,7 +2543,6 @@ def download_tissue_data(request):
 	return response
 
 def suggest_tissue_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	tissue_experiment_list = []
 	starts_with = ''
@@ -2625,10 +2556,9 @@ def suggest_tissue_experiment(request):
 		tissue_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['tissue_experiment_list'] = tissue_experiment_list
-	return render_to_response('lab/tissue_experiment_list.html', context_dict, context)
+	return render(request, 'lab/tissue_experiment_list.html', context= context_dict)
 
 def select_tissue_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plant_data = []
 	checkbox_tissue_experiment_name_list = []
@@ -2642,10 +2572,9 @@ def select_tissue_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['tissue_data'] = tissue_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/tissue_data.html', context_dict, context)
+	return render(request, 'lab/tissue_data.html', context=context_dict)
 
 def checkbox_tissue_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_tissue_experiment']
 	del request.session['checkbox_tissue_experiment_id_list']
@@ -2653,15 +2582,14 @@ def checkbox_tissue_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['tissue_data'] = tissue_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/tissue_data.html', context_dict, context)
+	return render(request, 'lab/tissue_data.html', context=context_dict)
 
 def show_all_tissue_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	tissue_experiment_list = ObsTracker.objects.filter(obs_entity_type='tissue').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['tissue_experiment_list'] = tissue_experiment_list
-	return render_to_response('lab/tissue_experiment_list.html', context_dict, context)
+	return render(request, 'lab/tissue_experiment_list.html', context=context_dict)
 
 def find_tissue_from_experiment(experiment_name):
 	try:
@@ -2672,13 +2600,12 @@ def find_tissue_from_experiment(experiment_name):
 
 @login_required
 def tissue_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	tissue_data = find_tissue_from_experiment(experiment_name)
 	context_dict['tissue_data'] = tissue_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/tissue_experiment_data.html', context_dict, context)
+	return render(request, 'lab/tissue_experiment_data.html', context=context_dict)
 
 @login_required
 def download_tissue_experiment(request, experiment_name):
@@ -2693,13 +2620,12 @@ def download_tissue_experiment(request, experiment_name):
 
 @login_required
 def separation_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	separation_data = sort_separation_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['separation_data'] = separation_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/separation_data.html', context_dict, context)
+	return render(request, 'lab/separation_data.html', context=context_dict)
 
 def sort_separation_data(request):
 	separation_data = []
@@ -2739,13 +2665,12 @@ def find_separation_from_experiment(experiment_name):
 
 @login_required
 def separation_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	separation_data = find_separation_from_experiment(experiment_name)
 	context_dict['separation_data'] = separation_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/separation_experiment_data.html', context_dict, context)
+	return render(request, 'lab/separation_experiment_data.html', context=context_dict)
 
 @login_required
 def download_separation_experiment(request, experiment_name):
@@ -2771,13 +2696,12 @@ def download_separation_data(request):
 
 @login_required
 def plate_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plate_data = sort_plate_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plate_data'] = plate_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plate_data.html', context_dict, context)
+	return render(request, 'lab/plate_data.html', context=context_dict)
 
 def sort_plate_data(request):
 	plate_data = {}
@@ -2802,7 +2726,6 @@ def download_plate_data(request):
 	return response
 
 def suggest_plate_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plate_experiment_list = []
 	starts_with = ''
@@ -2816,10 +2739,9 @@ def suggest_plate_experiment(request):
 		plate_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plate_experiment_list'] = plate_experiment_list
-	return render_to_response('lab/plate_experiment_list.html', context_dict, context)
+	return render(request, 'lab/plate_experiment_list.html', context=context_dict)
 
 def select_plate_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plant_data = []
 	checkbox_plate_experiment_name_list = []
@@ -2833,10 +2755,9 @@ def select_plate_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plate_data'] = plate_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plate_data.html', context_dict, context)
+	return render(request, 'lab/plate_data.html', context=context_dict)
 
 def checkbox_plate_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_plate_experiment']
 	del request.session['checkbox_plate_experiment_id_list']
@@ -2844,15 +2765,14 @@ def checkbox_plate_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plate_data'] = plate_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plate_data.html', context_dict, context)
+	return render(request, 'lab/plate_data.html', context=context_dict)
 
 def show_all_plate_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plate_experiment_list = ObsTracker.objects.filter(obs_entity_type='plate').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plate_experiment_list'] = plate_experiment_list
-	return render_to_response('lab/plate_experiment_list.html', context_dict, context)
+	return render(request, 'lab/plate_experiment_list.html', context= context_dict)
 
 def find_plate_from_experiment(experiment_name):
 	try:
@@ -2863,13 +2783,12 @@ def find_plate_from_experiment(experiment_name):
 
 @login_required
 def plate_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	plate_data = find_plate_from_experiment(experiment_name)
 	context_dict['plate_data'] = plate_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plate_experiment_data.html', context_dict, context)
+	return render(request, 'lab/plate_experiment_data.html', context=context_dict)
 
 @login_required
 def download_plate_experiment(request, experiment_name):
@@ -2884,13 +2803,12 @@ def download_plate_experiment(request, experiment_name):
 
 @login_required
 def well_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	well_data = sort_well_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['well_data'] = well_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/well_data.html', context_dict, context)
+	return render(request, 'lab/well_data.html', context=context_dict)
 
 def sort_well_data(request):
 	well_data = {}
@@ -2915,7 +2833,6 @@ def download_well_data(request):
 	return response
 
 def suggest_well_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	well_experiment_list = []
 	starts_with = ''
@@ -2929,10 +2846,9 @@ def suggest_well_experiment(request):
 		well_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['well_experiment_list'] = well_experiment_list
-	return render_to_response('lab/well_experiment_list.html', context_dict, context)
+	return render(request, 'lab/well_experiment_list.html', context=context_dict)
 
 def select_well_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	well_data = []
 	checkbox_well_experiment_name_list = []
@@ -2946,10 +2862,9 @@ def select_well_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['well_data'] = well_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/well_data.html', context_dict, context)
+	return render(request, 'lab/well_data.html', context=context_dict)
 
 def checkbox_well_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_well_experiment']
 	del request.session['checkbox_well_experiment_id_list']
@@ -2957,15 +2872,14 @@ def checkbox_well_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['well_data'] = well_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/well_data.html', context_dict, context)
+	return render(request, 'lab/well_data.html', context=context_dict)
 
 def show_all_well_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	well_experiment_list = ObsTracker.objects.filter(obs_entity_type='well').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['well_experiment_list'] = well_experiment_list
-	return render_to_response('lab/well_experiment_list.html', context_dict, context)
+	return render(request, 'lab/well_experiment_list.html', context=context_dict)
 
 def find_well_from_experiment(experiment_name):
 	try:
@@ -2976,13 +2890,12 @@ def find_well_from_experiment(experiment_name):
 
 @login_required
 def well_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	well_data = find_well_from_experiment(experiment_name)
 	context_dict['well_data'] = well_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/well_experiment_data.html', context_dict, context)
+	return render(request, 'lab/well_experiment_data.html', context=context_dict)
 
 @login_required
 def download_well_experiment(request, experiment_name):
@@ -2997,13 +2910,12 @@ def download_well_experiment(request, experiment_name):
 
 @login_required
 def plant_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plant_data = sort_plant_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plant_data'] = plant_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plant_data.html', context_dict, context)
+	return render(request, 'lab/plant_data.html', context=context_dict)
 
 def sort_plant_data(request):
 	plant_data = {}
@@ -3028,7 +2940,6 @@ def download_plant_data(request):
 	return response
 
 def suggest_plant_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plant_experiment_list = []
 	starts_with = ''
@@ -3042,10 +2953,9 @@ def suggest_plant_experiment(request):
 		plant_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plant_experiment_list'] = plant_experiment_list
-	return render_to_response('lab/plant_experiment_list.html', context_dict, context)
+	return render(request, 'lab/plant_experiment_list.html', context=context_dict)
 
 def select_plant_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plant_data = []
 	checkbox_plant_experiment_name_list = []
@@ -3059,10 +2969,9 @@ def select_plant_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plant_data'] = plant_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plant_data.html', context_dict, context)
+	return render(request, 'lab/plant_data.html', context=context_dict)
 
 def checkbox_plant_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_plant_experiment']
 	del request.session['checkbox_plant_experiment_id_list']
@@ -3070,15 +2979,14 @@ def checkbox_plant_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plant_data'] = plant_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plant_data.html', context_dict, context)
+	return render(request, 'lab/plant_data.html', context=context_dict)
 
 def show_all_plant_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	plant_experiment_list = ObsTracker.objects.filter(obs_entity_type='plant').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['plant_experiment_list'] = plant_experiment_list
-	return render_to_response('lab/plant_experiment_list.html', context_dict, context)
+	return render(request, 'lab/plant_experiment_list.html', context=context_dict)
 
 def find_plant_from_experiment(experiment_name):
 	try:
@@ -3089,13 +2997,12 @@ def find_plant_from_experiment(experiment_name):
 
 @login_required
 def plant_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	plant_data = find_plant_from_experiment(experiment_name)
 	context_dict['plant_data'] = plant_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plant_experiment_data.html', context_dict, context)
+	return render(request, 'lab/plant_experiment_data.html', context=context_dict)
 
 @login_required
 def download_plant_experiment(request, experiment_name):
@@ -3110,13 +3017,12 @@ def download_plant_experiment(request, experiment_name):
 
 @login_required
 def culture_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	culture_data = sort_culture_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['culture_data'] = culture_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/culture_data.html', context_dict, context)
+	return render(request, 'lab/culture_data.html', context=context_dict)
 
 def sort_culture_data(request):
 	culture_data = {}
@@ -3141,7 +3047,6 @@ def download_culture_data(request):
 	return response
 
 def suggest_culture_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	culture_experiment_list = []
 	starts_with = ''
@@ -3155,10 +3060,9 @@ def suggest_culture_experiment(request):
 		culture_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['culture_experiment_list'] = culture_experiment_list
-	return render_to_response('lab/culture_experiment_list.html', context_dict, context)
+	return render(request, 'lab/culture_experiment_list.html', context=context_dict)
 
 def select_culture_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	culture_data = []
 	checkbox_culture_experiment_name_list = []
@@ -3172,10 +3076,9 @@ def select_culture_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['culture_data'] = culture_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/culture_data.html', context_dict, context)
+	return render(request, 'lab/culture_data.html', context=context_dict)
 
 def checkbox_culture_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_culture_experiment']
 	del request.session['checkbox_culture_experiment_id_list']
@@ -3183,15 +3086,14 @@ def checkbox_culture_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['culture_data'] = culture_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/culture_data.html', context_dict, context)
+	return render(request, 'lab/culture_data.html', context=context_dict)
 
 def show_all_culture_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	culture_experiment_list = ObsTracker.objects.filter(obs_entity_type='culture').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['culture_experiment_list'] = culture_experiment_list
-	return render_to_response('lab/culture_experiment_list.html', context_dict, context)
+	return render(request, 'lab/culture_experiment_list.html', context=context_dict)
 
 def find_culture_from_experiment(experiment_name):
 	try:
@@ -3202,13 +3104,12 @@ def find_culture_from_experiment(experiment_name):
 
 @login_required
 def culture_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	culture_data = find_culture_from_experiment(experiment_name)
 	context_dict['culture_data'] = culture_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/culture_experiment_data.html', context_dict, context)
+	return render(request, 'lab/culture_experiment_data.html', context=context_dict)
 
 @login_required
 def download_culture_experiment(request, experiment_name):
@@ -3223,13 +3124,12 @@ def download_culture_experiment(request, experiment_name):
 
 @login_required
 def dna_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	dna_data = sort_dna_data(request)
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['dna_data'] = dna_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/dna_data.html', context_dict, context)
+	return render(request, 'lab/dna_data.html', context=context_dict)
 
 def sort_dna_data(request):
 	dna_data = {}
@@ -3254,7 +3154,6 @@ def download_dna_data(request):
 	return response
 
 def suggest_dna_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	dna_experiment_list = []
 	starts_with = ''
@@ -3268,10 +3167,9 @@ def suggest_dna_experiment(request):
 		dna_experiment_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['dna_experiment_list'] = dna_experiment_list
-	return render_to_response('lab/dna_experiment_list.html', context_dict, context)
+	return render(request, 'lab/dna_experiment_list.html', context=context_dict)
 
 def select_dna_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	dna_data = []
 	checkbox_dna_experiment_name_list = []
@@ -3285,10 +3183,9 @@ def select_dna_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['dna_data'] = dna_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/dna_data.html', context_dict, context)
+	return render(request, 'lab/dna_data.html', context=context_dict)
 
 def checkbox_dna_data_clear(request):
-	context = RequestContext(request)
 	context_dict = {}
 	del request.session['checkbox_dna_experiment']
 	del request.session['checkbox_dna_experiment_id_list']
@@ -3296,15 +3193,14 @@ def checkbox_dna_data_clear(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['dna_data'] = dna_data
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/dna_data.html', context_dict, context)
+	return render(request, 'lab/dna_data.html', context=context_dict)
 
 def show_all_dna_experiment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	dna_experiment_list = ObsTracker.objects.filter(obs_entity_type='dna').values('experiment__name', 'experiment__field__field_name', 'experiment__field__id', 'experiment__id').distinct()[:2000]
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['dna_experiment_list'] = dna_experiment_list
-	return render_to_response('lab/dna_experiment_list.html', context_dict, context)
+	return render(request, 'lab/dna_experiment_list.html', context=context_dict)
 
 def find_dna_from_experiment(experiment_name):
 	try:
@@ -3315,13 +3211,12 @@ def find_dna_from_experiment(experiment_name):
 
 @login_required
 def dna_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	dna_data = find_dna_from_experiment(experiment_name)
 	context_dict['dna_data'] = dna_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/dna_experiment_data.html', context_dict, context)
+	return render(requset, 'lab/dna_experiment_data.html', context=context_dict)
 
 @login_required
 def download_dna_experiment(request, experiment_name):
@@ -3357,11 +3252,10 @@ def datatable_measurement_data(request):
 
 @login_required
 def measurement_data_browse(request):
-	context = RequestContext(request)
 	context_dict = {}
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/measurement_data.html', context_dict, context)
+	return render(request, 'lab/measurement_data.html', context=context_dict)
 
 def sort_measurement_data(request):
 	measurement_data = {}
@@ -3506,7 +3400,6 @@ def find_measurement_from_experiment(experiment_name):
 
 @login_required
 def measurement_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	measurement_data = find_measurement_from_experiment(experiment_name)
 	for m in measurement_data:
@@ -3515,7 +3408,7 @@ def measurement_data_from_experiment(request, experiment_name):
 	context_dict['measurement_data'] = measurement_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/measurement_experiment_data.html', context_dict, context)
+	return render(request, 'lab/measurement_experiment_data.html', context=context_dict)
 
 def separations_measurement_data_from_experiment(request, experiment_name):
 	context = RequestContext(request)
@@ -3552,22 +3445,20 @@ def download_measurement_experiment(request, experiment_name):
 
 @login_required
 def stock_for_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	context_dict['stock_for_experiment'] = find_relationship_for_experiment(experiment_name, 'stock', 'stock_used_in_experiment')
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/seed_for_experiment.html', context_dict, context)
+	return render(request, 'lab/seed_for_experiment.html', context=context_dict)
 
 @login_required
 def stock_collected_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	collected_stock_data = find_stock_collected_from_experiment(experiment_name)
 	context_dict['collected_stock_data'] = collected_stock_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/seed_collected_from_experiment.html', context_dict, context)
+	return render(request, 'lab/seed_collected_from_experiment.html', context=context_dict)
 
 def find_seedpackets_from_obstracker_stock(stock_query):
 	seed_packet_list = []
@@ -3602,7 +3493,6 @@ def find_relationship_for_experiment(experiment_name, obs_entity_type, relations
 
 @login_required
 def stockpackets_for_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	stock_data = find_relationship_for_experiment(experiment_name, 'stock', 'stock_used_in_experiment')
 	if stock_data is not None:
@@ -3613,7 +3503,7 @@ def stockpackets_for_experiment(request, experiment_name):
 	context_dict['packet_type'] = 'Used'
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/seedpackets_for_experiment.html', context_dict, context)
+	return render(request, 'lab/seedpackets_for_experiment.html', context=context_dict)
 
 def download_stockpackets_for_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
@@ -3631,7 +3521,6 @@ def download_stockpackets_for_experiment(request, experiment_name):
 
 @login_required
 def stockpackets_collected_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	collected_stock_data = find_stock_collected_from_experiment(experiment_name)
 	if collected_stock_data is not None:
@@ -3642,7 +3531,7 @@ def stockpackets_collected_from_experiment(request, experiment_name):
 	context_dict['packet_type'] = 'Collected'
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/seedpackets_for_experiment.html', context_dict, context)
+	return render(request, 'lab/seedpackets_for_experiment.html', context=context_dict)
 
 def download_stockpackets_collected_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
@@ -3666,13 +3555,12 @@ def find_isolate_for_experiment(experiment_name):
 	return isolate_data
 
 def isolate_data_from_experiment(request, experiment_name):
-	context = RequestContext(request)
 	context_dict = {}
 	isolate_data = find_isolate_for_experiment(experiment_name)
 	context_dict['isolate_data'] = isolate_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/isolate_from_experiment.html', context_dict, context)
+	return render(request, 'lab/isolate_from_experiment.html', context=context_dict)
 
 def download_isolates_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
@@ -3848,7 +3736,6 @@ def get_seed_collected_from_row(obs_type, obs_id):
 
 @login_required
 def single_stock_info(request, stock_id):
-	context = RequestContext(request)
 	context_dict = {}
 	obs_tracker_seed = []
 	obs_source = []
@@ -3886,7 +3773,7 @@ def single_stock_info(request, stock_id):
 	context_dict['stock_packets'] = stock_packets
 	context_dict['measured_parameters'] = measured_parameters
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/stock_info.html', context_dict, context)
+	return render(request, 'lab/stock_info.html', context=context_dict)
 
 def get_obs_measurements(obs_type, obs_id):
 	obs_tracker_type = 'obs_tracker__%s'%(obs_type)
@@ -3902,7 +3789,6 @@ def get_obs_measurements(obs_type, obs_id):
 
 @login_required
 def single_row_info(request, obs_row_id):
-	context = RequestContext(request)
 	context_dict = {}
 	obs_tracker_row = []
 	try:
@@ -3924,11 +3810,10 @@ def single_row_info(request, obs_row_id):
 	context_dict['obs_source'] = obs_source
 	context_dict['obs_measurements'] = obs_measurements
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/row_info.html', context_dict, context)
+	return render(request, 'lab/row_info.html', context=context_dict)
 
 @login_required
 def single_isolate_info(request, isolate_table_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		isolate_info = Isolate.objects.get(id=isolate_table_id)
@@ -3942,11 +3827,10 @@ def single_isolate_info(request, isolate_table_id):
 	context_dict['isolate_info'] = isolate_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/isolate_info.html', context_dict, context)
+	return render(request, 'lab/isolate_info.html', context=context_dict)
 
 @login_required
 def single_glycerol_stock_info(request, glycerol_stock_table_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		glycerol_stock_info = GlycerolStock.objects.get(id=glycerol_stock_table_id)
@@ -3957,11 +3841,10 @@ def single_glycerol_stock_info(request, glycerol_stock_table_id):
 	context_dict['glycerol_stock_info'] = glycerol_stock_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/glycerol_stock_info.html', context_dict, context)
+	return render(request, 'lab/glycerol_stock_info.html', context=context_dict)
 
 @login_required
 def single_plant_info(request, obs_plant_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		plant_info = ObsPlant.objects.get(id=obs_plant_id)
@@ -3972,11 +3855,10 @@ def single_plant_info(request, obs_plant_id):
 	context_dict['plant_info'] = plant_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plant_info.html', context_dict, context)
+	return render(request, 'lab/plant_info.html', context=context_dict)
 
 @login_required
 def single_maize_info(request, maize_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		maize_info = MaizeSample.objects.get(id=maize_id)
@@ -3987,11 +3869,10 @@ def single_maize_info(request, maize_id):
 	context_dict['maize_info'] = maize_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/maize_info.html', context_dict, context)
+	return render(request, 'lab/maize_info.html', context=context_dict)
 
 @login_required
 def single_sample_info(request, obs_sample_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		sample_info = ObsSample.objects.get(id=obs_sample_id)
@@ -4006,11 +3887,10 @@ def single_sample_info(request, obs_sample_id):
 	context_dict['obs_tracker_source_obs'] = obs_tracker_source_obs
 	context_dict['obs_tracker_target_obs'] = obs_tracker_target_obs
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/sample_info.html', context_dict, context)
+	return render(request, 'lab/sample_info.html', context=context_dict)
 
 @login_required
 def single_extract_info(request, obs_extract_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		extract_info = ObsExtract.objects.get(id=obs_extract_id)
@@ -4021,11 +3901,10 @@ def single_extract_info(request, obs_extract_id):
 	context_dict['extract_info'] = extract_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/extract_info.html', context_dict, context)
+	return render(request, 'lab/extract_info.html', context=context_dict)
 
 @login_required
 def single_plate_info(request, obs_plate_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		plate_info = ObsPlate.objects.get(id=obs_plate_id)
@@ -4036,11 +3915,10 @@ def single_plate_info(request, obs_plate_id):
 	context_dict['plate_info'] = plate_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/plate_info.html', context_dict, context)
+	return render(request, 'lab/plate_info.html', context=context_dict)
 
 @login_required
 def single_well_info(request, obs_well_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		well_info = ObsWell.objects.get(id=obs_well_id)
@@ -4051,11 +3929,10 @@ def single_well_info(request, obs_well_id):
 	context_dict['well_info'] = well_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/well_info.html', context_dict, context)
+	return render(request, 'lab/well_info.html', context=context_dict)
 
 @login_required
 def single_tissue_info(request, obs_tissue_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		tissue_info = ObsTissue.objects.get(id=obs_tissue_id)
@@ -4066,11 +3943,10 @@ def single_tissue_info(request, obs_tissue_id):
 	context_dict['tissue_info'] = tissue_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/tissue_info.html', context_dict, context)
+	return render(request, 'lab/tissue_info.html', context=context_dict)
 
 @login_required
 def single_culture_info(request, obs_culture_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		culture_info = ObsCulture.objects.get(id=obs_culture_id)
@@ -4081,11 +3957,10 @@ def single_culture_info(request, obs_culture_id):
 	context_dict['culture_info'] = culture_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/culture_info.html', context_dict, context)
+	return render(request, 'lab/culture_info.html', context=context_dict)
 
 @login_required
 def single_dna_info(request, obs_dna_id):
-	context = RequestContext(request)
 	context_dict = {}
 	try:
 		dna_info = ObsDNA.objects.get(id=obs_dna_id)
@@ -4096,12 +3971,11 @@ def single_dna_info(request, obs_dna_id):
 	context_dict['dna_info'] = dna_info
 	context_dict['obs_tracker'] = obs_tracker
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/dna_info.html', context_dict, context)
+	return render(request, 'lab/dna_info.html', context=context_dict)
 
 
 @login_required
 def log_data_online(request, data_type):
-	context = RequestContext(request)
 	context_dict = {}
 	failed = False
 	if data_type == 'seed_inventory':
@@ -5373,11 +5247,10 @@ def log_data_online(request, data_type):
 	context_dict['sent'] = sent
 	context_dict['data_type_title'] = data_type_title
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/log_data_online.html', context_dict, context)
+	return render(request, 'lab/log_data_online.html', context=context_dict)
 
 @login_required
 def new_treatment(request):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.method == 'POST':
 		new_treatment_form = NewTreatmentForm(data=request.POST)
@@ -5399,18 +5272,16 @@ def new_treatment(request):
 	context_dict['new_treatment_form'] = new_treatment_form
 	context_dict['treatment_added'] = treatment_added
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/new_treatment.html', context_dict, context)
+	return render(request, 'lab/new_treatment.html', context=context_dict)
 
 def site_map(request):
-	context = RequestContext(request)
 	context_dict = {}
 
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/site_map.html', context_dict, context)
+	return render(request, 'lab/site_map.html', context=context_dict)
 
 @login_required
 def queue_upload_file(request, data_type):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.method == 'POST':
 		upload_form = UploadQueueForm(request.POST, request.FILES)
@@ -5433,11 +5304,10 @@ def queue_upload_file(request, data_type):
 	context_dict['upload_added'] = upload_added
 	context_dict['data_type'] = data_type
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/new_upload.html', context_dict, context)
+	return render(request, 'lab/new_upload.html', context=context_dict)
 
 @login_required
 def seed_id_search(request):
-	context = RequestContext(request)
 	context_dict = {}
 	seed_id_list = []
 	starts_with = ''
@@ -5451,11 +5321,10 @@ def seed_id_search(request):
 		seed_id_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['seed_id_list'] = seed_id_list
-	return render_to_response('lab/seed_id_search_list.html', context_dict, context)
+	return render(request, 'lab/seed_id_search_list.html', context=context_dict)
 
 def sidebar_search_page(request):
 	starts_with = request.POST.get("sidebarsearch", "")
-	context = RequestContext(request)
 	context_dict = {}
 	experiment_results = []
 	row_results = []
@@ -5620,10 +5489,9 @@ def sidebar_search_page(request):
 	context_dict['people_results'] = people_results
 	context_dict['stock_results'] = stock_results
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/sidebar_search_page.html', context_dict, context)
+	return render(request, 'lab/sidebar_search_page.html', context=context_dict)
 
 def sidebar_search(request):
-	context = RequestContext(request)
 	context_dict = {}
 	results_list = []
 	starts_with = ''
@@ -5759,27 +5627,24 @@ def sidebar_search(request):
 		results_list = None
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['results_list'] = results_list
-	return render_to_response('lab/sidebar_search_results_list.html', context_dict, context)
+	return render(request, 'lab/sidebar_search_results_list.html', context=context_dict)
 
 @login_required
 def mycotoxin_templates(request):
-	context = RequestContext(request)
 	context_dict = {}
 
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/mycotoxin_templates.html', context_dict, context)
+	return render(request, 'lab/mycotoxin_templates.html', context=context_dict)
 
 @login_required
 def query_builder(request):
-	context = RequestContext(request)
 	context_dict = {}
 
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/query_builder.html', context_dict, context)
+	return render(request, 'lab/query_builder.html', context=context_dict)
 
 @login_required
 def query_builder_options(request):
-	context = RequestContext(request)
 	context_dict = {}
 	query_builder_fields_list = {}
 	selected_options = []
@@ -5834,7 +5699,7 @@ def query_builder_options(request):
 	context_dict['obs_entity_type'] = obs_entity_type
 	context_dict['query_builder_fields_list'] = query_builder_fields_list
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/query_builder_fields_list.html', context_dict, context)
+	return render(request, 'lab/query_builder_fields_list.html', context=context_dict)
 
 @login_required
 def query_builder_fields(request):
@@ -6047,7 +5912,6 @@ def measurement_data_keyword_browse(request, keyword):
 
 @login_required
 def upload_online(request, template_type):
-	context = RequestContext(request)
 	context_dict = {}
 	if request.method == 'POST':
 		sent = True
@@ -6216,4 +6080,4 @@ def upload_online(request, template_type):
 	context_dict['sent'] = sent
 	context_dict['template_type'] = template_type
 	context_dict['logged_in_user'] = request.user.username
-	return render_to_response('lab/upload_online.html', context_dict, context)
+	return render(request, 'lab/upload_online.html', context=context_dict)

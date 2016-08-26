@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, FileDump
 from lab.forms import UserForm, UserProfileForm, ChangePasswordForm, EditUserForm, EditUserProfileForm, NewExperimentForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, LogPlantsOnlineForm, LogRowsOnlineForm, LogEnvironmentsOnlineForm, LogSamplesOnlineForm, LogMeasurementsOnlineForm, NewTreatmentForm, UploadQueueForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, NewFieldForm, NewLocalityForm, NewMeasurementParameterForm, NewLocationForm, NewDiseaseInfoForm, NewTaxonomyForm, NewMediumForm, NewCitationForm, UpdateSeedDataOnlineForm, LogTissuesOnlineForm, LogCulturesOnlineForm, LogMicrobesOnlineForm, LogDNAOnlineForm, LogPlatesOnlineForm, LogWellOnlineForm, LogIsolatesOnlineForm, LogSeparationsOnlineForm, LogMaizeSurveyOnlineForm, LogGlycerolStocksOnlineForm, FileDumpForm
 from django.contrib.auth import authenticate, login, logout
@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
 def about_people(request, people_selection):
-  context = RequestContext(request)
   context_dict = {}
   if people_selection == 'all':
     people_all_button = True
@@ -67,36 +66,31 @@ def about_people(request, people_selection):
   context_dict['people_collaborator_button'] = people_collaborator_button
   context_dict['users'] = users
   context_dict['logged_in_user'] = request.user.username
-  return render_to_response('lab/people.html', context_dict, context)
+  return render(request, 'lab/people.html', context=context_dict)
 
 def about_literature(request):
-  context = RequestContext(request)
   context_dict = {}
   context_dict['logged_in_user'] = request.user.username
-  return render_to_response('lab/literature.html', context_dict, context)
+  return render(request, 'lab/literature.html', context=context_dict)
 
 def about_goals(request):
-  context = RequestContext(request)
   context_dict = {}
   context_dict['logged_in_user'] = request.user.username
-  return render_to_response('lab/goals.html', context_dict, context)
+  return render(request, 'lab/goals.html', context=context_dict)
 
 def about_help(request):
-  context = RequestContext(request)
   context_dict = {}
   context_dict['logged_in_user'] = request.user.username
-  return render_to_response('lab/help.html', context_dict, context)
+  return render(request, 'lab/help.html', context=context_dict)
 
 def about_odk(request):
-  context = RequestContext(request)
   context_dict = {}
   context_dict['logged_in_user'] = request.user.username
-  return render_to_response('lab/odk.html', context_dict, context)
+  return render(request, 'lab/odk.html', context=context_dict)
 
 def about_collaborators(request):
-  context = RequestContext(request)
   context_dict = {}
   collaborators = People.objects.all()
   context_dict['collaborators'] = collaborators
   context_dict['logged_in_user'] = request.user.username
-  return render_to_response('lab/collaborators.html', context_dict, context)
+  return render(request, 'lab/collaborators.html', context=context_dict)
