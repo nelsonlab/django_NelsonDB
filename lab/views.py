@@ -209,7 +209,6 @@ def download_file_dump(request, file_id):
 	return response
 
 def user_login(request):
-	context = RequestContext(request)
 	next_url = request.GET.get('next', '/lab/')
 	if request.method == 'POST':
 		username = request.POST['username']
@@ -220,11 +219,11 @@ def user_login(request):
 				login(request, user)
 				return HttpResponseRedirect(next_url)
 			else:
-				return render_to_response('lab/login.html', {'next_url':next_url, 'disabled_account': 'disabled'}, context)
+				return render(request, 'lab/login.html', context={'next_url':next_url, 'disabled_account': 'disabled'})
 		else:
-			return render_to_response('lab/login.html', {'next_url':next_url, 'bad_details': 'bad_details'}, context)
+			return render(request, 'lab/login.html', context={'next_url':next_url, 'bad_details': 'bad_details'})
 	else:
-		return render_to_response('lab/login.html', {'next_url':next_url}, context)
+		return render(request, 'lab/login.html', context={'next_url':next_url})
 
 @login_required
 def user_logout(request):
