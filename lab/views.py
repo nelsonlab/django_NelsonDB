@@ -368,7 +368,6 @@ def experiment(request, experiment_name_url):
 					obs_type_data = find_relationship_for_experiment(experiment_name, 'maize', 'maize_from_experiment')
 
 				if obs_type == 'sample':
-					print("HERE")
 					obs_type_data = find_relationship_for_experiment(experiment_name, 'sample', 'sample_used_in_experiment')
 
 				if obs_type == 'stock':
@@ -526,7 +525,6 @@ def find_stock_collected_from_experiment(experiment_name):
 	try:
 		collected_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='stock', relationship='stock_from_experiment')
 	except ObsTracker.DoesNotExist:
-		print("HERE")
 		try:
 			collected_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='stock')
 		except ObsTracker.DoesNotExist:
@@ -1780,7 +1778,7 @@ def browse_parameter_data(request):
 	parameter_data = MeasurementParameter.objects.all()
 	context_dict['parameter_data'] = parameter_data
 	context_dict['logged_in_user'] = request.user.username
-	return render(requset, 'lab/parameter_data.html', context=context_dict)
+	return render(request, 'lab/parameter_data.html', context=context_dict)
 
 @login_required
 def browse_location_data(request):
@@ -1788,7 +1786,7 @@ def browse_location_data(request):
 	location_data = Location.objects.all().exclude(location_name='')
 	context_dict['location_data'] = location_data
 	context_dict['logged_in_user'] = request.user.username
-	return render(requset, 'lab/location_data.html', context=context_dict)
+	return render(request, 'lab/location_data.html', context=context_dict)
 
 @login_required
 def browse_locality_data(request):
@@ -1870,7 +1868,7 @@ def new_experiment(request):
 	context_dict['name_check_fail'] = name_check_fail
 	context_dict['experiment_added'] = experiment_added
 	context_dict['logged_in_user'] = request.user.username
-	return render(requset, 'lab/new_experiment.html', context=context_dict)
+	return render(request, 'lab/new_experiment.html', context=context_dict)
 
 @login_required
 def log_data_select_obs(request):
@@ -1937,7 +1935,7 @@ def select_maize_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['maize_data'] = maize_data
 	context_dict['logged_in_user'] = request.user.username
-	return render(requset, 'lab/maize_data.html', context=context_dict)
+	return render(request, 'lab/maize_data.html', context=context_dict)
 
 def checkbox_maize_data_clear(request):
 	context_dict = {}
@@ -3216,7 +3214,7 @@ def dna_data_from_experiment(request, experiment_name):
 	context_dict['dna_data'] = dna_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
-	return render(requset, 'lab/dna_experiment_data.html', context=context_dict)
+	return render(request, 'lab/dna_experiment_data.html', context=context_dict)
 
 @login_required
 def download_dna_experiment(request, experiment_name):
