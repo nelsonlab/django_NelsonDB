@@ -1,7 +1,7 @@
 
 import os, tempfile, zipfile
 import csv
-import loader_scripts
+import lab.loader_scripts
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render
