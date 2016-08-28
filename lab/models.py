@@ -533,22 +533,22 @@ class GenotypeResults(models.Model):
 		return self.sequence
 
 class GWASResults(models.Model):
-    parameter = models.ForeignKey(MeasurementParameter)
-    p_value = models.CharField(max_length=200)
-    strand = models.CharField(max_length=200)
-    relationship_to_hit = models.CharField(max_length=200)
-    interpro_domain = models.CharField(max_length=200)
-    distance_from_gene = models.CharField(max_length=200)
-    f_value = models.CharField(max_length=200)
-    perm_p_value = models.CharField(max_length=200)
-    r2 = models.CharField(max_length=200)
-    alleles = models.CharField(max_length=200)
-    bpp = models.CharField(max_length=200)
-    effect = models.CharField(max_length=200)
-    cM = models.CharField(max_length=200)
-    comments = models.CharField(max_length=1000)
+	parameter = models.ForeignKey(MeasurementParameter)
+	p_value = models.CharField(max_length=200)
+	strand = models.CharField(max_length=200)
+	relationship_to_hit = models.CharField(max_length=200)
+	interpro_domain = models.CharField(max_length=200)
+	distance_from_gene = models.CharField(max_length=200)
+	f_value = models.CharField(max_length=200)
+	perm_p_value = models.CharField(max_length=200)
+	r2 = models.CharField(max_length=200)
+	alleles = models.CharField(max_length=200)
+	bpp = models.CharField(max_length=200)
+	effect = models.CharField(max_length=200)
+	cM = models.CharField(max_length=200)
+	comments = models.CharField(max_length=1000)
 
-    def __unicode__(self):
+	def __unicode__(self):
 		return self.p_value
 
 class GWASExperimentSet(models.Model):
