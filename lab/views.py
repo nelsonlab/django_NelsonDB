@@ -388,6 +388,7 @@ def experiment(request, experiment_name_url):
 				#	context_dict['separation_data'] = separations
 
 				if obs_type_data is None:
+					print('HERE1')
 					obs_type_data = old_data_lookup(experiment_name, obs_type)
 
 				context_dict[obs_data] = obs_type_data
@@ -3470,9 +3471,14 @@ def find_relationship_for_experiment(experiment_name, obs_entity_type, relations
 	except ObsTrackerSource.DoesNotExist:
 		used_data = None
 	data_for_experiment = []
-	if used_data is not None:
+	if used_data:
 		for s in used_data:
 			data_for_experiment.append(s.target_obs)
+	else:
+		try:
+			data_for_experiment = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type=obs_entity_type)
+		except ObsTracker.DoesNotExist:
+			data_for_experiment = None
 	return data_for_experiment
 
 @login_required
