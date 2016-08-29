@@ -2715,17 +2715,11 @@ def show_all_plate_experiment(request):
 	context_dict['plate_experiment_list'] = plate_experiment_list
 	return render(request, 'lab/plate_experiment_list.html', context= context_dict)
 
-def find_plate_from_experiment(experiment_name):
-	try:
-		plate_data = ObsTracker.objects.filter(obs_entity_type='plate', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		plate_data = None
-	return plate_data
 
 @login_required
 def plate_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	plate_data = find_plate_from_experiment(experiment_name)
+	plate_data = find_relationship_for_experiment(experiment_name, 'plate', 'plate_used_in_experiment')
 	context_dict['plate_data'] = plate_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -2735,7 +2729,7 @@ def plate_data_from_experiment(request, experiment_name):
 def download_plate_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_plates.csv"' % (experiment_name)
-	plate_data = find_plate_from_experiment(experiment_name)
+	plate_data = find_relationship_for_experiment(experiment_name, 'plate', 'plate_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Plate ID', 'Plate Name', 'Date Plate', 'Contents', 'Rep', 'Plate Type', 'Plate Status', 'Plate Comments'])
 	for row in plate_data:
