@@ -217,6 +217,7 @@ urlpatterns = [
     url(r'^download/plate/(?P<experiment_name>\w+)/', views.download_plate_experiment, name='download_plate_experiment'),
     url(r'^download/culture/(?P<experiment_name>\w+)/', views.download_culture_experiment, name='download_culture_experiment'),
     url(r'^download/tissue/(?P<experiment_name>\w+)/', views.download_tissue_experiment, name='download_tissue_experiment'),
+    url(r'^download/dna/(?P<experiment_name>\w+)/', views.download_dna_experiment, name='download_dna_experiment'),
     url(r'^download/well/(?P<experiment_name>\w+)/', views.download_well_experiment, name='download_well_experiment'),
     url(r'^download/environment/(?P<experiment_name>\w+)/', views.download_env_experiment, name='download_env_experiment'),
     url(r'^download/plant/(?P<experiment_name>\w+)/', views.download_plant_experiment, name='download_plant_experiment'),

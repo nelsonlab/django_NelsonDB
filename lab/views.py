@@ -3124,17 +3124,10 @@ def show_all_dna_experiment(request):
 	context_dict['dna_experiment_list'] = dna_experiment_list
 	return render(request, 'lab/dna_experiment_list.html', context=context_dict)
 
-def find_dna_from_experiment(experiment_name):
-	try:
-		dna_data = ObsTracker.objects.filter(obs_entity_type='dna', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		dna_data = None
-	return dna_data
-
 @login_required
 def dna_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	dna_data = find_dna_from_experiment(experiment_name)
+	dna_data = find_relationship_for_experiment(experiment_name, 'dna', 'dna_used_in_experiment')
 	context_dict['dna_data'] = dna_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -3144,7 +3137,7 @@ def dna_data_from_experiment(request, experiment_name):
 def download_dna_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_dna.csv"' % (experiment_name)
-	dna_data = find_dna_from_experiment(experiment_name)
+	dna_data = find_relationship_for_experiment(experiment_name, 'dna', 'dna_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['DNA ID', 'Extraction Method', 'Date', 'Tube ID', 'Tube Type', 'Comments', 'Well ID', 'Plate ID', 'Plant ID', 'Tissue ID', 'Row ID', 'Seed ID', 'Username'])
 	for row in dna_data:
