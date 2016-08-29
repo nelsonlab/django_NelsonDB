@@ -2058,17 +2058,10 @@ def show_all_microbe_experiment(request):
 	context_dict['microbe_experiment_list'] = microbe_experiment_list
 	return render(request, 'lab/microbe_experiment_list.html', context=context_dict)
 
-def find_microbe_from_experiment(experiment_name):
-	try:
-		microbe_data = ObsTracker.objects.filter(obs_entity_type='microbe', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		microbe_data = None
-	return microbe_data
-
 @login_required
 def microbe_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	microbe_data = find_microbe_from_experiment(experiment_name)
+	microbe_data = find_relationship_for_experiment(experiment_name, 'microbe', 'microbe_used_in_experiment')
 	context_dict['microbe_data'] = microbe_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -2078,7 +2071,7 @@ def microbe_data_from_experiment(request, experiment_name):
 def download_microbe_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_microbes.csv"' % (experiment_name)
-	microbe_data = find_microbe_from_experiment(experiment_name)
+	microbe_data = find_relationship_for_experiment(experiment_name, 'microbe', 'microbe_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Microbe ID', 'Microbe Type', 'Comments', 'Source Row ID', 'Source Seed ID', 'Source Plant ID', 'Source Tissue ID', 'Source Culture ID'])
 	for row in microbe_data:

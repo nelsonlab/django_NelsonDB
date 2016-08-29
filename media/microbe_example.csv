@@ -1,0 +1,11 @@
+Experiment Name,Microbe ID,Microbe Type,Microbe Comments,Source Seed ID,Source Row ID,Source Plant ID,Source Culture ID,Source Tissue ID
+16NTS,16NTS_microbe_01,type1,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_culture_01,16NTS_tissue_01
+16NTS,16NTS_microbe_02,type1,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_culture_01,16NTS_tissue_01
+16NTS,16NTS_microbe_03,type1,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_culture_01,16NTS_tissue_01
+16NTS,16NTS_microbe_04,type1,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_culture_01,16NTS_tissue_01
+16NTS,16NTS_microbe_05,type1,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_culture_01,16NTS_tissue_01
+16NTS,16NTS_microbe_06,type1,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_culture_15,16NTS_tissue_06
+16NTS,16NTS_microbe_07,type1,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_culture_15,16NTS_tissue_06
+16NTS,16NTS_microbe_08,type1,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_culture_15,16NTS_tissue_06
+16NTS,16NTS_microbe_09,type1,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_culture_15,16NTS_tissue_06
+16NTS,16NTS_microbe_10,type1,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_culture_15,16NTS_tissue_06
