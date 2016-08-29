@@ -2160,17 +2160,10 @@ def show_all_env_experiment(request):
 	context_dict['env_experiment_list'] = env_experiment_list
 	return render(request, 'lab/env_experiment_list.html', context=context_dict)
 
-def find_env_from_experiment(experiment_name):
-	try:
-		env_data = ObsTracker.objects.filter(obs_entity_type='environment', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		env_data = None
-	return env_data
-
 @login_required
 def env_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	env_data = find_env_from_experiment(experiment_name)
+	env_data = find_relationship_for_experiment(experiment_name, 'environment', 'env_used_in_experiment')
 	context_dict['env_data'] = env_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -2180,7 +2173,7 @@ def env_data_from_experiment(request, experiment_name):
 def download_env_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_environments.csv"' % (experiment_name)
-	env_data = find_env_from_experiment(experiment_name)
+	env_data = find_relationship_for_experiment(experiment_name, 'environment', 'env_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Environment ID', 'Field Name', 'Longitude', 'Latitude', 'Comments'])
 	for row in env_data:
