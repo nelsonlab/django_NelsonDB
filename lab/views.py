@@ -1,7 +1,7 @@
 
 import os, tempfile, zipfile
 import csv
-import lab.loader_scripts
+from lab import loader_scripts
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render
@@ -1387,21 +1387,7 @@ def select_stockpacket_from_stock(request):
 def download_stock_used_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_seed_used.csv"' % (experiment_name)
-	try:
-		stock_associated_experiment = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type='stock')
-	except ObsTracker.DoesNotExist:
-		stock_associated_experiment = None
-	try:
-		collected_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='stock').values_list('target_obs__stock__id', flat=True)
-	except ObsTracker.DoesNotExist:
-		collected_stock_data = []
-	stock_for_experiment = []
-	if collected_stock_data is not None:
-		for s in stock_associated_experiment:
-			if s.stock.id in collected_stock_data:
-				pass
-			else:
-				stock_for_experiment.append(s)
+	stock_for_experiment = find_relationship_for_experiment(experiment_name, 'stock', 'stock_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Seed ID', 'Seed Name', 'Cross Type', 'Pedigree', 'Population', 'Status', 'Inoculated', 'Collector', 'Comments'])
 	for data in stock_for_experiment:
@@ -1412,10 +1398,7 @@ def download_stock_used_experiment(request, experiment_name):
 def download_stock_collected_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_seed_collected.csv"' % (experiment_name)
-	try:
-		collected_stock_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='stock')
-	except ObsTracker.DoesNotExist:
-		collected_stock_data = None
+	collected_stock_data = find_stock_collected_from_experiment(experiment_name)
 	writer = csv.writer(response)
 	writer.writerow(['Seed ID', 'Seed Name', 'Cross Type', 'Pedigree', 'Population', 'Status', 'Inoculated', 'Collector', 'Comments'])
 	for data in collected_stock_data:
@@ -2988,9 +2971,12 @@ def show_all_plant_experiment(request):
 
 def find_plant_from_experiment(experiment_name):
 	try:
-		plant_data = ObsTracker.objects.filter(obs_entity_type='plant', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		plant_data = None
+		plant_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='plant', relationship='plant_used_in_experiment')
+	except ObsTrackerSource.DoesNotExist:
+		try:
+			plant_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='plant')
+		except ObsTracker.DoesNotExist:
+			plant_data = None
 	return plant_data
 
 @login_required

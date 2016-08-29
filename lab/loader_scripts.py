@@ -2,7 +2,7 @@
 import csv
 from collections import OrderedDict
 import time
-import lab.loader_db_mirror
+from lab import loader_db_mirror
 from django.http import HttpResponseRedirect, HttpResponse
 from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, ObsTrackerSource, Primer, Marker, MapFeature, MapFeatureInterval
 from django.db import IntegrityError, transaction
