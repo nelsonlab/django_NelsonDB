@@ -1,0 +1,16 @@
+Experiment Name,Culture ID,Media Name,Location Name,Culture Name,Microbe Type,Plating Cycle,Dilution,Image File,Culture Comments,Num Colonies,Num Microbes,Source Seed ID,Source Row ID,Source Plant ID,Source Microbe ID,Source Tissue ID
+16NTS,16NTS_culture_01,IV,Plant Science Box 1,16NTS_culture_01,,1,10,,,5,20,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_01
+16NTS,16NTS_culture_02,IV,Plant Science Box 1,16NTS_culture_02,,1,10,,,5,21,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_01
+16NTS,16NTS_culture_03,IV,Plant Science Box 1,16NTS_culture_03,,1,10,,,5,22,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_01
+16NTS,16NTS_culture_04,IV,Plant Science Box 1,16NTS_culture_04,,1,10,,,5,23,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_01
+16NTS,16NTS_culture_05,IV,Plant Science Box 1,16NTS_culture_05,,1,10,,,5,24,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_01
+16NTS,16NTS_culture_06,IV,Plant Science Box 1,16NTS_culture_06,,1,10,,,5,25,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_02
+16NTS,16NTS_culture_07,IV,Plant Science Box 1,16NTS_culture_07,,1,20,,,5,26,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_02
+16NTS,16NTS_culture_08,IV,Plant Science Box 1,16NTS_culture_08,,1,29,,,5,27,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_02
+16NTS,16NTS_culture_09,IV,Plant Science Box 1,16NTS_culture_09,,1,20,,,5,28,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_02
+16NTS,16NTS_culture_10,IV,Plant Science Box 1,16NTS_culture_10,,1,10,,,5,29,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_02
+16NTS,16NTS_culture_11,IV,Plant Science Box 1,16NTS_culture_11,,1,10,,,5,30,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,,16NTS_tissue_02
+16NTS,16NTS_culture_12,IV,Plant Science Box 1,16NTS_culture_12,,1,10,,,5,31,16NTS_planted_02,16NTS_row_002,16NTS_plant_02,,16NTS_tissue_03
+16NTS,16NTS_culture_13,IV,Plant Science Box 1,16NTS_culture_13,,1,10,,,5,32,16NTS_planted_02,16NTS_row_002,16NTS_plant_02,,16NTS_tissue_04
+16NTS,16NTS_culture_14,IV,Plant Science Box 1,16NTS_culture_14,,1,10,,,5,33,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,,16NTS_tissue_05
+16NTS,16NTS_culture_15,IV,Plant Science Box 1,16NTS_culture_15,,1,10,,,5,34,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,,16NTS_tissue_06

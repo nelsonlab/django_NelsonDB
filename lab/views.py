@@ -3036,17 +3036,11 @@ def show_all_culture_experiment(request):
 	context_dict['culture_experiment_list'] = culture_experiment_list
 	return render(request, 'lab/culture_experiment_list.html', context=context_dict)
 
-def find_culture_from_experiment(experiment_name):
-	try:
-		culture_data = ObsTracker.objects.filter(obs_entity_type='culture', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		culture_data = None
-	return culture_data
 
 @login_required
 def culture_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	culture_data = find_culture_from_experiment(experiment_name)
+	culture_data = find_relationship_for_experiment(experiment_name, 'culture', 'culture_used_in_experiment')
 	context_dict['culture_data'] = culture_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -3056,11 +3050,11 @@ def culture_data_from_experiment(request, experiment_name):
 def download_culture_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_cultures.csv"' % (experiment_name)
-	culture_data = find_culture_from_experiment(experiment_name)
+	culture_data = find_relationship_for_experiment(experiment_name, 'culture', 'culture_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Culture ID', 'Culture Name', 'Microbe Type', 'Plating Cycle', 'Dilution', 'Image', 'Comments', 'Medium ID', 'Tissue ID', 'Plant ID', 'Row ID', 'Seed ID', 'Username'])
 	for row in culture_data:
-		writer.writerow([row.obs_culture.culture_id, row.obs_culture.culture_name, row.obs_culture.microbe_type, row.obs_culture.plating_cycle, row.obs_culture.dilution, row.obs_culture.image_filename, row.obs_culture.comments, row.medium.medium_id, row.obs_tissue.tissue_id, row.obs_plant.plant_id, row.obs_row.row_id, row.stock.seed_id, row.user])
+		writer.writerow([row.obs_culture.culture_id, row.obs_culture.culture_name, row.obs_culture.microbe_type, row.obs_culture.plating_cycle, row.obs_culture.dilution, row.obs_culture.image_filename, row.obs_culture.comments, row.obs_culture.medium.media_name, row.obs_tissue.tissue_id, row.obs_plant.plant_id, row.obs_row.row_id, row.stock.seed_id, row.user])
 	return response
 
 @login_required
