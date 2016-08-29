@@ -2970,20 +2970,10 @@ def show_all_plant_experiment(request):
 	context_dict['plant_experiment_list'] = plant_experiment_list
 	return render(request, 'lab/plant_experiment_list.html', context=context_dict)
 
-def find_plant_from_experiment(experiment_name):
-	try:
-		plant_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, source_obs__obs_entity_type='experiment', target_obs__obs_entity_type='plant', relationship='plant_used_in_experiment')
-	except ObsTrackerSource.DoesNotExist:
-		try:
-			plant_data = ObsTrackerSource.objects.filter(source_obs__experiment__name=experiment_name, target_obs__obs_entity_type='plant')
-		except ObsTracker.DoesNotExist:
-			plant_data = None
-	return plant_data
-
 @login_required
 def plant_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	plant_data = find_plant_from_experiment(experiment_name)
+	plant_data = find_relationship_for_experiment(experiment_name, 'plant', 'plant_used_in_experiment')
 	context_dict['plant_data'] = plant_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -2993,7 +2983,7 @@ def plant_data_from_experiment(request, experiment_name):
 def download_plant_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_plants.csv"' % (experiment_name)
-	plant_data = find_plant_from_experiment(experiment_name)
+	plant_data = find_relationship_for_experiment(experiment_name, 'plant', 'plant_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Plant ID', 'Plant Num', 'Row ID', 'Stock ID', 'Comments'])
 	for row in plant_data:

@@ -15,15 +15,19 @@
           <tr>
             <th>Plant ID</th>
             <th>Plant Num</th>
+            <th>Row ID</th>
+            <th>Stock ID</th>
             <th>Comments</th>
           </tr>
           </thead>
           <tbody>
           {% for data in plant_data %}
           <tr>
-            <td><a href='/lab/plant/{{data.target_obs.obs_plant.id}}/'>{{data.target_obs.obs_plant.plant_id}}</a></td>
-            <td>{{data.target_obs.obs_plant.plant_num}}</td>
-            <td>{{data.target_obs.obs_plant.comments}}</td>
+            <td><a href='/lab/plant/{{data.obs_plant.id}}/'>{{data.obs_plant.plant_id}}</a></td>
+            <td>{{data.obs_plant.plant_num}}</td>
+            <td><a href='/lab/row/{{data.obs_row.id}}/'>{{data.obs_row.row_id}}</a></td>
+            <td><a href='/lab/stock/{{data.stock.id}}/'>{{data.stock.seed_id}}</a></td>
+            <td>{{data.obs_plant.comments}}</td>
           </tr>
           {% endfor %}
           </tbody>
