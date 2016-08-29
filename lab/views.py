@@ -2546,17 +2546,10 @@ def show_all_tissue_experiment(request):
 	context_dict['tissue_experiment_list'] = tissue_experiment_list
 	return render(request, 'lab/tissue_experiment_list.html', context=context_dict)
 
-def find_tissue_from_experiment(experiment_name):
-	try:
-		tissue_data = ObsTracker.objects.filter(obs_entity_type='tissue', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		tissue_data = None
-	return tissue_data
-
 @login_required
 def tissue_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	tissue_data = find_tissue_from_experiment(experiment_name)
+	tissue_data = find_relationship_for_experiment(experiment_name, 'tissue', 'tissue_used_in_experiment')
 	context_dict['tissue_data'] = tissue_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -2566,7 +2559,7 @@ def tissue_data_from_experiment(request, experiment_name):
 def download_tissue_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_tissues.csv"' % (experiment_name)
-	tissue_data = find_tissue_from_experiment(experiment_name)
+	tissue_data = find_relationship_for_experiment(experiment_name, 'tissue', 'tissue_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Tissue ID', 'Tissue Type', 'Tissue Name', 'Date Ground', 'Comments', 'Row ID', 'Plant ID', 'Plate ID', 'Seed ID'])
 	for row in tissue_data:

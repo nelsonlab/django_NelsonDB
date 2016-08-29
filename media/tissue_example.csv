@@ -1,0 +1,11 @@
+Experiment Name,Tissue ID,Tissue Name,Tissue Type,Date Ground,Tissue Comments,Source Seed ID,Source Row ID,Source Plant ID,Source Culture ID
+16NTS,16NTS_tissue_01,16NTS_tissue_01,cobb,,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,
+16NTS,16NTS_tissue_02,16NTS_tissue_02,leaf,,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,
+16NTS,16NTS_tissue_03,16NTS_tissue_03,cobb,,,16NTS_planted_02,16NTS_row_002,16NTS_plant_02,
+16NTS,16NTS_tissue_04,16NTS_tissue_04,leaf,,,16NTS_planted_02,16NTS_row_002,16NTS_plant_02,
+16NTS,16NTS_tissue_05,16NTS_tissue_05,cobb,,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,
+16NTS,16NTS_tissue_06,16NTS_tissue_06,leaf,,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,
+16NTS,16NTS_tissue_07,16NTS_tissue_07,cobb,,,16NTS_planted_04,16NTS_row_004,16NTS_plant_04,
+16NTS,16NTS_tissue_08,16NTS_tissue_08,leaf,,,16NTS_planted_04,16NTS_row_004,16NTS_plant_04,
+16NTS,16NTS_tissue_09,16NTS_tissue_09,cobb,,,16NTS_planted_05,16NTS_row_005,16NTS_plant_05,
+16NTS,16NTS_tissue_10,16NTS_tissue_10,leaf,,,16NTS_planted_05,16NTS_row_005,16NTS_plant_05,
