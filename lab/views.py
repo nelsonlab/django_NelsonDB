@@ -365,7 +365,7 @@ def experiment(request, experiment_name_url):
 					obs_type_data = find_relationship_for_experiment(experiment_name, 'glycerol_stock', 'isolate_stock_from_experiment')
 
 				if obs_type == 'maize':
-					obs_type_data = find_relationship_for_experiment(experiment_name, 'maize', 'maize_from_experiment')
+					obs_type_data = find_relationship_for_experiment(experiment_name, 'maize', 'maize_used_in_experiment')
 
 				if obs_type == 'sample':
 					obs_type_data = find_relationship_for_experiment(experiment_name, 'sample', 'sample_used_in_experiment')
@@ -376,20 +376,6 @@ def experiment(request, experiment_name_url):
 					stockpackets_used = find_seedpackets_from_obstracker_stock(obs_type_data)
 					context_dict['stockpackets_used'] = stockpackets_used
 
-				#if obs_type == 'sample':
-				#	separations = []
-				#	obs_type_data = old_data_lookup(experiment_name, obs_type)
-				#	for sample in obs_type_data:
-				#		try:
-				#			separation = Separation.objects.filter(obs_sample_id=sample.obs_sample_id)
-				#		except Separation.DoesNotExist:
-				#			separation = None
-				#		separations = list(chain(separation, separations))
-				#	context_dict['separation_data'] = separations
-
-				if obs_type_data is None:
-					print('HERE1')
-					obs_type_data = old_data_lookup(experiment_name, obs_type)
 
 				context_dict[obs_data] = obs_type_data
 
@@ -420,13 +406,6 @@ def experiment(request, experiment_name_url):
 	context_dict['logged_in_user'] = request.user.username
 	return render(request, 'lab/experiment.html', context=context_dict)
 
-#For data loaded in old way. Need to redo loading on data into ObsTrackerSource
-def old_data_lookup (experiment_name, obs_entity_type):
-	try:
-		obs_type_data = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type=obs_entity_type)
-	except ObsTracker.DoesNotExist:
-		obs_type_data = None
-	return obs_type_data
 
 @login_required
 def experiment_delete(request):
@@ -1938,17 +1917,11 @@ def show_all_maize_experiment(request):
 	context_dict['maize_experiment_list'] = maize_experiment_list
 	return render(request, 'lab/maize_experiment_list.html', context=context_dict)
 
-def find_maize_from_experiment(experiment_name):
-	try:
-		maize_data = ObsTracker.objects.filter(obs_entity_type='maize', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		maize_data = None
-	return maize_data
 
 @login_required
 def maize_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	maize_data = find_maize_from_experiment(experiment_name)
+	maize_data = find_relationship_for_experiment(experiment_name, 'maize', 'maize_used_in_experiment')
 	context_dict['maize_data'] = maize_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -1958,7 +1931,7 @@ def maize_data_from_experiment(request, experiment_name):
 def download_maize_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_maize_survey.csv"' % (experiment_name)
-	maize_data = find_maize_from_experiment(experiment_name)
+	maize_data = find_relationship_for_experiment(experiment_name, 'maize', 'maize_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Maize ID', 'County', 'Sub Location', 'Village', 'Weight', 'Harvest Date', 'Storage Months', 'Storage Conditions', 'Maize Variety', 'Seed Source', 'Moisture Content', 'Source Type', 'Appearance', 'GPS Latitude', 'GPS Longitude', 'GPS Altitude', 'GPS Accuracy', 'Photo Filename'])
 	for row in maize_data:
