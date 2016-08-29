@@ -3453,16 +3453,10 @@ def download_stockpackets_collected_experiment(request, experiment_name):
 		writer.writerow([row.stock.seed_id, row.stock.seed_name, row.stock.cross_type, row.stock.pedigree, row.stock.passport.taxonomy.population, row.stock.stock_status, row.stock.inoculated, row.stock.comments, row.weight, row.num_seeds, row.location.location_name, row.comments])
 	return response
 
-def find_isolate_for_experiment(experiment_name):
-	try:
-		isolate_data = ObsTracker.objects.filter(experiment__name=experiment_name, obs_entity_type='isolate')
-	except ObsTracker.DoesNotExist:
-		isolate_data = None
-	return isolate_data
 
 def isolate_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	isolate_data = find_isolate_for_experiment(experiment_name)
+	isolate_data = find_relationship_for_experiment(experiment_name, 'isolate', 'isolate_used_in_experiment')
 	context_dict['isolate_data'] = isolate_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -3471,11 +3465,11 @@ def isolate_data_from_experiment(request, experiment_name):
 def download_isolates_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_measurements.csv"' % (experiment_name)
-	isolate_data = find_isolate_for_experiment(experiment_name)
+	isolate_data = find_relationship_for_experiment(experiment_name, 'isolate', 'isolate_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Isolate ID', 'Isolate Name', 'Plant Organ', 'Isolate Comments', 'Genus', 'Species', 'Alias', 'Race', 'Subtaxa', 'Disease Name', 'Location Name', 'Box Name'])
 	for i in isolate_data:
-		writer.writerow([i.isolate_id, i.isolate_name, i.plant_organ, i.comments, i.passport.taxonomy.genus, i.passport.taxonomy.species, i.passport.taxonomy.alias, i.passport.taxonomy.race, i.passport.taxonomy.subtaxa, i.disease_info, i.location.location_name, i.location.box_name])
+		writer.writerow([i.isolate_id, i.isolate.isolate_name, i.isolate.plant_organ, i.isolate.comments, i.isolate.passport.taxonomy.genus, i.isolate.passport.taxonomy.species, i.isolate.passport.taxonomy.alias, i.isolate.passport.taxonomy.race, i.isolate.passport.taxonomy.subtaxa, i.isolate.disease_info, i.isolate.location.location_name, i.isolate.location.box_name])
 	return response
 
 def make_obs_tracker_info(tracker):
