@@ -1,0 +1,11 @@
+Well ID,Experiment Name,Well,Inventory,Tube Label,Well Comments,Source Seed ID,Source Row ID,Source Plant ID,Source Microbe ID,Source Culture ID,Source Tissue ID,Source Plate ID
+16NTS_well_01,16NTS,1,Full,Well_01,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_microbe_01,16NTS_culture_01,16NTS_tissue_01,16NTS_plate_01
+16NTS_well_02,16NTS,2,Full,Well_02,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_microbe_02,16NTS_culture_01,16NTS_tissue_01,16NTS_plate_01
+16NTS_well_03,16NTS,3,Full,Well_03,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_microbe_03,16NTS_culture_01,16NTS_tissue_01,16NTS_plate_01
+16NTS_well_04,16NTS,4,Full,Well_04,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_microbe_04,16NTS_culture_01,16NTS_tissue_01,16NTS_plate_01
+16NTS_well_05,16NTS,5,Full,Well_05,,16NTS_planted_01,16NTS_row_001,16NTS_plant_01,16NTS_microbe_05,16NTS_culture_01,16NTS_tissue_01,16NTS_plate_01
+16NTS_well_06,16NTS,6,Full,Well_06,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_microbe_06,16NTS_culture_15,16NTS_tissue_06,16NTS_plate_01
+16NTS_well_07,16NTS,7,Full,Well_07,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_microbe_07,16NTS_culture_15,16NTS_tissue_06,16NTS_plate_01
+16NTS_well_08,16NTS,8,Full,Well_08,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_microbe_08,16NTS_culture_15,16NTS_tissue_06,16NTS_plate_01
+16NTS_well_09,16NTS,9,Full,Well_09,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_microbe_09,16NTS_culture_15,16NTS_tissue_06,16NTS_plate_01
+16NTS_well_10,16NTS,10,Full,Well_10,,16NTS_planted_03,16NTS_row_003,16NTS_plant_03,16NTS_microbe_10,16NTS_culture_15,16NTS_tissue_06,16NTS_plate_01

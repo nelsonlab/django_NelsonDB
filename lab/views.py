@@ -2816,17 +2816,10 @@ def show_all_well_experiment(request):
 	context_dict['well_experiment_list'] = well_experiment_list
 	return render(request, 'lab/well_experiment_list.html', context=context_dict)
 
-def find_well_from_experiment(experiment_name):
-	try:
-		well_data = ObsTracker.objects.filter(obs_entity_type='well', experiment__name=experiment_name)
-	except ObsTracker.DoesNotExist:
-		well_data = None
-	return well_data
-
 @login_required
 def well_data_from_experiment(request, experiment_name):
 	context_dict = {}
-	well_data = find_well_from_experiment(experiment_name)
+	well_data = find_relationship_for_experiment(experiment_name, 'well', 'well_used_in_experiment')
 	context_dict['well_data'] = well_data
 	context_dict['experiment_name'] = experiment_name
 	context_dict['logged_in_user'] = request.user.username
@@ -2836,7 +2829,7 @@ def well_data_from_experiment(request, experiment_name):
 def download_well_experiment(request, experiment_name):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="%s_wells.csv"' % (experiment_name)
-	well_data = find_well_from_experiment(experiment_name)
+	well_data = find_relationship_for_experiment(experiment_name, 'well', 'well_used_in_experiment')
 	writer = csv.writer(response)
 	writer.writerow(['Well ID', 'Well', 'Well Inventory', 'Tube Label', 'Comments', 'Plate ID', 'Row ID', 'Plant ID', 'Tissue ID', 'Seed ID'])
 	for row in well_data:
