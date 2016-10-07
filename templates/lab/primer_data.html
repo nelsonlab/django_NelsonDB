@@ -1,0 +1,43 @@
+{% extends 'lab/base.html' %}
+{% load static %}
+{% block title %}Primer Data{% endblock %}
+{% block body_block %}
+<div class="hero-unit">
+  <h1>Primer Data</h1>
+</div>
+
+    <div style="-webkit-box-shadow:2px 2px 3px 3px #888888; -moz-box-shadow:2px 2px 3px 3px #888888; box-shadow:2px 2px 3px 3px #888888; padding:15px">
+        <table id="selected_stocks" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+            <th>Primer ID</th>
+            <th>Primer Name</th>
+            <th>Tail</th>
+            <th>Size Range</th>
+            <th>Temp Min</th>
+            <th>Temp Max</th>
+            <th>Order Date</th>
+            <th>Comments</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for data in primer_data %}
+          <tr>
+            <td><a href='/lab/primer/{{data.id}}/'>{{data.primer_id}}</a></td>
+            <td>{{data.primer_name}}</td>
+            <td>{{data.primer_tail}}</td>
+            <td>{{data.size_range}}</td>
+            <td>{{data.temp_min}}</td>
+            <td>{{data.temp_max}}</td>
+            <td>{{data.order_date}}</td>
+            <td>{{data.comments}}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+    </div><br/><br/>
+  </div>
+
+
+{% endblock %}

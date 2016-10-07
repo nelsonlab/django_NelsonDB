@@ -1,7 +1,7 @@
 #import filebrowser
 #from filebrowser.fields import FileBrowseField
 from django import forms
-from lab.models import UserProfile, Experiment, Field, ObsRow, ObsPlant, Locality, Stock, ObsRow, ObsPlant, ObsSample, ObsEnv, MeasurementParameter, Citation, Medium, Location, DiseaseInfo, FileDump
+from lab.models import UserProfile, Experiment, Field, ObsRow, ObsPlant, Locality, Stock, ObsRow, ObsPlant, ObsSample, ObsEnv, MeasurementParameter, Citation, Medium, Location, DiseaseInfo, FileDump, Primer
 from django.contrib.auth.models import User
 from django.core.validators import EmailValidator
 import re
@@ -30,8 +30,9 @@ class FileDumpForm(forms.ModelForm):
 
 class SequenceZipfileForm(forms.Form):
 	user = forms.ModelChoiceField(queryset=User.objects.all(), empty_label="--- Username ---", help_text="Select the primary user:", required=True)
-	experiment = forms.ModelChoiceField(queryset=Experiment.objects.all(), empty_label="--- Experiment ---", help_text="Select the experiment if relevant:", required=True)
+	experiment = forms.ModelChoiceField(queryset=Experiment.objects.all(), empty_label="--- Experiment ---", help_text="Select the experiment:", required=True)
 	measurement_parameter = forms.ModelChoiceField(queryset=MeasurementParameter.objects.all(), empty_label="--- Parameter ---", help_text="Select the sequencing method parameter", required=True)
+	primer = forms.ModelChoiceField(queryset=Primer.objects.all(), empty_label="--- Primer ---", help_text="Select the primer used:", required=True)
 	file_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'File Name'}), help_text="Give an informative name to the file:")
 	file = forms.FileField(help_text="Select your zip file. Zipped file should contain .seq and .ab1 files that are named according to their sample name:")
 	comments = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Comments:'}), help_text="Any additional comments:", required=False)

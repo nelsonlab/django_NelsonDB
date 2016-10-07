@@ -67,6 +67,7 @@ urlpatterns = [
     url(r'^data/field/$', views.browse_field_data, name='browse_field_data'),
     url(r'^data/disease_info/$', views.browse_disease_info_data, name='browse_disease_info_data'),
     url(r'^data/taxonomy/$', views.browse_taxonomy_data, name='browse_taxonomy_data'),
+    url(r'^data/primer/$', views.browse_primer_data, name='browse_primer_data'),
     url(r'^data/publication/$', views.browse_publication_data, name='browse_publication_data'),
     url(r'^data/downloads/$', views.browse_downloads, name='browse_downloads'),
 
