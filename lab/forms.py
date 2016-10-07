@@ -115,6 +115,16 @@ class NewLocalityForm(forms.Form):
 	country = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Country'}), help_text="What country is the state in:", required=False)
 	zipcode = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Zipcode'}), help_text="Type the zipcode:", required=False)
 
+class NewPrimerForm(forms.Form):
+	primer_id = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Primer ID'}), help_text="Type a unique primer ID:", required=True)
+	primer_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Primer Name'}), help_text="Type an easily identifiable primer name:", required=False)
+	primer_tail = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Primer Tail'}), help_text="What is the primer's tail:", required=False)
+	size_range = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Size Range'}), help_text="The primer's size range:", required=False)
+	temp_min = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Temp Min'}), help_text="The primer's minimum temperature:", required=False)
+	temp_max = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Temp Max'}), help_text="The primer's maximum temperature:", required=False)
+	order_date = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Order Date'}), help_text="The date the primer was ordered:", required=False)
+	comments = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Comments'}), help_text="Any additional comments:", required=False)
+
 class NewMeasurementParameterForm(forms.Form):
 	parameter = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Parameter'}), help_text="Type a new parameter:", required=True)
 	parameter_type = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Parameter Type'}), help_text="What type of parameter is this:", required=True)

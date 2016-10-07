@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, render
 from django.conf import settings
 from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, FileDump, Marker, GenotypeResults, Primer
-from lab.forms import UserForm, UserProfileForm, ChangePasswordForm, EditUserForm, EditUserProfileForm, NewExperimentForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, LogPlantsOnlineForm, LogRowsOnlineForm, LogEnvironmentsOnlineForm, LogSamplesOnlineForm, LogMeasurementsOnlineForm, NewTreatmentForm, UploadQueueForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, NewFieldForm, NewLocalityForm, NewMeasurementParameterForm, NewLocationForm, NewDiseaseInfoForm, NewTaxonomyForm, NewMediumForm, NewCitationForm, UpdateSeedDataOnlineForm, LogTissuesOnlineForm, LogCulturesOnlineForm, LogMicrobesOnlineForm, LogDNAOnlineForm, LogPlatesOnlineForm, LogWellOnlineForm, LogIsolatesOnlineForm, LogSeparationsOnlineForm, LogMaizeSurveyOnlineForm, LogGlycerolStocksOnlineForm, FileDumpForm, SequenceZipfileForm
+from lab.forms import UserForm, UserProfileForm, ChangePasswordForm, EditUserForm, EditUserProfileForm, NewExperimentForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, LogPlantsOnlineForm, LogRowsOnlineForm, LogEnvironmentsOnlineForm, LogSamplesOnlineForm, LogMeasurementsOnlineForm, NewTreatmentForm, UploadQueueForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, NewFieldForm, NewLocalityForm, NewMeasurementParameterForm, NewLocationForm, NewDiseaseInfoForm, NewTaxonomyForm, NewMediumForm, NewCitationForm, UpdateSeedDataOnlineForm, LogTissuesOnlineForm, LogCulturesOnlineForm, LogMicrobesOnlineForm, LogDNAOnlineForm, LogPlatesOnlineForm, LogWellOnlineForm, LogIsolatesOnlineForm, LogSeparationsOnlineForm, LogMaizeSurveyOnlineForm, LogGlycerolStocksOnlineForm, FileDumpForm, SequenceZipfileForm, NewPrimerForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -1350,6 +1350,35 @@ def edit_info(request, obj_type, obj_id):
 		context_dict['logged_in_user'] = request.user.username
 		return render(request, 'lab/edit_taxonomy.html', context=context_dict)
 
+	elif obj_type == 'primer':
+		if request.method == 'POST':
+			primer_form = NewPrimerForm(data=request.POST)
+			if primer_form.is_valid():
+				with transaction.atomic():
+					try:
+						primer = Primer.objects.get(id=obj_id)
+						primer.primer_id = primer_form.cleaned_data['primer_id']
+						primer.primer_name = primer_form.cleaned_data['primer_name']
+						primer.primer_tail = primer_form.cleaned_data['primer_tail']
+						primer.size_range = primer_form.cleaned_data['size_range']
+						primer.temp_min = primer_form.cleaned_data['temp_min']
+						primer.temp_max = primer_form.cleaned_data['temp_max']
+						primer.order_date = primer_form.cleaned_data['order_date']
+						primer.comments = primer_form.cleaned_data['comments']
+						primer.save()
+						context_dict['updated'] = True
+					except Exception:
+						context_dict['failed'] = True
+			else:
+				print(primer_form.errors)
+		else:
+			primer_data = Primer.objects.filter(id=obj_id).values('primer_id', 'primer_name', 'primer_tail', 'size_range', 'temp_min', 'temp_max', 'order_date', 'comments')
+			primer_form = NewPrimerForm(initial=primer_data[0])
+		context_dict['primer_id'] = obj_id
+		context_dict['primer_form'] = primer_form
+		context_dict['logged_in_user'] = request.user.username
+		return render(request, 'lab/edit_primer.html', context=context_dict)
+
 def select_stockpacket_from_stock(request):
 	context_dict = {}
 	selected_packets = []
@@ -1688,7 +1717,7 @@ def single_medium_info(request, medium_id):
 	context_dict = {}
 	try:
 		medium_info = Medium.objects.get(id=medium_id)
-	except MeasurementParameter.DoesNotExist:
+	except Medium.DoesNotExist:
 		medium_info = None
 	context_dict['medium_info'] = medium_info
 	context_dict['logged_in_user'] = request.user.username
@@ -1699,7 +1728,7 @@ def single_location_info(request, location_id):
 	context_dict = {}
 	try:
 		location_info = Location.objects.get(id=location_id)
-	except MeasurementParameter.DoesNotExist:
+	except Location.DoesNotExist:
 		location_info = None
 	context_dict['location_info'] = location_info
 	context_dict['logged_in_user'] = request.user.username
@@ -1710,7 +1739,7 @@ def single_locality_info(request, locality_id):
 	context_dict = {}
 	try:
 		locality_info = Locality.objects.get(id=locality_id)
-	except MeasurementParameter.DoesNotExist:
+	except Locality.DoesNotExist:
 		locality_info = None
 	context_dict['locality_info'] = locality_info
 	context_dict['logged_in_user'] = request.user.username
@@ -1721,11 +1750,22 @@ def single_taxonomy_info(request, taxonomy_id):
 	context_dict = {}
 	try:
 		taxonomy_info = Taxonomy.objects.get(id=taxonomy_id)
-	except MeasurementParameter.DoesNotExist:
+	except Taxonomy.DoesNotExist:
 		taxonomy_info = None
 	context_dict['taxonomy_info'] = taxonomy_info
 	context_dict['logged_in_user'] = request.user.username
 	return render(request, 'lab/taxonomy.html', context=context_dict)
+
+@login_required
+def single_primer_info(request, id):
+	context_dict = {}
+	try:
+		primer_info = Primer.objects.get(id=id)
+	except Primer.DoesNotExist:
+		primer_info = None
+	context_dict['primer_info'] = primer_info
+	context_dict['logged_in_user'] = request.user.username
+	return render(request, 'lab/primer.html', context=context_dict)
 
 @login_required
 def browse_medium_data(request):
@@ -4055,6 +4095,38 @@ def log_data_online(request, data_type):
 
 						try:
 							new_locality, created = Locality.objects.get_or_create(city=city, state=state, country=country, zipcode=zipcode)
+						except Exception as e:
+							print("Error: %s %s" % (e.message, e.args))
+							failed = True
+					except KeyError:
+						pass
+			else:
+				sent = False
+				print(log_data_online_form_set.errors)
+		else:
+			sent = False
+			log_data_online_form_set = LogDataOnlineFormSet
+
+	if data_type == 'primer':
+		data_type_title = 'Add Primer Info'
+		LogDataOnlineFormSet = formset_factory(NewPrimerForm, extra=10)
+		if request.method == 'POST':
+			log_data_online_form_set = LogDataOnlineFormSet(request.POST)
+			if log_data_online_form_set.is_valid():
+				sent = True
+				for form in log_data_online_form_set:
+					try:
+						primer_id = form.cleaned_data['primer_id']
+						primer_name = form.cleaned_data['primer_name']
+						primer_tail = form.cleaned_data['primer_tail']
+						size_range = form.cleaned_data['size_range']
+						temp_min = form.cleaned_data['temp_min']
+						temp_max = form.cleaned_data['temp_max']
+						order_date = form.cleaned_data['order_date']
+						comments = form.cleaned_data['comments']
+
+						try:
+							new_primer, created = Primer.objects.get_or_create(primer_id=primer_id, primer_name=primer_name, primer_tail=primer_tail, size_range=size_range, temp_min=temp_min, temp_max=temp_max, order_date=order_date, comments=comments)
 						except Exception as e:
 							print("Error: %s %s" % (e.message, e.args))
 							failed = True

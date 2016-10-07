@@ -191,6 +191,7 @@ urlpatterns = [
     url(r'^location/(?P<location_id>\d+)/$', views.single_location_info, name='single_location_info'),
     url(r'^locality/(?P<locality_id>\d+)/$', views.single_locality_info, name='single_locality_info'),
     url(r'^taxonomy/(?P<taxonomy_id>\d+)/$', views.single_taxonomy_info, name='single_taxonomy_info'),
+    url(r'^primer/(?P<id>\d+)/$', views.single_primer_info, name='single_primer_info'),
     url(r'^maize/(?P<maize_id>\d+)/$', views.single_maize_info, name='single_maize_info'),
     url(r'^sample/(?P<obs_sample_id>\d+)/$', views.single_sample_info, name='single_sample_info'),
     url(r'^sample/update/(?P<obs_sample_id>\d+)/$', views.update_sample_info, name='update_sample_info'),

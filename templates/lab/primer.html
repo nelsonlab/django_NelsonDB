@@ -1,0 +1,30 @@
+{% extends "lab/base.html" %}
+
+{% block title %}Primer{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+  <h1>Primer<h1>
+{% if primer_info %}
+  <br/>
+  <h2>Primer ID: {{ primer_info.primer_id }}</h2>
+
+  <p>Primer Name: {{primer_info.primer_name}}</p>
+  <p>Tail: {{primer_info.primer_tail}}</p>
+  <p>Size Range: {{primer_info.size_range}}</p>
+  <p>Temp Min: {{primer_info.temp_min}}</p>
+  <p>Temp Max: {{primer_info.temp_max}}</p>
+  <p>Order Date: {{primer_info.order_date}}</p>
+  <p>Comments: {{primer_info.comments}}</p>
+
+  <hr>
+  <a href='/lab/edit/primer/{{primer_info.id}}/'><input class="btn btn-info" type="submit" name="submit" value="Edit Primer"/></a>
+  <hr>
+
+{% else %}
+  <br/>
+  <h2>Primer Does Not Exist</h2>
+{% endif %}
+</div>
+
+{% endblock %}
