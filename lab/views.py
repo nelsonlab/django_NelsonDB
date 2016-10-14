@@ -148,7 +148,7 @@ def upload_sequence_zipfile(request):
 
 					#print(unique_names)
 					for name in unique_names:
-						print(name)
+						#print(name)
 						obs_sample = ObsSample.objects.get(sample_id=name)
 						sample = ObsTracker.objects.get(obs_entity_type='sample', obs_sample=obs_sample)
 
@@ -156,15 +156,7 @@ def upload_sequence_zipfile(request):
 						chromatogram_file = "%s.ab1" % name
 
 						sequence = zf.read(fasta_file)
-						print(sequence)
-
-						sequence_name = sequence.splitlines()[0]
-						if sequence_name.lower().endswith('.ab1'):
-							sequence_name = sequence_name.replace(".ab1", "")
-						if sequence_name.lower().startswith('>'):
-							sequence_name = sequence_name.replace(">", "")
-
-						print(sequence_name)
+						#print(sequence)
 
 						extracted_seqfile = zf.extract(fasta_file, 'media/fasta_files')
 						extracted_chromfile = zf.extract(chromatogram_file, 'media/chromatogram_files')
@@ -213,6 +205,22 @@ def download_file_dump(request, file_id):
 
 	filename     = '%s/%s' % (settings.MEDIA_ROOT,file.file)
 	download_name = file.file
+	wrapper      = FileWrapper(open(filename))
+	content_type = mimetypes.guess_type(filename)[0]
+	response     = HttpResponse(wrapper,content_type=content_type)
+	response['Content-Length']      = os.path.getsize(filename)
+	response['Content-Disposition'] = "attachment; filename=%s"%download_name
+	return response
+
+@login_required
+def download_geno_result_file(request, result_id, file_type):
+	result = GenotypeResults.objects.get(id=result_id)
+	if (file_type == 'fasta'):
+		filename     = '%s' % (result.fasta_file)
+		download_name = result.fasta_file
+	elif (file_type == 'chromatogram'):
+		filename     = '%s' % (result.chromatogram_file)
+		download_name = result.chromatogram_file
 	wrapper      = FileWrapper(open(filename))
 	content_type = mimetypes.guess_type(filename)[0]
 	response     = HttpResponse(wrapper,content_type=content_type)
@@ -2324,6 +2332,22 @@ def show_all_row_experiment(request):
 	context_dict = checkbox_session_variable_check(request)
 	context_dict['row_experiment_list'] = row_experiment_list
 	return render(request, 'lab/row_experiment_list.html', context=context_dict)
+
+@login_required
+def marker_data_browse(request):
+	context_dict = {}
+	marker_data = Marker.objects.all().exclude(id=1)
+	context_dict['marker_data'] = marker_data
+	context_dict['logged_in_user'] = request.user.username
+	return render(request, 'lab/marker_data.html', context=context_dict)
+
+@login_required
+def sequence_data_browse(request):
+	context_dict = {}
+	seq_data = GenotypeResults.objects.all()
+	context_dict['seq_data'] = seq_data
+	context_dict['logged_in_user'] = request.user.username
+	return render(request, 'lab/genotype_result_data.html', context=context_dict)
 
 @login_required
 def sample_data_browse(request):

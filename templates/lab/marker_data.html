@@ -1,0 +1,42 @@
+{% extends 'lab/base.html' %}
+{% load static %}
+{% block title %}Genetic Marker Data{% endblock %}
+{% block body_block %}
+<div class="hero-unit">
+  <h1>Genetic Marker Data</h1>
+</div>
+  <br />
+
+        <table id="selected_stocks" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+            <th>Marker ID</th>
+            <th>Marker Name</th>
+            <th>Primer F</th>
+            <th>Primer R</th>
+            <th>Chromosome</th>
+            <th>Physical Start</th>
+            <th>Physical Stop</th>
+            <th>Interval Type</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for data in marker_data %}
+          <tr>
+            <td>{{data.marker_id}}</td>
+            <td>{{data.marker_name}}</td>
+            <td>{{data.primer_f.primer_id}}</td>
+            <td>{{data.primer_r.primer_id}}</td>
+            <td>{{data.map_feature_interval.map_feature_start.chromosome}}</td>
+            <td>{{data.map_feature_interval.map_feature_start.physical_position}}</td>
+            <td>{{data.map_feature_interval.map_feature_end.physical_position}}</td>
+            <td>{{data.map_feature_interval.interval_type}}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <br/>
+
+
+
+{% endblock %}

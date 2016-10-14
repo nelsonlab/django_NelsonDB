@@ -162,6 +162,9 @@ urlpatterns = [
     url(r'^data/sample/checkbox_clear/$', views.checkbox_sample_data_clear, name='checkbox_sample_data_clear'),
     url(r'^data/sample/(?P<experiment_name>\w+)/$', views.sample_data_from_experiment, name='sample_data_from_experiment'),
 
+    url(r'^data/marker/$', views.marker_data_browse, name='marker_data_browse'),
+    url(r'^data/sequence/$', views.sequence_data_browse, name='sequence_data_browse'),
+
     url(r'^data/separation/$', views.separation_data_browse, name='separation_data_browse'),
     url(r'^data/separation/(?P<experiment_name>\w+)/$', views.separation_data_from_experiment, name='separation_data_from_experiment'),
 
@@ -242,6 +245,7 @@ urlpatterns = [
     url(r'^download/data/environment/$', views.download_env_data, name='download_env_data'),
     url(r'^download/data/measurements/$', views.download_measurement_data, name='download_measurement_data'),
     url(r'^download/file_storage/(?P<file_id>\d+)/$', views.download_file_dump, name='download_file_dump'),
+    url(r'^download/file_name/(?P<result_id>\d+)/(?P<file_type>\w+)/$', views.download_geno_result_file, name='download_geno_result_file'),
 
     url(r'^upload_online/(?P<template_type>\w+)/', views.upload_online, name='upload_online'),
 

@@ -1,0 +1,44 @@
+{% extends 'lab/base.html' %}
+{% load static %}
+{% block title %}Genotype Result Data{% endblock %}
+{% block body_block %}
+<div class="hero-unit">
+  <h1>Genotype Result Data</h1>
+</div>
+  <br />
+
+        <table id="selected_stocks" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+            <th>Exp</th>
+            <th>Sample ID</th>
+            <th>Gene Name</th>
+            <th>Primer F</th>
+            <th>Primer R</th>
+            <th>Parameter</th>
+            <th>Sequence</th>
+            <th>Fasta File</th>
+            <th>Chromatogram FIle</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for data in seq_data %}
+          <tr>
+            <td><a href='/lab/experiment/{{data.obs_tracker.experiment.name}}/'>{{data.obs_tracker.experiment.name}}</a></td>
+            <td><a href='/lab/sample/{{data.obs_tracker.obs_sample_id}}/'>{{data.obs_tracker.obs_sample.sample_id}}</a></td>
+            <td>{{data.marker.marker_id}}</td>
+            <td>{{data.marker.primer_f.primer_id}}</td>
+            <td>{{data.marker.primer_r.primer_id}}</td>
+            <td>{{data.measurement_parameter.parameter}}</td>
+            <td>{{data.sequence}}</td>
+            <td><a href="/lab/download/file_name/{{data.id}}/fasta">{{data.fasta_file}}</a></td>
+            <td><a href="/lab/download/file_name/{{data.id}}/chromatogram">{{data.chromatogram_file}}</a></td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <br/>
+
+
+
+{% endblock %}
