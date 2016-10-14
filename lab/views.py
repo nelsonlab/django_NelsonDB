@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render
 from django.conf import settings
-from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, FileDump, Marker, GenotypeResults, Primer
+from lab.models import UserProfile, Experiment, Passport, Stock, StockPacket, Taxonomy, People, Collecting, Field, Locality, Location, ObsRow, ObsPlant, ObsSample, ObsEnv, ObsWell, ObsCulture, ObsTissue, ObsDNA, ObsPlate, ObsMicrobe, ObsExtract, ObsTracker, ObsTrackerSource, Isolate, DiseaseInfo, Measurement, MeasurementParameter, Treatment, UploadQueue, Medium, Citation, Publication, MaizeSample, Separation, GlycerolStock, FileDump, Marker, GenotypeResults, Primer, MapFeature, MapFeatureInterval
 from lab.forms import UserForm, UserProfileForm, ChangePasswordForm, EditUserForm, EditUserProfileForm, NewExperimentForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, LogPlantsOnlineForm, LogRowsOnlineForm, LogEnvironmentsOnlineForm, LogSamplesOnlineForm, LogMeasurementsOnlineForm, NewTreatmentForm, UploadQueueForm, LogSeedDataOnlineForm, LogStockPacketOnlineForm, NewFieldForm, NewLocalityForm, NewMeasurementParameterForm, NewLocationForm, NewDiseaseInfoForm, NewTaxonomyForm, NewMediumForm, NewCitationForm, UpdateSeedDataOnlineForm, LogTissuesOnlineForm, LogCulturesOnlineForm, LogMicrobesOnlineForm, LogDNAOnlineForm, LogPlatesOnlineForm, LogWellOnlineForm, LogIsolatesOnlineForm, LogSeparationsOnlineForm, LogMaizeSurveyOnlineForm, LogGlycerolStocksOnlineForm, FileDumpForm, SequenceZipfileForm, NewPrimerForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -109,15 +109,22 @@ def upload_sequence_zipfile(request):
 			user = fileform.cleaned_data['user']
 			experiment = fileform.cleaned_data['experiment']
 			file_name = fileform.cleaned_data['file_name']
+			primer_f = fileform.cleaned_data['primer_f']
+			primer_r = fileform.cleaned_data['primer_r']
+			gene_name = fileform.cleaned_data['gene_name']
+			start_physical_position = fileform.cleaned_data['start_physical_position']
+			stop_physical_position = fileform.cleaned_data['stop_physical_position']
+			chromosome = fileform.cleaned_data['chromosome']
 			comments = fileform.cleaned_data['comments']
 			zip_file = fileform.cleaned_data['file']
 			parameter = fileform.cleaned_data['measurement_parameter']
 
 			if zipfile.is_zipfile(zip_file):
 				zf = zipfile.ZipFile(zip_file, 'r')
+				namelist = zf.namelist();
 
 				check_filecontent_ext = True
-				for filename in zf.namelist():
+				for filename in namelist:
 					if filename.lower().endswith('.ab1') or filename.lower().endswith('.seq'):
 						print(filename)
 					else:
@@ -127,15 +134,21 @@ def upload_sequence_zipfile(request):
 				if check_filecontent_ext == True:
 
 					unique_names = []
-					for filename in zf.namelist():
+					for filename in namelist:
 						filename = filename.replace(".ab1", "")
 						filename = filename.replace(".seq", "")
 						if filename not in unique_names:
 							unique_names.append(filename)
 
+					start_position, created = MapFeature.objects.get_or_create(chromosome=chromosome, physical_position=start_physical_position)
+					stop_position, created = MapFeature.objects.get_or_create(chromosome=chromosome, physical_position=stop_physical_position)
+					map_feature_interval, created = MapFeatureInterval.objects.get_or_create(map_feature_start=start_position, map_feature_end=stop_position, interval_type='gene', interval_name=gene_name)
+					marker_map_feature = MapFeature.objects.get(id=1)
+					marker, created = Marker.objects.get_or_create(map_feature_interval=map_feature_interval, marker_map_feature=marker_map_feature, primer_f=primer_f, primer_r=primer_r, marker_id=gene_name, marker_name=gene_name)
+
 					#print(unique_names)
 					for name in unique_names:
-						#print(name)
+						print(name)
 						obs_sample = ObsSample.objects.get(sample_id=name)
 						sample = ObsTracker.objects.get(obs_entity_type='sample', obs_sample=obs_sample)
 
@@ -143,7 +156,7 @@ def upload_sequence_zipfile(request):
 						chromatogram_file = "%s.ab1" % name
 
 						sequence = zf.read(fasta_file)
-						#print(sequence)
+						print(sequence)
 
 						sequence_name = sequence.splitlines()[0]
 						if sequence_name.lower().endswith('.ab1'):
@@ -151,12 +164,14 @@ def upload_sequence_zipfile(request):
 						if sequence_name.lower().startswith('>'):
 							sequence_name = sequence_name.replace(">", "")
 
-						#print(sequence_name)
+						print(sequence_name)
 
-						marker = Marker.objects.get(marker_id=sequence_name)
-						GenotypeResults.objects.create(obs_tracker=sample, marker=marker, parameter=parameter, sequence=sequence, comments=comments, fasta_file=fasta_file, chromatogram_file=chromatogram_file)
+						extracted_seqfile = zf.extract(fasta_file, 'media/fasta_files')
+						extracted_chromfile = zf.extract(chromatogram_file, 'media/chromatogram_files')
 
-					#FileDump.objects.create(user=user, experiment=experiment, file_name=file_name, file=zip_file, comments=comments)
+						GenotypeResults.objects.create(obs_tracker=sample, marker=marker, parameter=parameter, sequence=sequence, comments=comments, fasta_file=extracted_seqfile, chromatogram_file=extracted_chromfile)
+
+					FileDump.objects.create(user=user, experiment=experiment, file_name=file_name, file=zip_file, comments=comments)
 
 					complete = True
 				else :
