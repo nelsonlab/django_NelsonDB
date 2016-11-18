@@ -34,7 +34,8 @@
             <td>{{data.measurement_parameter.parameter}}</td>
             <td>{{data.sequence}}</td>
             <td><a href="/lab/download/file_name/{{data.id}}/fasta">{{data.fasta_file}}</a></td>
-            <td><a href="/lab/download/file_name/{{data.id}}/chromatogram">{{data.chromatogram_file}}</a></td>
+            <!--td><a href="/lab/download/file_name/{{data.id}}/chromatogram">{{data.chromatogram_file}}</a></td-->
+            <td><a href="/lab/data/chromatogram/{{data.id}}">{{data.chromatogram_file}}</a></td>
           </tr>
           {% endfor %}
           </tbody>

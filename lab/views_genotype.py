@@ -2,7 +2,7 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from lab.models import Primer, MapFeature, MapFeatureInterval, Marker, MapFeatureAnnotation, MeasurementParameter, QTL, MapFeatureExpression
+from lab.models import Primer, MapFeature, MapFeatureInterval, Marker, MapFeatureAnnotation, MeasurementParameter, QTL, MapFeatureExpression, GenotypeResults
 from lab.forms import FileDumpForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -50,3 +50,16 @@ def genotype_data_browse_plot(request):
         data.append({'position':e.map_feature_interval.map_feature_end.physical_position, 'chromosome':e.map_feature_interval.map_feature_end.chromosome, 'name':'%s End Value: %s'%(e.parameter, e.value), 'type':'Expression'})
 
     return JsonResponse({'data':data}, safe=True)
+
+def extract_abi_information(request, result_id):
+	context_dict = {}
+	genotype_result = GenotypeResults.objects.get(id=result_id)
+	chromatogram_file = genotype_result.chromatogram_file.name
+	print(chromatogram_file)
+	with open(chromatogram_file, "rb") as handle:
+		records = list(SeqIO.parse(handle, "abi"))
+	print(records)
+
+	context_dict['records'] = records
+	context_dict['logged_in_user'] = request.user.username
+	return render(request, 'lab/index.html', context=context_dict)

@@ -30,7 +30,7 @@ class UserProfile(models.Model):
 	notes = models.CharField(max_length=1000, blank=True)
 	job_title = models.CharField(max_length=200, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.user.username
 
 class Locality(models.Model):
@@ -39,7 +39,7 @@ class Locality(models.Model):
   country = models.CharField(max_length=200, blank=True)
   zipcode = models.CharField(max_length=30, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.city
 
 class Field(models.Model):
@@ -48,7 +48,7 @@ class Field(models.Model):
   field_num = models.CharField(max_length=200, blank=True)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.field_name
 
 class Experiment(models.Model):
@@ -59,7 +59,7 @@ class Experiment(models.Model):
   purpose = models.CharField(max_length=1000, blank=True)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.name
 
 class FileDump(models.Model):
@@ -70,7 +70,7 @@ class FileDump(models.Model):
 	date = models.DateTimeField(auto_now_add=True, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.file_name
 
 class Publication(models.Model):
@@ -80,7 +80,7 @@ class Publication(models.Model):
   publish_date = models.DateField()
   publication_info = models.CharField(max_length=200, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.name_of_paper
 
 class Taxonomy(models.Model):
@@ -92,7 +92,7 @@ class Taxonomy(models.Model):
 	race = models.CharField(max_length=200, blank=True)
 	subtaxa = models.CharField(max_length=200, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.genus
 
 class People(models.Model):
@@ -103,7 +103,7 @@ class People(models.Model):
 	email = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.organization
 
 class Citation(models.Model):
@@ -113,7 +113,7 @@ class Citation(models.Model):
 	pubmed_id = models.CharField(max_length=300, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.title
 
 class Medium(models.Model):
@@ -124,7 +124,7 @@ class Medium(models.Model):
 	media_preparation = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.media_name
 
 class ObsRow(models.Model):
@@ -139,7 +139,7 @@ class ObsRow(models.Model):
   harvest_date = models.CharField(max_length=200, blank=True)
   comments = models.CharField(max_length=3000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.row_id
 
 class ObsPlant(models.Model):
@@ -147,7 +147,7 @@ class ObsPlant(models.Model):
   plant_num = models.CharField(max_length=200, blank=True)
   comments = models.CharField(max_length=3000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.plant_id
 
 class ObsSample(models.Model):
@@ -161,7 +161,7 @@ class ObsSample(models.Model):
 	photo = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=3000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.sample_id
 
 class Separation(models.Model):
@@ -178,7 +178,7 @@ class Separation(models.Model):
 	operating_factor = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.separation_type
 
 class ObsExtract(models.Model):
@@ -189,7 +189,7 @@ class ObsExtract(models.Model):
 	solvent = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=3000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.extract_id
 
 class ObsEnv(models.Model):
@@ -198,7 +198,7 @@ class ObsEnv(models.Model):
 	latitude = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=3000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.environment_id
 
 class ObsDNA(models.Model):
@@ -209,7 +209,7 @@ class ObsDNA(models.Model):
 	tube_type = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=3000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.dna_id
 
 class ObsTissue(models.Model):
@@ -219,7 +219,7 @@ class ObsTissue(models.Model):
 	date_ground = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=3000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.tissue_id
 
 class ObsPlate(models.Model):
@@ -232,7 +232,7 @@ class ObsPlate(models.Model):
 	plate_status = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=3000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.plate_id
 
 class ObsWell(models.Model):
@@ -242,7 +242,7 @@ class ObsWell(models.Model):
 	tube_label = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=3000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.well_id
 
 class ObsCulture(models.Model):
@@ -257,7 +257,7 @@ class ObsCulture(models.Model):
 	num_colonies = models.CharField(max_length=200, blank=True)
 	num_microbes = models.CharField(max_length=200, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.culture_id
 
 class ObsMicrobe(models.Model):
@@ -265,7 +265,7 @@ class ObsMicrobe(models.Model):
 	microbe_type = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=3000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.microbe_id
 
 class Location(models.Model):
@@ -278,7 +278,7 @@ class Location(models.Model):
   box_name = models.CharField(max_length=200, blank=True)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.location_name
 
 class Collecting(models.Model):
@@ -287,7 +287,7 @@ class Collecting(models.Model):
   collection_method = models.CharField(max_length=1000, blank=True)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.collection_date
 
 class Passport(models.Model):
@@ -295,7 +295,7 @@ class Passport(models.Model):
 	people = models.ForeignKey(People)
 	taxonomy = models.ForeignKey(Taxonomy)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.taxonomy.genus
 
 class Stock(models.Model):
@@ -309,7 +309,7 @@ class Stock(models.Model):
   inoculated = models.BooleanField(default=False)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
       return self.seed_id
 
 class MaizeSample(models.Model):
@@ -332,7 +332,7 @@ class MaizeSample(models.Model):
   gps_accuracy = models.CharField(max_length=200, blank=True)
   photo = models.CharField(max_length=200, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
       return self.maize_id
 
 class GlycerolStock(models.Model):
@@ -342,7 +342,7 @@ class GlycerolStock(models.Model):
   organism = models.CharField(max_length=200, blank=True)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
       return self.glycerol_stock_id
 
 class DiseaseInfo(models.Model):
@@ -350,7 +350,7 @@ class DiseaseInfo(models.Model):
   abbrev = models.CharField(max_length=200, blank=True)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
       return self.common_name
 
 class Isolate(models.Model):
@@ -362,7 +362,7 @@ class Isolate(models.Model):
   plant_organ = models.CharField(max_length=200, blank=True)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
       return self.isolate_id
 
 class StockPacket(models.Model):
@@ -372,7 +372,7 @@ class StockPacket(models.Model):
   num_seeds = models.CharField(max_length=200, blank=True)
   comments = models.CharField(max_length=1000, blank=True)
 
-  def __unicode__(self):
+  def __str__(self):
     return self.stock.seed_id
 
 class Treatment(models.Model):
@@ -382,7 +382,7 @@ class Treatment(models.Model):
 	date = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.treatment_id
 
 class UploadQueue(models.Model):
@@ -395,7 +395,7 @@ class UploadQueue(models.Model):
 	verified = models.BooleanField(default=False)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.file_name
 
 class ObsTracker(models.Model):
@@ -420,7 +420,7 @@ class ObsTracker(models.Model):
 	obs_env = models.ForeignKey(ObsEnv, blank=True, null=True)
 	obs_extract = models.ForeignKey(ObsExtract, blank=True, null=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.obs_entity_type
 
 class ObsTrackerSource(models.Model):
@@ -428,7 +428,7 @@ class ObsTrackerSource(models.Model):
 	source_obs = models.ForeignKey(ObsTracker, related_name='source_obs_tracker')
 	relationship = models.CharField(max_length=200, blank=True, null=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.target_obs
 
 class Primer(models.Model):
@@ -441,7 +441,7 @@ class Primer(models.Model):
 	order_date = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.primer_id
 
 class MapFeature(models.Model):
@@ -452,7 +452,7 @@ class MapFeature(models.Model):
 	physical_position = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.physical_position
 
 class MapFeatureAnnotation(models.Model):
@@ -460,7 +460,7 @@ class MapFeatureAnnotation(models.Model):
 	annotation_type = models.CharField(max_length=200, blank=True)
 	annotation_value = models.CharField(max_length=200, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.annotation_value
 
 class MapFeatureInterval(models.Model):
@@ -470,7 +470,7 @@ class MapFeatureInterval(models.Model):
 	interval_name = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.interval_name
 
 class Marker(models.Model):
@@ -489,7 +489,7 @@ class Marker(models.Model):
 	strand = models.CharField(max_length=200, blank=True)
 	allele = models.CharField(max_length=200, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.marker_id
 
 class MeasurementParameter(models.Model):
@@ -500,7 +500,7 @@ class MeasurementParameter(models.Model):
 	trait_id_buckler = models.CharField(max_length=200, blank=True)
 	marker = models.ForeignKey(Marker, blank=True, null=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.parameter
 
 class QTL(models.Model):
@@ -508,7 +508,7 @@ class QTL(models.Model):
 	parameter = models.ForeignKey(MeasurementParameter)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.map_feature_interval.interval_name
 
 class MapFeatureExpression(models.Model):
@@ -517,7 +517,7 @@ class MapFeatureExpression(models.Model):
 	value = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.map_feature_interval.interval_name
 
 class GenotypeResults(models.Model):
@@ -529,7 +529,7 @@ class GenotypeResults(models.Model):
 	fasta_file = models.FileField(upload_to='fasta_files', blank=True)
 	chromatogram_file = models.FileField(upload_to='chromatogram_files', blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.sequence
 
 class GWASResults(models.Model):
@@ -548,14 +548,14 @@ class GWASResults(models.Model):
 	cM = models.CharField(max_length=200)
 	comments = models.CharField(max_length=1000)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.p_value
 
 class GWASExperimentSet(models.Model):
 	experiment = models.ForeignKey(Experiment)
 	gwas_results = models.ForeignKey(GWASResults)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.gwas_results
 
 class Measurement(models.Model):
@@ -566,5 +566,5 @@ class Measurement(models.Model):
 	value = models.CharField(max_length=200, blank=True)
 	comments = models.CharField(max_length=1000, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.value

@@ -164,6 +164,7 @@ urlpatterns = [
 
     url(r'^data/marker/$', views.marker_data_browse, name='marker_data_browse'),
     url(r'^data/sequence/$', views.sequence_data_browse, name='sequence_data_browse'),
+    url(r'^data/chromatogram/(?P<result_id>\d+)/$', views_genotype.extract_abi_information, name='extract_abi_information'),
     url(r'^data/sequence_alignment/$', views.sequence_alignment_browse, name='sequence_alignment_browse'),
 
     url(r'^data/separation/$', views.separation_data_browse, name='separation_data_browse'),

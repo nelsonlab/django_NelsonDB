@@ -1,4 +1,4 @@
-
+import codecs
 import csv
 from collections import OrderedDict
 import time
@@ -68,7 +68,7 @@ def seed_stock_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    stock_file = csv.DictReader(upload_file)
+    stock_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in stock_file:
         seed_id = row["Seed ID"]
         seed_name = row["Seed Name"]
@@ -337,136 +337,136 @@ def seed_stock_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Stock Table'])
     writer.writerow(['stock_id', 'passport_id', 'seed_id', 'seed_name', 'cross_type', 'pedigree', 'stock_status', 'stock_date', 'inoculated', 'comments'])
-    for key in results_dict['stock_new'].iterkeys():
+    for key in results_dict['stock_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Collecting Table'])
     writer.writerow(['collecting_id', 'user_id', 'collection_date', 'collection_method', 'comments'])
-    for key in results_dict['collecting_new'].iterkeys():
+    for key in results_dict['collecting_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New People Table'])
     writer.writerow(['people_id', 'first_name', 'last_name', 'organization', 'phone', 'email', 'comments'])
-    for key in results_dict['people_new'].iterkeys():
+    for key in results_dict['people_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Taxonomy Table'])
     writer.writerow(['taxonomy_id', 'genus', 'species', 'population', 'common_name', 'alias', 'race', 'subtaxa'])
-    for key in results_dict['taxonomy_new'].iterkeys():
+    for key in results_dict['taxonomy_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Passport Table'])
     writer.writerow(['passport_id', 'collecting_id', 'people_id', 'taxonomy_id'])
-    for key in results_dict['passport_new'].iterkeys():
+    for key in results_dict['passport_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['seed_id', 'seed_name', 'cross_type', 'pedigree', 'stock_status', 'stock_date', 'inoculated', 'stock_comments', 'genus', 'species', 'population', 'row_id', 'field_name', 'plant_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'first_name', 'last_name', 'phone', 'email', 'source_comments'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Field Name Errors'])
     writer.writerow(['seed_id', 'seed_name', 'cross_type', 'pedigree', 'stock_status', 'stock_date', 'inoculated', 'stock_comments', 'genus', 'species', 'population', 'row_id', 'field_name', 'plant_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'first_name', 'last_name', 'phone', 'email', 'source_comments'])
-    for key in results_dict['field_name_error'].iterkeys():
+    for key in results_dict['field_name_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['seed_id', 'seed_name', 'cross_type', 'pedigree', 'stock_status', 'stock_date', 'inoculated', 'stock_comments', 'genus', 'species', 'population', 'row_id', 'field_name', 'plant_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'first_name', 'last_name', 'phone', 'email', 'source_comments'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Collecting Entries Already Exist'])
-    for key in results_dict['collecting_hash_exists'].iterkeys():
+    for key in results_dict['collecting_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['People Entries Already Exist'])
-    for key in results_dict['people_hash_exists'].iterkeys():
+    for key in results_dict['people_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Taxonomy Entries Already Exist'])
-    for key in results_dict['taxonomy_hash_exists'].iterkeys():
+    for key in results_dict['taxonomy_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Passport Entries Already Exist'])
-    for key in results_dict['passport_hash_exists'].iterkeys():
+    for key in results_dict['passport_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Stock Entries Already Exist'])
-    for key in results_dict['stock_hash_exists'].iterkeys():
+    for key in results_dict['stock_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entries Already Exist'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entries Already Exist'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
 
     return response
 
 def seed_stock_loader(results_dict):
     try:
-        for key in results_dict['collecting_new'].iterkeys():
+        for key in results_dict['collecting_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = Collecting.objects.create(id=key[0], user_id=key[1], collection_date=key[2], collection_method=key[3], comments=key[4])
             except Exception as e:
                 print("Collecting Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['people_new'].iterkeys():
+        for key in results_dict['people_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = People.objects.create(id=key[0], first_name=key[1], last_name=key[2], organization=key[3], phone=key[4], email=key[5], comments=key[6])
             except Exception as e:
                 print("People Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['taxonomy_new'].iterkeys():
+        for key in results_dict['taxonomy_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = Taxonomy.objects.create(id=key[0], genus=key[1], species=key[2], population=key[3], common_name=key[4], alias=key[5], race=key[6], subtaxa=key[7])
             except Exception as e:
                 print("Taxonomy Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['passport_new'].iterkeys():
+        for key in results_dict['passport_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = Passport.objects.create(id=key[0], collecting_id=key[1], people_id=key[2], taxonomy_id=key[3])
             except Exception as e:
                 print("Passport Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['stock_new'].iterkeys():
+        for key in results_dict['stock_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock, create = Stock.objects.update_or_create(id=key[0], seed_id=key[2], defaults= { 'passport_id':key[1], 'seed_name':key[3], 'cross_type':key[4], 'pedigree':key[5], 'stock_status':key[6], 'stock_date':key[7], 'inoculated':key[8], 'comments':key[9] } )
             except Exception as e:
                 print("Stock Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -507,7 +507,7 @@ def seed_packet_loader_prep(upload_file, user):
     location_hash_exists = OrderedDict({})
     stock_packet_hash_exists = OrderedDict({})
 
-    stock_packet_file = csv.DictReader(upload_file)
+    stock_packet_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in stock_packet_file:
         seed_id = row["Seed ID"]
         weight = row["Weight"]
@@ -606,62 +606,62 @@ def seed_packet_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Stock Packet Table'])
     writer.writerow(['stock_packet_id', 'stock_id', 'location_id', 'weight', 'num_seeds', 'comments'])
-    for key in results_dict['stock_packet_new'].iterkeys():
+    for key in results_dict['stock_packet_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Location Table'])
     writer.writerow(['location_id', 'location_name', 'building_name', 'room', 'shelf', 'column', 'box_name', 'comments'])
-    for key in results_dict['location_new'].iterkeys():
+    for key in results_dict['location_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Locality Table'])
     writer.writerow(['locality_id', 'city', 'state', 'country', 'zipcode'])
-    for key in results_dict['locality_new'].iterkeys():
+    for key in results_dict['locality_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['seed_id', 'weight', 'num_seeds', 'packet_comments', 'location_name', 'building_name', 'room', 'shelf', 'column', 'box_name', 'city', 'state', 'country', 'zipcode', 'location_comments'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Location Entries Already Exist'])
-    for key in results_dict['location_hash_exists'].iterkeys():
+    for key in results_dict['location_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Locality Entries Already Exist'])
-    for key in results_dict['locality_hash_exists'].iterkeys():
+    for key in results_dict['locality_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Stock Packet Entries Already Exist'])
-    for key in results_dict['stock_packet_hash_exists'].iterkeys():
+    for key in results_dict['stock_packet_hash_exists'].keys():
         writer.writerow(key)
 
     return response
 
 def seed_packet_loader(results_dict):
     try:
-        for key in results_dict['locality_new'].iterkeys():
+        for key in results_dict['locality_new'].keys():
             try:
                 with transaction.atomic():
                     new_locality = Locality.objects.create(id=key[0], city=key[1], state=key[2], country=key[3], zipcode=key[4])
             except Exception as e:
                 print("Locality Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['location_new'].iterkeys():
+        for key in results_dict['location_new'].keys():
             try:
                 with transaction.atomic():
                     new_location = Location.objects.create(id=key[0], locality_id=key[1], location_name=key[2], building_name=key[3], room=key[4], shelf=key[5], column=key[6], box_name=key[7], comments=key[8])
             except Exception as e:
                 print("Location Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['stock_packet_new'].iterkeys():
+        for key in results_dict['stock_packet_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock_packet = StockPacket.objects.create(id=key[0], stock_id=key[1], location_id=key[2], weight=key[3], num_seeds=key[4], comments=key[5])
@@ -707,7 +707,7 @@ def row_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    row_file = csv.DictReader(upload_file)
+    row_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in row_file:
         row_id = row["Row ID"]
         experiment_name = row["Experiment Name"]
@@ -828,66 +828,66 @@ def row_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Row Table'])
     writer.writerow(['obs_row_id', 'row_id', 'row_name', 'range_num', 'plot', 'block', 'rep', 'kernel_num', 'planting_date', 'harvest_date', 'comments'])
-    for key in results_dict['obs_row_new'].iterkeys():
+    for key in results_dict['obs_row_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Source Seed ID Errors'])
     writer.writerow(['row_id', 'source_seed_id', 'field_name', 'row_name', 'range', 'plot', 'block', 'rep', 'kernel_num', 'planting_date', 'harvest_date', 'comments'])
-    for key in results_dict['source_seed_id_error'].iterkeys():
+    for key in results_dict['source_seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Field Name Errors'])
     writer.writerow(['row_id', 'source_seed_id', 'field_name', 'row_name', 'range', 'plot', 'block', 'rep', 'kernel_num', 'planting_date', 'harvest_date', 'comments'])
-    for key in results_dict['field_name_error'].iterkeys():
+    for key in results_dict['field_name_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row Entry Already Exists'])
-    for key in results_dict['row_hash_exists'].iterkeys():
+    for key in results_dict['row_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entries Already Exist'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def row_loader(results_dict):
     try:
-        for key in results_dict['obs_row_new'].iterkeys():
+        for key in results_dict['obs_row_new'].keys():
             try:
                 with transaction.atomic():
                     new_obsrow = ObsRow.objects.create(id=key[0], row_id=key[1], row_name=key[2], range_num=key[3], plot=key[4], block=key[5], rep=key[6], kernel_num=key[7], planting_date=key[8], harvest_date=key[9], comments=key[10])
             except Exception as e:
                 print("ObsRow Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -934,7 +934,7 @@ def plant_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    plant_file = csv.DictReader(upload_file)
+    plant_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in plant_file:
         plant_id = row["Plant ID"]
         experiment_name = row["Experiment Name"]
@@ -1059,66 +1059,66 @@ def plant_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Plant Table'])
     writer.writerow(['obs_plant_id', 'plant_id', 'plant_num', 'comments'])
-    for key in results_dict['obs_plant_new'].iterkeys():
+    for key in results_dict['obs_plant_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['plant_id', 'experiment_name', 'row_id', 'seed_id', 'plant_num', 'comments'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['plant_id', 'experiment_name', 'row_id', 'seed_id', 'plant_num', 'comments'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant Entry Already Exists'])
-    for key in results_dict['plant_hash_exists'].iterkeys():
+    for key in results_dict['plant_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entries Already Exist'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def plant_loader(results_dict):
     try:
-        for key in results_dict['obs_plant_new'].iterkeys():
+        for key in results_dict['obs_plant_new'].keys():
             try:
                 with transaction.atomic():
                     new_obsrow = ObsPlant.objects.create(id=key[0], plant_id=key[1], plant_num=key[2], comments=key[3])
             except Exception as e:
                 print("ObsPlant Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -1170,7 +1170,7 @@ def tissue_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    tissue_file = csv.DictReader(upload_file)
+    tissue_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in tissue_file:
         tissue_id = row["Tissue ID"]
         experiment_name = row["Experiment Name"]
@@ -1345,76 +1345,76 @@ def tissue_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Tissue Table'])
     writer.writerow(['obs_tissue_id', 'tissue_id', 'tissue_type', 'tissue_name', 'date_ground', 'comments'])
-    for key in results_dict['obs_tissue_new'].iterkeys():
+    for key in results_dict['obs_tissue_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['tissue_id', 'experiment_name', 'tissue_name', 'tissue_type', 'date_ground', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_culture_id', 'tissue_comments'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['tissue_id', 'experiment_name', 'tissue_name', 'tissue_type', 'date_ground', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_culture_id', 'tissue_comments'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['tissue_id', 'experiment_name', 'tissue_name', 'tissue_type', 'date_ground', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_culture_id', 'tissue_comments'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Culture ID Errors'])
     writer.writerow(['tissue_id', 'experiment_name', 'tissue_name', 'tissue_type', 'date_ground', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_culture_id', 'tissue_comments'])
-    for key in results_dict['culture_id_error'].iterkeys():
+    for key in results_dict['culture_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Tissue Entry Already Exists'])
-    for key in results_dict['tissue_hash_exists'].iterkeys():
+    for key in results_dict['tissue_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entries Already Exist'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def tissue_loader(results_dict):
     try:
-        for key in results_dict['obs_tissue_new'].iterkeys():
+        for key in results_dict['obs_tissue_new'].keys():
             try:
                 with transaction.atomic():
                     new_obstissue = ObsTissue.objects.create(id=key[0], tissue_id=key[1], tissue_type=key[2], tissue_name=key[3], date_ground=key[4], comments=key[5])
             except Exception as e:
                 print("ObsTissue Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -1473,7 +1473,7 @@ def culture_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    culture_file = csv.DictReader(upload_file)
+    culture_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in culture_file:
         culture_id = row["Culture ID"]
         experiment_name = row["Experiment Name"]
@@ -1705,81 +1705,81 @@ def culture_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Culture Table'])
     writer.writerow(['obs_culture_id', 'medium_id', 'culture_id', 'culture_name', 'microbe_type', 'plating_cycle', 'dilution', 'image_filename', 'tissue_comments', 'num_colonies', 'num_microbes'])
-    for key in results_dict['obs_culture_new'].iterkeys():
+    for key in results_dict['obs_culture_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['culture_id', 'experiment_name', 'media_name', 'location_name', 'culture_name', 'microbe_type', 'plating_cycle', 'dilution', 'image_filename', 'culture_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['culture_id', 'experiment_name', 'media_name', 'location_name', 'culture_name', 'microbe_type', 'plating_cycle', 'dilution', 'image_filename', 'culture_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['culture_id', 'experiment_name', 'media_name', 'location_name', 'culture_name', 'microbe_type', 'plating_cycle', 'dilution', 'image_filename', 'culture_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Tissue ID Errors'])
     writer.writerow(['culture_id', 'experiment_name', 'media_name', 'location_name', 'culture_name', 'microbe_type', 'plating_cycle', 'dilution', 'image_filename', 'culture_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id'])
-    for key in results_dict['tissue_id_error'].iterkeys():
+    for key in results_dict['tissue_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Microbe ID Errors'])
     writer.writerow(['culture_id', 'experiment_name', 'media_name', 'location_name', 'culture_name', 'microbe_type', 'plating_cycle', 'dilution', 'image_filename', 'culture_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id'])
-    for key in results_dict['microbe_id_error'].iterkeys():
+    for key in results_dict['microbe_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Culture Entry Already Exists'])
-    for key in results_dict['culture_hash_exists'].iterkeys():
+    for key in results_dict['culture_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entries Already Exist'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def culture_loader(results_dict):
     try:
-        for key in results_dict['obs_culture_new'].iterkeys():
+        for key in results_dict['obs_culture_new'].keys():
             try:
                 with transaction.atomic():
                     new_obsculture = ObsCulture.objects.create(id=key[0], medium_id=key[1], culture_id=key[2], culture_name=key[3], microbe_type=key[4], plating_cycle=key[5], dilution=key[6], image_filename=key[7], comments=key[8], num_colonies=key[9], num_microbes=key[10])
             except Exception as e:
                 print("ObsCulture Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -1846,7 +1846,7 @@ def dna_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    dna_file = csv.DictReader(upload_file)
+    dna_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in dna_file:
         dna_id = row["DNA ID"]
         experiment_name = row["Experiment Name"]
@@ -2141,101 +2141,101 @@ def dna_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New DNA Table'])
     writer.writerow(['obs_dna_id', 'dna_id', 'extraction_method', 'date', 'tube_id', 'tube_type', 'comments'])
-    for key in results_dict['obs_dna_new'].iterkeys():
+    for key in results_dict['obs_dna_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Tissue ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['tissue_id_error'].iterkeys():
+    for key in results_dict['tissue_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Microbe ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['microbe_id_error'].iterkeys():
+    for key in results_dict['microbe_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Culture ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['culture_id_error'].iterkeys():
+    for key in results_dict['culture_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plate ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['plate_id_error'].iterkeys():
+    for key in results_dict['plate_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Well ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['well_id_error'].iterkeys():
+    for key in results_dict['well_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Sample ID Errors'])
     writer.writerow(['dna_id', 'experiment_name', 'extraction', 'date', 'tube_id', 'tube_type', 'dna_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_culture_id', 'source_plate_id'])
-    for key in results_dict['sample_id_error'].iterkeys():
+    for key in results_dict['sample_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['DNA Entry Already Exists'])
-    for key in results_dict['dna_hash_exists'].iterkeys():
+    for key in results_dict['dna_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entries Already Exist'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def dna_loader(results_dict):
     try:
-        for key in results_dict['obs_dna_new'].iterkeys():
+        for key in results_dict['obs_dna_new'].keys():
             try:
                 with transaction.atomic():
                     new_obsdna = ObsDNA.objects.create(id=key[0], dna_id=key[1], extraction_method=key[2], date=key[3], tube_id=key[4], tube_type=key[5], comments=key[6])
             except Exception as e:
                 print("ObsDNA Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -2290,7 +2290,7 @@ def microbe_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    microbe_file = csv.DictReader(upload_file)
+    microbe_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in microbe_file:
         microbe_id = row["Microbe ID"]
         experiment_name = row["Experiment Name"]
@@ -2486,81 +2486,81 @@ def microbe_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Microbe Table'])
     writer.writerow(['obs_microbe_id', 'microbe_id', 'microbe_type', 'comments'])
-    for key in results_dict['obs_microbe_new'].iterkeys():
+    for key in results_dict['obs_microbe_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['microbe_id', 'experiment_name', 'microbe_type', 'microbe_comments','source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['microbe_id', 'experiment_name', 'microbe_type', 'microbe_comments','source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['microbe_id', 'experiment_name', 'microbe_type', 'microbe_comments','source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Tissue ID Errors'])
     writer.writerow(['microbe_id', 'experiment_name', 'microbe_type', 'microbe_comments','source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id'])
-    for key in results_dict['tissue_id_error'].iterkeys():
+    for key in results_dict['tissue_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Culture ID Errors'])
     writer.writerow(['microbe_id', 'experiment_name', 'microbe_type', 'microbe_comments','source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id'])
-    for key in results_dict['culture_id_error'].iterkeys():
+    for key in results_dict['culture_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Microbe Entry Already Exists'])
-    for key in results_dict['microbe_hash_exists'].iterkeys():
+    for key in results_dict['microbe_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entries Already Exist'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def microbe_loader(results_dict):
     try:
-        for key in results_dict['obs_microbe_new'].iterkeys():
+        for key in results_dict['obs_microbe_new'].keys():
             try:
                 with transaction.atomic():
                     new_obsmicrobe = ObsMicrobe.objects.create(id=key[0], microbe_id=key[1], microbe_type=key[2], comments=key[3])
             except Exception as e:
                 print("ObsMicrobe Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -2600,7 +2600,7 @@ def plate_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    plate_file = csv.DictReader(upload_file)
+    plate_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in plate_file:
         plate_id = row["Plate ID"]
         experiment_name = row["Experiment Name"]
@@ -2696,61 +2696,61 @@ def plate_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Plate Table'])
     writer.writerow(['obs_plate_id', 'plate_id', 'plate_name', 'date', 'contents', 'rep', 'plate_type', 'plate_status', 'comments'])
-    for key in results_dict['obs_plate_new'].iterkeys():
+    for key in results_dict['obs_plate_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Location Name Errors'])
     writer.writerow(['plate_id', 'experiment_name', 'location_name', 'plate_name', 'date', 'contents', 'rep', 'plate_type', 'plate_status', 'plate_comments'])
-    for key in results_dict['location_name_error'].iterkeys():
+    for key in results_dict['location_name_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plate Entry Already Exists'])
-    for key in results_dict['plate_hash_exists'].iterkeys():
+    for key in results_dict['plate_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entry Already Exists'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def plate_loader(results_dict):
     try:
-        for key in results_dict['obs_plate_new'].iterkeys():
+        for key in results_dict['obs_plate_new'].keys():
             try:
                 with transaction.atomic():
                     new_obsplate = ObsPlate.objects.create(id=key[0], plate_id=key[1], plate_name=key[2], date=key[3], contents=key[4], rep=key[5], plate_type=key[6], plate_status=key[7], comments=key[8])
             except Exception as e:
                 print("ObsPlate Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -2790,7 +2790,7 @@ def env_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    env_file = csv.DictReader(upload_file)
+    env_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in env_file:
         environment_id = row["Environment ID"]
         experiment_name = row["Experiment Name"]
@@ -2882,61 +2882,61 @@ def env_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Environment Table'])
     writer.writerow(['obs_env_id', 'environment_id', 'longitude', 'latitude', 'comments'])
-    for key in results_dict['obs_env_new'].iterkeys():
+    for key in results_dict['obs_env_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_id', 'source_obs_id', 'target_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Field Name Errors'])
     writer.writerow(['environment_id', 'experiment_name', 'field_name', 'longitude', 'latitude', 'env_comments'])
-    for key in results_dict['field_name_error'].iterkeys():
+    for key in results_dict['field_name_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Environment Entry Already Exists'])
-    for key in results_dict['env_hash_exists'].iterkeys():
+    for key in results_dict['env_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entry Already Exists'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def env_loader(results_dict):
     try:
-        for key in results_dict['obs_env_new'].iterkeys():
+        for key in results_dict['obs_env_new'].keys():
             try:
                 with transaction.atomic():
                     new_obsenv = ObsEnv.objects.create(id=key[0], environment_id=key[1], longitude=key[2], latitude=key[3], comments=key[4])
             except Exception as e:
                 print("ObsEnv Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -2997,7 +2997,7 @@ def well_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    well_file = csv.DictReader(upload_file)
+    well_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in well_file:
         well_id = row["Well ID"]
         experiment_name = row["Experiment Name"]
@@ -3243,91 +3243,91 @@ def well_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Well Table'])
     writer.writerow(['obs_well_id', 'well_id', 'well', 'well_inventory', 'tube_label', 'comments'])
-    for key in results_dict['obs_well_new'].iterkeys():
+    for key in results_dict['obs_well_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['well_id', 'experiment_name', 'well', 'inventory', 'tube_label', 'well_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id', 'source_microbe_id', 'source_plate_id'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['well_id', 'experiment_name', 'well', 'inventory', 'tube_label', 'well_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id', 'source_microbe_id', 'source_plate_id'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['well_id', 'experiment_name', 'well', 'inventory', 'tube_label', 'well_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id', 'source_microbe_id', 'source_plate_id'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Tissue ID Errors'])
     writer.writerow(['well_id', 'experiment_name', 'well', 'inventory', 'tube_label', 'well_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id', 'source_microbe_id', 'source_plate_id'])
-    for key in results_dict['tissue_id_error'].iterkeys():
+    for key in results_dict['tissue_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Culture ID Errors'])
     writer.writerow(['well_id', 'experiment_name', 'well', 'inventory', 'tube_label', 'well_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id', 'source_microbe_id', 'source_plate_id'])
-    for key in results_dict['culture_id_error'].iterkeys():
+    for key in results_dict['culture_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Microbe ID Errors'])
     writer.writerow(['well_id', 'experiment_name', 'well', 'inventory', 'tube_label', 'well_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id', 'source_microbe_id', 'source_plate_id'])
-    for key in results_dict['microbe_id_error'].iterkeys():
+    for key in results_dict['microbe_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plate ID Errors'])
     writer.writerow(['well_id', 'experiment_name', 'well', 'inventory', 'tube_label', 'well_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_tissue_id', 'source_culture_id', 'source_microbe_id', 'source_plate_id'])
-    for key in results_dict['plate_id_error'].iterkeys():
+    for key in results_dict['plate_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Well Entry Already Exists'])
-    for key in results_dict['well_hash_exists'].iterkeys():
+    for key in results_dict['well_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entries Already Exist'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def well_loader(results_dict):
     try:
-        for key in results_dict['obs_well_new'].iterkeys():
+        for key in results_dict['obs_well_new'].keys():
             try:
                 with transaction.atomic():
                     new_obswell = ObsWell.objects.create(id=key[0], well_id=key[1], well=key[2], well_inventory=key[3], tube_label=key[4], comments=key[5])
             except Exception as e:
                 print("ObsWell Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -3378,7 +3378,7 @@ def samples_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    sample_file = csv.DictReader(upload_file)
+    sample_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in sample_file:
         sample_id = row["Sample ID"]
         experiment_name = row["Experiment Name"]
@@ -3551,76 +3551,76 @@ def samples_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Samples Table'])
     writer.writerow(['obs_sample_id', 'sample_id', 'sample_type', 'sample_name', 'weight', 'volume', 'density', 'kernel_num', 'photo', 'comments'])
-    for key in results_dict['obs_sample_new'].iterkeys():
+    for key in results_dict['obs_sample_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'target_obs_id'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['sample_id', 'experiment_name', 'sample_type', 'sample_name', 'kernel_num', 'weight', 'volume', 'density', 'photo', 'sample_comments', 'source_row_id', 'source_seed_id', 'source_plant_id'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['sample_id', 'experiment_name', 'sample_type', 'sample_name', 'kernel_num', 'weight', 'volume', 'density', 'photo', 'sample_comments', 'source_row_id', 'source_seed_id', 'source_plant_id'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['sample_id', 'experiment_name', 'sample_type', 'sample_name', 'kernel_num', 'weight', 'volume', 'density', 'photo', 'sample_comments', 'source_row_id', 'source_seed_id', 'source_plant_id'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Source Sample ID Errors'])
     writer.writerow(['sample_id', 'experiment_name', 'sample_type', 'sample_name', 'kernel_num', 'weight', 'volume', 'density', 'photo', 'sample_comments', 'source_row_id', 'source_seed_id', 'source_plant_id', 'source_sample_id'])
-    for key in results_dict['source_sample_id_error'].iterkeys():
+    for key in results_dict['source_sample_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Samples Entry Already Exists'])
-    for key in results_dict['sample_hash_exists'].iterkeys():
+    for key in results_dict['sample_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entry Already Exists'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def samples_loader(results_dict):
     try:
-        for key in results_dict['obs_sample_new'].iterkeys():
+        for key in results_dict['obs_sample_new'].keys():
             try:
                 with transaction.atomic():
                     new_obssample = ObsSample.objects.create(id=key[0], sample_id=key[1], sample_type=key[2], sample_name=key[3], weight=key[4], volume=key[5], density=key[6], kernel_num=key[7], photo=key[8], comments=key[9])
             except Exception as e:
                 print("ObsSample Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_obstracker = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_obstrackersource = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -3658,7 +3658,7 @@ def maize_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    maize_sample_file = csv.DictReader(upload_file)
+    maize_sample_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in maize_sample_file:
         maize_id = row["Maize ID"]
         experiment_name = row["Experiment Name"]
@@ -3749,56 +3749,56 @@ def maize_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Maize Samples Table'])
     writer.writerow(['maize_sample_id', 'maize_id', 'gps_altitude', 'county', 'weight', 'appearance', 'photo', 'gps_accuracy', 'gps_latitude', 'gps_longitude', 'harvest_date', 'maize_variety', 'moisture_content', 'seed_source', 'source_type', 'storage_conditions', 'storage_months', 'sub_location', 'village'])
-    for key in results_dict['maize_sample_new'].iterkeys():
+    for key in results_dict['maize_sample_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'obs_source_id', 'obs_target_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Maize Sample Entry Already Exists'])
-    for key in results_dict['maize_sample_hash_exists'].iterkeys():
+    for key in results_dict['maize_sample_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entry Already Exists'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def maize_loader(results_dict):
     try:
-        for key in results_dict['maize_sample_new'].iterkeys():
+        for key in results_dict['maize_sample_new'].keys():
             try:
                 with transaction.atomic():
                     new_maizesample = MaizeSample.objects.create(id=key[0], maize_id=key[1], gps_altitude=key[2], county=key[3], weight=key[4], appearance=key[5], photo=key[6], gps_accuracy=key[7], gps_latitude=key[8], gps_longitude=key[9], harvest_date=key[10], maize_variety=key[11], moisture_content=key[12], seed_source=key[13], source_type=key[14], storage_conditions=key[15], storage_months=key[16], sub_location=key[17], village=key[18])
             except Exception as e:
                 print("MaizeSample Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -3826,7 +3826,7 @@ def separation_loader_prep(upload_file, user):
     sample_id_error = OrderedDict({})
     separation_hash_exists = OrderedDict({})
 
-    separation_file = csv.DictReader(upload_file)
+    separation_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in separation_file:
         sample_id = row["Sample ID"]
         sample_name = row["Sample Name"]
@@ -3881,29 +3881,29 @@ def separation_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Separation Table'])
     writer.writerow(['separation_id', 'obs_sample_id', 'separation_type', 'apparatus', 'sg', 'light_weight', 'medium_weight', 'heavy_weight', 'light_percent', 'medium_percent', 'heavy_percent', 'operating_factor', 'comments'])
-    for key in results_dict['separation_new'].iterkeys():
+    for key in results_dict['separation_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Sample ID Errors'])
     writer.writerow(['sample_id', 'sample_name', 'separation_type', 'apparatus', 'sg', 'light_weight', 'medium_weight', 'heavy_weight', 'light_percent', 'medium_percent', 'heavy_percent', 'operating_factor', 'comments'])
-    for key in results_dict['sample_id_error'].iterkeys():
+    for key in results_dict['sample_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Separation Entry Already Exists'])
-    for key in results_dict['separation_hash_exists'].iterkeys():
+    for key in results_dict['separation_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def separation_loader(results_dict):
     try:
-        for key in results_dict['separation_new'].iterkeys():
+        for key in results_dict['separation_new'].keys():
             try:
                 with transaction.atomic():
                     new_separation = Separation.objects.create(id=key[0], obs_sample_id=key[1], separation_type=key[2], apparatus=key[3], SG=key[4], light_weight=key[5], intermediate_weight=key[6], heavy_weight=key[7], light_percent=key[8], intermediate_percent=key[9], heavy_percent=key[10], operating_factor=key[11], comments=key[12])
@@ -4000,7 +4000,7 @@ def isolate_loader_prep(upload_file, user):
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
 
-    isolate_file = csv.DictReader(upload_file)
+    isolate_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in isolate_file:
         isolate_id = row["Isolate ID"]
         experiment_name = row["Experiment Name"]
@@ -4440,180 +4440,180 @@ def isolate_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Isolate Table'])
     writer.writerow(['isolate_table_id', 'passport_id', 'location_id', 'disease_info_id', 'isolate_id', 'isolate_name', 'plant_organ', 'comments'])
-    for key in results_dict['isolate_new'].iterkeys():
+    for key in results_dict['isolate_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Collecting Table'])
     writer.writerow(['collecting_id', 'user_id', 'collection_date', 'collection_method', 'comments'])
-    for key in results_dict['collecting_new'].iterkeys():
+    for key in results_dict['collecting_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New People Table'])
     writer.writerow(['people_id', 'first_name', 'last_name', 'organization', 'phone', 'email', 'comments'])
-    for key in results_dict['people_new'].iterkeys():
+    for key in results_dict['people_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Taxonomy Table'])
     writer.writerow(['taxonomy_id', 'genus', 'species', 'population', 'common_name', 'alias', 'race', 'subtaxa'])
-    for key in results_dict['taxonomy_new'].iterkeys():
+    for key in results_dict['taxonomy_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Passport Table'])
     writer.writerow(['passport_id', 'collecting_id', 'people_id', 'taxonomy_id'])
-    for key in results_dict['passport_new'].iterkeys():
+    for key in results_dict['passport_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'target_obs_id', 'relationship'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Tissue ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['tissue_id_error'].iterkeys():
+    for key in results_dict['tissue_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Culture ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['culture_id_error'].iterkeys():
+    for key in results_dict['culture_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Microbe ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['microbe_id_error'].iterkeys():
+    for key in results_dict['microbe_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plate ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['plate_id_error'].iterkeys():
+    for key in results_dict['plate_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Well ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['well_id_error'].iterkeys():
+    for key in results_dict['well_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['DNA ID Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['dna_id_error'].iterkeys():
+    for key in results_dict['dna_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Field Name Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['field_name_error'].iterkeys():
+    for key in results_dict['field_name_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Location Name Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['location_name_error'].iterkeys():
+    for key in results_dict['location_name_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Disease Common Name Errors'])
     writer.writerow(['isolate_id', 'experiment_name', 'isolate_name', 'plant_organ', 'isolate_comments', 'genus', 'species', 'population', 'alias', 'race', 'subtaxa', 'source_row_id', 'source_field_name', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'collection_username', 'collection_date', 'collection_method', 'collection_comments', 'organization', 'firat_name', 'last_name', 'phone', 'email', 'source_comments', 'location_name'])
-    for key in results_dict['disease_common_name_error'].iterkeys():
+    for key in results_dict['disease_common_name_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Collecting Entries Already Exist'])
-    for key in results_dict['collecting_hash_exists'].iterkeys():
+    for key in results_dict['collecting_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['People Entries Already Exist'])
-    for key in results_dict['people_hash_exists'].iterkeys():
+    for key in results_dict['people_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Taxonomy Entries Already Exist'])
-    for key in results_dict['taxonomy_hash_exists'].iterkeys():
+    for key in results_dict['taxonomy_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Passport Entries Already Exist'])
-    for key in results_dict['passport_hash_exists'].iterkeys():
+    for key in results_dict['passport_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Isolate Entry Already Exists'])
-    for key in results_dict['isolate_hash_exists'].iterkeys():
+    for key in results_dict['isolate_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entry Already Exists'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def isolate_loader(results_dict):
     try:
-        for key in results_dict['collecting_new'].iterkeys():
+        for key in results_dict['collecting_new'].keys():
             try:
                 with transaction.atomic():
                     new_isolate = Collecting.objects.create(id=key[0], user_id=key[1], collection_date=key[2], collection_method=key[3], comments=key[4])
             except Exception as e:
                 print("Collecting Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['people_new'].iterkeys():
+        for key in results_dict['people_new'].keys():
             try:
                 with transaction.atomic():
                     new_isolate = People.objects.create(id=key[0], first_name=key[1], last_name=key[2], organization=key[3], phone=key[4], email=key[5], comments=key[6])
             except Exception as e:
                 print("People Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['taxonomy_new'].iterkeys():
+        for key in results_dict['taxonomy_new'].keys():
             try:
                 with transaction.atomic():
                     new_isolate = Taxonomy.objects.create(id=key[0], genus=key[1], species=key[2], population=key[3], common_name=key[4], alias=key[5], race=key[6], subtaxa=key[7])
             except Exception as e:
                 print("Taxonomy Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['passport_new'].iterkeys():
+        for key in results_dict['passport_new'].keys():
             try:
                 with transaction.atomic():
                     new_isolate = Passport.objects.create(id=key[0], collecting_id=key[1], people_id=key[2], taxonomy_id=key[3])
             except Exception as e:
                 print("Passport Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['isolate_new'].iterkeys():
+        for key in results_dict['isolate_new'].keys():
             try:
                 with transaction.atomic():
                     new_isolate = Isolate.objects.create(id=key[0], passport_id=key[1], location_id=key[2], disease_info_id=key[3], isolate_id=key[4], isolate_name=key[5], plant_organ=key[6], comments=key[7])
             except Exception as e:
                 print("Isolate Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_obstrackersource = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -4687,7 +4687,7 @@ def glycerol_stock_loader_prep(upload_file, user):
     glycerol_stock_hash_exists = OrderedDict({})
     obs_tracker_hash_exists = OrderedDict({})
 
-    glycerol_file = csv.DictReader(upload_file)
+    glycerol_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in glycerol_file:
         glycerol_stock_id = row["Glycerol Stock ID"]
         experiment_name = row["Experiment Name"]
@@ -5059,116 +5059,116 @@ def glycerol_stock_loader_prep_output(results_dict, new_upload_exp, template_typ
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Glycerol Stock Table'])
     writer.writerow(['id', 'glycerol_stock_id', 'stock_date', 'extract_color', 'organism', 'comments'])
-    for key in results_dict['glycerol_stock_new'].iterkeys():
+    for key in results_dict['glycerol_stock_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTracker Table'])
     writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
-    for key in results_dict['obs_tracker_new'].iterkeys():
+    for key in results_dict['obs_tracker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
     writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'target_obs_id'])
-    for key in results_dict['obs_tracker_source_new'].iterkeys():
+    for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Seed ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['seed_id_error'].iterkeys():
+    for key in results_dict['seed_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Row ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['row_id_error'].iterkeys():
+    for key in results_dict['row_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plant ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['plant_id_error'].iterkeys():
+    for key in results_dict['plant_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Tissue ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['tissue_id_error'].iterkeys():
+    for key in results_dict['tissue_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Culture ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['culture_id_error'].iterkeys():
+    for key in results_dict['culture_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Microbe ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['microbe_id_error'].iterkeys():
+    for key in results_dict['microbe_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Plate ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['plate_id_error'].iterkeys():
+    for key in results_dict['plate_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Well ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['well_id_error'].iterkeys():
+    for key in results_dict['well_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['DNA ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['dna_id_error'].iterkeys():
+    for key in results_dict['dna_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Isolate ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['isolate_id_error'].iterkeys():
+    for key in results_dict['isolate_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Sample ID Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['sample_id_error'].iterkeys():
+    for key in results_dict['sample_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Location Name Errors'])
     writer.writerow(['glycerol_stock_id', 'experiment_name', 'location_name', 'date', 'extract_color', 'organism', 'comments', 'source_field_name', 'source_row_id', 'source_plant_id', 'source_seed_id', 'source_tissue_id', 'source_microbe_id', 'source_well_id', 'source_plate_id', 'source_dna_id', 'source_culture_id', 'source_sample_id', 'source_isolate_id'])
-    for key in results_dict['location_name_error'].iterkeys():
+    for key in results_dict['location_name_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Glycerol Stock Entry Already Exists'])
-    for key in results_dict['glycerol_stock_hash_exists'].iterkeys():
+    for key in results_dict['glycerol_stock_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTracker Entry Already Exists'])
-    for key in results_dict['obs_tracker_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['ObsTrackerSource Entry Already Exists'])
-    for key in results_dict['obs_tracker_source_hash_exists'].iterkeys():
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def glycerol_stock_loader(results_dict):
     try:
-        for key in results_dict['glycerol_stock_new'].iterkeys():
+        for key in results_dict['glycerol_stock_new'].keys():
             try:
                 with transaction.atomic():
                     new_glycerol = GlycerolStock.objects.create(id=key[0], glycerol_stock_id=key[1], stock_date=key[2], extract_color=key[3], organism=key[4], comments=key[5])
             except Exception as e:
                 print("Glycerol Stock Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_new'].iterkeys():
+        for key in results_dict['obs_tracker_new'].keys():
             try:
                 with transaction.atomic():
                     new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
             except Exception as e:
                 print("ObsTracker Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['obs_tracker_source_new'].iterkeys():
+        for key in results_dict['obs_tracker_source_new'].keys():
             try:
                 with transaction.atomic():
                     new_obstrackersource = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
@@ -5211,7 +5211,7 @@ def measurement_loader_prep(upload_file, user):
     parameter_error = OrderedDict({})
     measurement_hash_exists = OrderedDict({})
 
-    measurement_file = csv.DictReader(upload_file)
+    measurement_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in measurement_file:
         obs_id = row["Observation Unit"]
         parameter = row["Parameter Name"]
@@ -5296,39 +5296,39 @@ def measurement_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Measurement Table'])
     writer.writerow(['measurement_id', 'obs_tracker_id', 'measurement_parameter_id', 'user_id', 'time_of_measurement', 'value', 'comments'])
-    for key in results_dict['measurement_new'].iterkeys():
+    for key in results_dict['measurement_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Observation ID Errors'])
     writer.writerow(['observation_id', 'parameter', 'username', 'time_of_measurement', 'value', 'comments'])
-    for key in results_dict['obs_id_error'].iterkeys():
+    for key in results_dict['obs_id_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Username Errors'])
     writer.writerow(['observation_id', 'parameter', 'username', 'time_of_measurement', 'value', 'comments'])
-    for key in results_dict['username_error'].iterkeys():
+    for key in results_dict['username_error'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Parameter Errors'])
     writer.writerow(['observation_id', 'parameter', 'username', 'time_of_measurement', 'value', 'comments'])
-    for key in results_dict['parameter_error'].iterkeys():
+    for key in results_dict['parameter_error'].keys():
         writer.writerow([key])
     writer.writerow([''])
     writer.writerow(['Measurement Entry Already Exists'])
-    for key in results_dict['measurement_hash_exists'].iterkeys():
+    for key in results_dict['measurement_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def measurement_loader(results_dict):
     try:
-        for key in results_dict['measurement_new'].iterkeys():
+        for key in results_dict['measurement_new'].keys():
             try:
                 with transaction.atomic():
                     new_measurement = Measurement.objects.create(id=key[0], obs_tracker_id=key[1], measurement_parameter_id=key[2], user_id=key[3], time_of_measurement=key[4], value=key[5], comments=key[6])
@@ -5356,7 +5356,7 @@ def primer_loader_prep(upload_file, user):
     error_count = 0
     primer_hash_exists = OrderedDict({})
 
-    primer_file = csv.DictReader(upload_file)
+    primer_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in primer_file:
         primer_id = row["Primer ID"]
         primer_name = row["Primer Name"]
@@ -5392,24 +5392,24 @@ def primer_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Primer Table'])
     writer.writerow(['primer_table_id', 'primer_id', 'primer_name', 'primer_tail', 'size_range', 'temp_min', 'temp_max', 'order_date', 'comments'])
-    for key in results_dict['primer_new'].iterkeys():
+    for key in results_dict['primer_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Primer Entry Already Exists'])
-    for key in results_dict['primer_hash_exists'].iterkeys():
+    for key in results_dict['primer_hash_exists'].keys():
         writer.writerow(key)
     return response
 
 def primer_loader(results_dict):
     try:
-        for key in results_dict['primer_new'].iterkeys():
+        for key in results_dict['primer_new'].keys():
             try:
                 with transaction.atomic():
                     new_primer = Primer.objects.create(id=key[0], primer_id=key[1], primer_name=key[2], primer_tail=key[3], size_range=key[4], temp_min=key[5], temp_max=key[6], order_date=key[7], comments=key[8])
@@ -5451,7 +5451,7 @@ def marker_loader_prep(upload_file, user):
     map_feature_interval_hash_exists = OrderedDict({})
     primer_error = OrderedDict({})
 
-    marker_file = csv.DictReader(upload_file)
+    marker_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in marker_file:
         marker_id = row["Marker ID"]
         interval_type = row["Interval Type"]
@@ -5557,60 +5557,60 @@ def marker_loader_prep_output(results_dict, new_upload_exp, template_type):
     writer = csv.writer(response)
     writer.writerow(['Stats'])
     writer.writerow([''])
-    for key in results_dict['stats'].iterkeys():
+    for key in results_dict['stats'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Marker Table'])
     writer.writerow(['marker_table_id', 'map_feature_interval_table_id', 'marker_map_feature_table_id', 'primer_f_table_id', 'primer_r_table_id', 'marker_id', 'marker_name', 'length', 'bac', 'nam_marker', 'poly_type', 'ref_seq', 'comments', 'strand', 'allele'])
-    for key in results_dict['marker_new'].iterkeys():
+    for key in results_dict['marker_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Map Feature Table'])
     writer.writerow(['map_feature_table_id', 'chromosome', 'genetic_bin', 'physical_map', 'genetic_position', 'physical_position', 'comments'])
-    for key in results_dict['map_feature_new'].iterkeys():
+    for key in results_dict['map_feature_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Map Feature Interval Table'])
     writer.writerow(['map_feature_interval_table_id', 'map_feature_start_id', 'map_feature_end_id', 'interval_type', 'interval_name', 'comments'])
-    for key in results_dict['map_feature_interval_new'].iterkeys():
+    for key in results_dict['map_feature_interval_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['---------------------------------------------------------------------------------------------------'])
     writer.writerow([''])
     writer.writerow(['Marker Entry Already Exists'])
-    for key in results_dict['marker_hash_exists'].iterkeys():
+    for key in results_dict['marker_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Map Feature Already Exists'])
-    for key in results_dict['map_feature_hash_exists'].iterkeys():
+    for key in results_dict['map_feature_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Map Feature Interval Already Exists'])
-    for key in results_dict['map_feature_interval_hash_exists'].iterkeys():
+    for key in results_dict['map_feature_interval_hash_exists'].keys():
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['Primer Error'])
-    for key in results_dict['primer_error'].iterkeys():
+    for key in results_dict['primer_error'].keys():
         writer.writerow(key)
     return response
 
 def marker_loader(results_dict):
     try:
-        for key in results_dict['map_feature_new'].iterkeys():
+        for key in results_dict['map_feature_new'].keys():
             try:
                 with transaction.atomic():
                     new_primer = MapFeature.objects.create(id=key[0], chromosome=key[1], genetic_bin=key[2], physical_map=key[3], genetic_position=key[4], physical_position=key[5], comments=key[6])
             except Exception as e:
                 print("MapFeature Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['map_feature_interval_new'].iterkeys():
+        for key in results_dict['map_feature_interval_new'].keys():
             try:
                 with transaction.atomic():
                     new_primer = MapFeatureInterval.objects.create(id=key[0], map_feature_start_id=key[1], map_feature_end_id=key[2], interval_type=key[3], interval_name=key[4], comments=key[5])
             except Exception as e:
                 print("MapFeatureInterval Error: %s %s" % (e.message, e.args))
                 return False
-        for key in results_dict['marker_new'].iterkeys():
+        for key in results_dict['marker_new'].keys():
             try:
                 with transaction.atomic():
                     new_primer = Marker.objects.create(id=key[0], map_feature_interval_id=key[1], marker_map_feature_id=key[2], primer_f_id=key[3], primer_r_id=key[4], marker_id=key[5], marker_name=key[6], length=key[7], bac=key[8], nam_marker=key[9], poly_type=key[10], ref_seq=key[11], comments=key[12], strand=key[13], allele=key[13])
