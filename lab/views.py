@@ -2350,6 +2350,14 @@ def sequence_data_browse(request):
 	return render(request, 'lab/genotype_result_data.html', context=context_dict)
 
 @login_required
+def sequence_alignment_browse(request):
+	context_dict = {}
+	seq_data = GenotypeResults.objects.all()
+	context_dict['seq_data'] = seq_data
+	context_dict['logged_in_user'] = request.user.username
+	return render(request, 'lab/genotype_result_data.html', context=context_dict)
+
+@login_required
 def sample_data_browse(request):
 	context_dict = {}
 	sample_data = sort_sample_data(request)

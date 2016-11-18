@@ -164,6 +164,7 @@ urlpatterns = [
 
     url(r'^data/marker/$', views.marker_data_browse, name='marker_data_browse'),
     url(r'^data/sequence/$', views.sequence_data_browse, name='sequence_data_browse'),
+    url(r'^data/sequence_alignment/$', views.sequence_alignment_browse, name='sequence_alignment_browse'),
 
     url(r'^data/separation/$', views.separation_data_browse, name='separation_data_browse'),
     url(r'^data/separation/(?P<experiment_name>\w+)/$', views.separation_data_from_experiment, name='separation_data_from_experiment'),

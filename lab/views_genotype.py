@@ -19,7 +19,7 @@ from django.template.defaulttags import register
 from operator import itemgetter
 from django.db import transaction
 from django.http import JsonResponse
-
+from Bio import SeqIO
 
 @login_required
 def genotype_data_browse(request):
