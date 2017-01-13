@@ -2263,7 +2263,7 @@ def mapfeature_data_browse(request):
 
 def sort_mapfeature_data(request):
 	data = {}
-	data = Marker.objects.all().exclude(id=1)
+	data = MapFeatureInterval.objects.all().exclude(id=1)
 	return data
 
 @login_required

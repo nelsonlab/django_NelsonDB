@@ -14,6 +14,7 @@
           <thead>
           <tr>
             <th>Name</th>
+            <th>Type</th>
             <th>Chromosome</th>
             <th>Physical Start Position</th>
             <th>Physical End Position</th>
@@ -24,11 +25,12 @@
           <tbody>
           {% for data in mapfeature_data %}
           <tr>
-            <td>{{data.marker_name}}</td>
-            <td>{{data.marker_map_feature.chromosome}}</td>
-            <td>{{data.map_feature_interval.map_feature_start.physical_position}}</td>
-            <td>{{data.map_feature_interval.map_feature_end.physical_position}}</td>
-            <td>{{data.marker_map_feature.physical_map}}</td>
+            <td><a href="http://ensembl.gramene.org/Zea_mays/Location/View?r={{data.map_feature_start.chromosome}}:{{data.map_feature_start.physical_position}}-{{data.map_feature_end.physical_position}}">{{data.interval_name}}</a></td>
+            <td>{{data.interval_type}}</td>
+            <td>{{data.map_feature_start.chromosome}}</td>
+            <td>{{data.map_feature_start.physical_position}}</td>
+            <td>{{data.map_feature_end.physical_position}}</td>
+            <td>{{data.map_feature_start.physical_map}}</td>
             <td>{{data.comments}}</td>
           </tr>
           {% endfor %}
