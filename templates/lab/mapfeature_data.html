@@ -1,0 +1,45 @@
+{% extends 'lab/base.html' %}
+{% load static %}
+{% block title %}Map Feature Data{% endblock %}
+{% block body_block %}
+<div class="hero-unit">
+  <h1>Map Feature Data</h1>
+</div>
+  <br />
+
+
+    <div style="-webkit-box-shadow:2px 2px 3px 3px #888888; -moz-box-shadow:2px 2px 3px 3px #888888; box-shadow:2px 2px 3px 3px #888888; padding:15px">
+      <h2>Map Feature Data</h2><br/>
+        <table id="selected_stocks" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Chromosome</th>
+            <th>Start Position</th>
+            <th>End Position</th>
+            <th>Map Version</th>
+            <th>Comments</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for data in mapfeature_data %}
+          <tr>
+            <td>{{data.marker_name}}</td>
+            <td>{{data.marker_map_feature.chromosome}}</td>
+            <td>{{data.marker_map_feature.chromosome}}</td>
+            <td>{{data.marker_map_feature.chromosome}}</td>
+            <td>{{data.marker_map_feature.chromosome}}</td>
+            <td>{{data.comments}}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <br/>
+      <form action='/lab/download/data/environment/'>
+        <input class="btn btn-primary" type="submit" name="submit" value="Export Data"/>
+      </form>
+    </div><br/><br/>
+
+
+
+{% endblock %}

@@ -2253,6 +2253,20 @@ def download_env_experiment(request, experiment_name):
 	return response
 
 @login_required
+def mapfeature_data_browse(request):
+	context_dict = {}
+	mapfeature_data = sort_mapfeature_data(request)
+	context_dict = checkbox_session_variable_check(request)
+	context_dict['mapfeature_data'] = mapfeature_data
+	context_dict['logged_in_user'] = request.user.username
+	return render(request, 'lab/mapfeature_data.html', context=context_dict)
+
+def sort_mapfeature_data(request):
+	data = {}
+	data = Marker.objects.all().exclude(id=1)
+	return data
+
+@login_required
 def row_data_browse(request):
 	context_dict = {}
 	row_data = sort_row_data(request)

@@ -1,7 +1,7 @@
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from lab.models import Primer, MapFeature, MapFeatureInterval, Marker, MapFeatureAnnotation, MeasurementParameter, QTL, MapFeatureExpression, GenotypeResults
 from lab.forms import FileDumpForm
 from django.contrib.auth import authenticate, login, logout

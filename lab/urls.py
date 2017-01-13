@@ -152,6 +152,8 @@ urlpatterns = [
     url(r'^data/environment/checkbox_clear/$', views.checkbox_env_data_clear, name='checkbox_env_data_clear'),
     url(r'^data/environment/(?P<experiment_name>\w+)/$', views.env_data_from_experiment, name='env_data_from_experiment'),
 
+    url(r'^data/mapfeature/$', views.mapfeature_data_browse, name='mapfeature_data_browse'),
+
     url(r'^data/isolates/(?P<experiment_name>\w+)/$', views.isolate_data_from_experiment, name='isolate_data_from_experiment'),
     url(r'^data/glycerol_stock/(?P<experiment_name>\w+)/$', views.glycerol_stock_data_from_experiment, name='glycerol_stock_data_from_experiment'),
 
