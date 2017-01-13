@@ -15,8 +15,8 @@
           <tr>
             <th>Name</th>
             <th>Chromosome</th>
-            <th>Start Position</th>
-            <th>End Position</th>
+            <th>Physical Start Position</th>
+            <th>Physical End Position</th>
             <th>Map Version</th>
             <th>Comments</th>
           </tr>
@@ -26,9 +26,9 @@
           <tr>
             <td>{{data.marker_name}}</td>
             <td>{{data.marker_map_feature.chromosome}}</td>
-            <td>{{data.marker_map_feature.chromosome}}</td>
-            <td>{{data.marker_map_feature.chromosome}}</td>
-            <td>{{data.marker_map_feature.chromosome}}</td>
+            <td>{{data.map_feature_interval.map_feature_start.physical_position}}</td>
+            <td>{{data.map_feature_interval.map_feature_end.physical_position}}</td>
+            <td>{{data.marker_map_feature.physical_map}}</td>
             <td>{{data.comments}}</td>
           </tr>
           {% endfor %}
