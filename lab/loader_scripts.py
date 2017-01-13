@@ -5621,3 +5621,122 @@ def marker_loader(results_dict):
         print("Error: %s %s" % (e.message, e.args))
         return False
     return True
+
+def map_feature_interval_loader_prep(upload_file, user):
+    start = time.clock()
+
+    map_feature_new = OrderedDict({})
+    #--- Key = (map_feature_table_id, chromosome, genetic_bin, physical_map, genetic_position, physical_position, comments)
+    #--- Value = (map_feature_table_id)
+    map_feature_interval_new = OrderedDict({})
+    #--- Key = (map_feature_interval_table_id, map_feature_start_id, map_feature_end_id, interval_type, interval_name, comments)
+    #--- Value = (map_feature_table_id)
+
+    map_feature_hash_table = loader_db_mirror.map_feature_hash_mirror()
+    map_feature_interval_hash_table = loader_db_mirror.map_feature_interval_hash_mirror()
+    map_feature_table_id = loader_db_mirror.map_feature_table_id_mirror()
+    map_feature_interval_table_id = loader_db_mirror.map_feature_interval_table_id_mirror()
+
+    error_count = 0
+    map_feature_hash_exists = OrderedDict({})
+    map_feature_interval_hash_exists = OrderedDict({})
+
+    map_feature_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
+    for row in map_feature_file:
+        interval_name = row["Interval Name"]
+        interval_type = row["Interval Type"]
+        interval_comments = row["Interval Comments"]
+        chromosome = row["Chromosome"]
+        genetic_bin = row["Genetic Bin"]
+        physical_map = row["Physical Map"]
+        start_physical_position = row["Start Physical Position"]
+        end_physical_position = row["End Physical Position"]
+        start_genetic_position = row["Start Genetic Position"]
+        end_genetic_position = row["End Genetic Position"]
+
+        map_feature_start_hash = chromosome + genetic_bin + physical_map + start_genetic_position + start_physical_position + interval_comments
+        if map_feature_start_hash not in map_feature_hash_table:
+            map_feature_hash_table[map_feature_start_hash] = map_feature_table_id
+            map_feature_new[(map_feature_table_id, chromosome, genetic_bin, physical_map, start_genetic_position, start_physical_position, interval_comments)] = map_feature_table_id
+            map_feature_table_id = map_feature_table_id + 1
+        else:
+            map_feature_hash_exists[(chromosome, genetic_bin, physical_map, start_genetic_position, start_physical_position, interval_comments)] = map_feature_table_id
+
+        map_feature_end_hash = chromosome + genetic_bin + physical_map + end_genetic_position + end_physical_position + interval_comments
+        if map_feature_end_hash not in map_feature_hash_table:
+            map_feature_hash_table[map_feature_end_hash] = map_feature_table_id
+            map_feature_new[(map_feature_table_id, chromosome, genetic_bin, physical_map, end_genetic_position, end_physical_position, interval_comments)] = map_feature_table_id
+            map_feature_table_id = map_feature_table_id + 1
+        else:
+            map_feature_hash_exists[(chromosome, genetic_bin, physical_map, end_genetic_position, end_physical_position, interval_comments)] = map_feature_table_id
+
+        map_feature_interval_hash = str(map_feature_hash_table[map_feature_start_hash]) + str(map_feature_hash_table[map_feature_end_hash]) + interval_type + interval_name + interval_comments
+        if map_feature_interval_hash not in map_feature_hash_table:
+            map_feature_interval_hash_table[map_feature_interval_hash] = map_feature_interval_table_id
+            map_feature_interval_new[(map_feature_interval_table_id, map_feature_hash_table[map_feature_start_hash], map_feature_hash_table[map_feature_end_hash], interval_type, interval_name, interval_comments)] = map_feature_interval_table_id
+            map_feature_interval_table_id = map_feature_interval_table_id + 1
+        else:
+            map_feature_interval_hash_exists[(map_feature_hash_table[map_feature_start_hash], map_feature_hash_table[map_feature_end_hash], interval_type, interval_name, interval_comments)] = map_feature_interval_table_id
+
+    end = time.clock()
+    stats = {}
+    stats[("Time: %s" % (end-start), "Errors: %s" % (error_count))] = error_count
+
+    results_dict = {}
+    results_dict['map_feature_new'] = map_feature_new
+    results_dict['map_feature_interval_new'] = map_feature_interval_new
+    results_dict['map_feature_hash_exists'] = map_feature_hash_exists
+    results_dict['map_feature_interval_hash_exists'] = map_feature_interval_hash_exists
+    results_dict['stats'] = stats
+    return results_dict
+
+def map_feature_interval_loader_prep_output(results_dict, new_upload_exp, template_type):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_%s_prep.csv"' % (new_upload_exp, template_type)
+    writer = csv.writer(response)
+    writer.writerow(['Stats'])
+    writer.writerow([''])
+    for key in results_dict['stats'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Map Feature Table'])
+    writer.writerow(['map_feature_table_id', 'chromosome', 'genetic_bin', 'physical_map', 'genetic_position', 'physical_position', 'comments'])
+    for key in results_dict['map_feature_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Map Feature Interval Table'])
+    writer.writerow(['map_feature_interval_table_id', 'map_feature_start_id', 'map_feature_end_id', 'interval_type', 'interval_name', 'comments'])
+    for key in results_dict['map_feature_interval_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['---------------------------------------------------------------------------------------------------'])
+    writer.writerow([''])
+    writer.writerow(['Map Feature Already Exists'])
+    for key in results_dict['map_feature_hash_exists'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['Map Feature Interval Already Exists'])
+    for key in results_dict['map_feature_interval_hash_exists'].keys():
+        writer.writerow(key)
+    return response
+
+def map_feature_interval_loader(results_dict):
+    try:
+        for key in results_dict['map_feature_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_primer = MapFeature.objects.create(id=key[0], chromosome=key[1], genetic_bin=key[2], physical_map=key[3], genetic_position=key[4], physical_position=key[5], comments=key[6])
+            except Exception as e:
+                print("MapFeature Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['map_feature_interval_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_primer = MapFeatureInterval.objects.create(id=key[0], map_feature_start_id=key[1], map_feature_end_id=key[2], interval_type=key[3], interval_name=key[4], comments=key[5])
+            except Exception as e:
+                print("MapFeatureInterval Error: %s %s" % (e.message, e.args))
+                return False
+    except Exception as e:
+        print("Error: %s %s" % (e.message, e.args))
+        return False
+    return True

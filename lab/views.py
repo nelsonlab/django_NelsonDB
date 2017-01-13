@@ -6004,6 +6004,8 @@ def upload_online(request, template_type):
 				results_dict = loader_scripts.primer_loader_prep(request.FILES['file_name'], new_upload_user)
 			elif template_type == 'marker_data':
 				results_dict = loader_scripts.marker_loader_prep(request.FILES['file_name'], new_upload_user)
+			elif template_type == 'map_feature_interval_data':
+				results_dict = loader_scripts.map_feature_interval_loader_prep(request.FILES['file_name'], new_upload_user)
 			else:
 				results_dict = None
 			if results_dict is not None:
@@ -6048,6 +6050,8 @@ def upload_online(request, template_type):
 						output = loader_scripts.primer_loader_prep_output(results_dict, new_upload_exp, template_type)
 					elif template_type == 'marker_data':
 						output = loader_scripts.marker_loader_prep_output(results_dict, new_upload_exp, template_type)
+					elif template_type == 'map_feature_interval_data':
+						output = loader_scripts.map_feature_interval_loader_prep_output(results_dict, new_upload_exp, template_type)
 					else:
 						output = None
 					return output
@@ -6091,6 +6095,8 @@ def upload_online(request, template_type):
 						uploaded = loader_scripts.primer_loader(results_dict)
 					elif template_type == 'marker_data':
 						uploaded = loader_scripts.marker_loader(results_dict)
+					elif template_type == 'map_feature_interval_data':
+						uploaded = loader_scripts.map_feature_interval_loader(results_dict)
 					else:
 						uploaded = False
 

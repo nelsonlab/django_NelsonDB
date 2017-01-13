@@ -1,1 +1,1 @@
-map_feature_interval_id,start_map_feature_id,end_map_feature_id,interval_type,interval_name,comments
+Interval Name,Interval Type,Interval Comments,Chromosome,Physical Map,Genetic Bin,Start Physical Position,Start Genetic Position,End Physical Position,End Genetic Position
