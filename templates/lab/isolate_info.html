@@ -23,6 +23,7 @@
         <td>Alias</td>
         <td>Race</td>
         <td>Subtaxa</td>
+        <td>Storage Location</td>
         <td>Passport</td>
         <td>Comments</td>
       </tr>
@@ -37,6 +38,7 @@
         <td>{{ isolate_info.passport.taxonomy.alias }}</td>
         <td>{{ isolate_info.passport.taxonomy.race }}</td>
         <td>{{ isolate_info.passport.taxonomy.subtaxa }}</td>
+        <td><a href='/lab/location/{{ isolate_info.location.id }}/'>{{ isolate_info.location.location_name }}</a></td>
         <td><a href='/lab/passport/{{ isolate_info.passport.id }}/'>{{ isolate_info.passport.id }}</a></td>
         <td>{{ isolate_info.comments }}</td>
       </tr>

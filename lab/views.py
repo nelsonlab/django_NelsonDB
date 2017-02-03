@@ -1091,6 +1091,7 @@ def update_isolate_info(request, isolate_id):
 					isolate.disease_info = obs_tracker_isolate_form.cleaned_data['isolate__disease_info']
 					isolate.plant_organ = obs_tracker_isolate_form.cleaned_data['isolate__plant_organ']
 					isolate.comments = obs_tracker_isolate_form.cleaned_data['isolate__comments']
+					isolate.location = obs_tracker_isolate_form.cleaned_data['location']
 					updated_taxonomy, created = Taxonomy.objects.get_or_create(genus=obs_tracker_isolate_form.cleaned_data['isolate__passport__taxonomy__genus'], species='', population='', common_name='Isolate', alias=obs_tracker_isolate_form.cleaned_data['isolate__passport__taxonomy__alias'], race=obs_tracker_isolate_form.cleaned_data['isolate__passport__taxonomy__race'], subtaxa=obs_tracker_isolate_form.cleaned_data['isolate__passport__taxonomy__subtaxa'])
 					updated_passport, created = Passport.objects.get_or_create(collecting=isolate.passport.collecting, people=isolate.passport.people, taxonomy=updated_taxonomy)
 					isolate.passport = updated_passport
