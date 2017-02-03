@@ -29,6 +29,7 @@
         <th>Status</th>
         <th>Inoculated</th>
         <th>Stock Date</th>
+        <th>Passport</th>
         <th>Comments</th>
       </tr>
     </thead>
@@ -41,6 +42,7 @@
         <td>{{ stock_info.stock_status }}</td>
         <td>{{ stock_info.inoculated }}</td>
         <td>{{ stock_info.stock_date }}</td>
+        <td><a href='/lab/passport/{{ stock_info.passport.id }}/'>{{ stock_info.passport.id }}</a></td>
         <td>{{ stock_info.comments }}</td>
       </tr>
     </tbody>
