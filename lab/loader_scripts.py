@@ -210,6 +210,9 @@ def seed_stock_loader_prep(upload_file, user):
 
 
         if seed_id not in seed_id_table and seed_id + '\r' not in seed_id_table:
+            if inoculated == '':
+                inoculated = '0'
+
             stock_hash = str(temp_passport_id) + seed_id + seed_name + cross_type + pedigree + stock_status + stock_date + inoculated + stock_comments
             stock_hash_fix = stock_hash + '\r'
             if stock_hash not in stock_hash_table and stock_hash_fix not in stock_hash_table:
@@ -5740,3 +5743,128 @@ def map_feature_interval_loader(results_dict):
         print("Error: %s %s" % (e.message, e.args))
         return False
     return True
+
+def nils_loader_prep(upload_file, user):
+    start = time.clock()
+
+    map_feature_new = OrderedDict({})
+    #--- Key = (map_feature_table_id, chromosome, genetic_bin, physical_map, genetic_position, physical_position, comments)
+    #--- Value = (map_feature_table_id)
+    map_feature_interval_new = OrderedDict({})
+    #--- Key = (map_feature_interval_table_id, map_feature_start_id, map_feature_end_id, interval_type, interval_name, comments)
+    #--- Value = (map_feature_table_id)
+    stock_new = OrderedDict({})
+    #--- Key = (stock_id, passport_id, seed_id, seed_name, cross_type, pedigree, stock_status, stock_date, inoculated, comments)
+    #--- Value = (stock_id)
+    passport_new = OrderedDict({})
+    #--- Key = (passport_id, collecting_id, people_id, taxonomy_id)
+    #--- Value = (passport_id)
+    collecting_new = OrderedDict({})
+    #--- Key = (collecting_id, user_id, collection_date, collection_method, comments)
+    #--- Value = (collecting_id)
+    people_new = OrderedDict({})
+    #--- Key = (people_id, first_name, last_name, organization, phone, email, comments)
+    #--- Value = (people_id)
+    taxonomy_new = OrderedDict({})
+    #--- Key = (taxonomy_id, genus, species, population, common_name, alias, race, subtaxa)
+    #--- Value = (taxonomy_id)
+    obs_tracker_new = OrderedDict({})
+    #--- Key = (obs_tracker_id, obs_entity_type, experiment_id, field_id, glycerol_stock_id, isolate_id, location_id, maize_sample_id, obs_culture_id, obs_dna_id, obs_env_id, obs_extract_id, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, obs_well_id, stock_id, user_id)
+    #--- Value = (obs_tracker_id)
+    obs_tracker_source_new = OrderedDict({})
+    #--- Key = (obs_tracker_source_id, source_obs_id, target_obs_id)
+    #--- Value = (obs_tracker_source_id)
+
+    user_hash_table = loader_db_mirror.user_hash_mirror()
+    stock_hash_table = loader_db_mirror.stock_hash_mirror()
+    stock_id = loader_db_mirror.stock_id_mirror()
+    row_id_table = loader_db_mirror.row_id_mirror()
+    plant_id_table = loader_db_mirror.plant_id_mirror()
+    obs_tracker_hash_table = loader_db_mirror.obs_tracker_hash_mirror()
+    obs_tracker_id = loader_db_mirror.obs_tracker_id_mirror()
+    collecting_hash_table = loader_db_mirror.collecting_hash_mirror()
+    collecting_id = loader_db_mirror.collecting_id_mirror()
+    people_hash_table = loader_db_mirror.people_hash_mirror()
+    people_id = loader_db_mirror.people_id_mirror()
+    taxonomy_hash_table = loader_db_mirror.taxonomy_hash_mirror()
+    taxonomy_id = loader_db_mirror.taxonomy_id_mirror()
+    passport_hash_table = loader_db_mirror.passport_hash_mirror()
+    passport_id = loader_db_mirror.passport_id_mirror()
+    experiment_name_table = loader_db_mirror.experiment_name_mirror()
+    seed_id_table = loader_db_mirror.seed_id_mirror()
+    obs_tracker_source_hash_table = loader_db_mirror.obs_tracker_source_hash_mirror()
+    obs_tracker_source_id = loader_db_mirror.obs_tracker_source_id_mirror()
+    obs_tracker_obs_row_id_table = loader_db_mirror.obs_tracker_obs_row_id_mirror()
+    obs_tracker_obs_plant_id_table = loader_db_mirror.obs_tracker_obs_plant_id_mirror()
+    map_feature_hash_table = loader_db_mirror.map_feature_hash_mirror()
+    map_feature_interval_hash_table = loader_db_mirror.map_feature_interval_hash_mirror()
+    map_feature_table_id = loader_db_mirror.map_feature_table_id_mirror()
+    map_feature_interval_table_id = loader_db_mirror.map_feature_interval_table_id_mirror()
+
+    error_count = 0
+    collecting_hash_exists = OrderedDict({})
+    people_hash_exists = OrderedDict({})
+    taxonomy_hash_exists = OrderedDict({})
+    passport_hash_exists = OrderedDict({})
+    stock_hash_exists = OrderedDict({})
+    seed_id_errors = OrderedDict({})
+    obs_tracker_hash_exists = OrderedDict({})
+    obs_tracker_source_hash_exists = OrderedDict({})
+    map_feature_hash_exists = OrderedDict({})
+    map_feature_interval_hash_exists = OrderedDict({})
+
+    nils_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
+    for row in nils_file:
+        interval_name = row["NIL Name"]
+        nil_seed_id = row["NIL Seed ID"]
+        introgression_parent = row["Introgression Parent Seed ID"]
+        backcross_parent = row["Backcross Parent Seed ID"]
+        num_introgressions = row["Number of Introgressions"]
+        physical_map = row["AGP Version"]
+        chromosome = row["Chromosome"]
+        start_physical_position = row["Start Physical Position"]
+        end_physical_position = row["End Physical Position"]
+
+        introgression_parent_stock_id = 1
+        if (introgression_parent not in seed_id_table):
+            seed_id_errors[(introgression_parent)] = stock_id
+            error_count = error_count + 1
+        if (backcross_parent not in seed_id_table):
+            seed_id_errors[(backcross_parent)] = stock_id
+            error_count = error_count + 1
+
+        map_feature_start_hash = chromosome + '' + physical_map + '' + start_physical_position + ''
+        if map_feature_start_hash not in map_feature_hash_table:
+            map_feature_hash_table[map_feature_start_hash] = map_feature_table_id
+            map_feature_new[(map_feature_table_id, chromosome, '', physical_map, '', start_physical_position, '')] = map_feature_table_id
+            map_feature_table_id = map_feature_table_id + 1
+        else:
+            map_feature_hash_exists[(chromosome, '', physical_map, '', start_physical_position, '')] = map_feature_table_id
+
+        map_feature_end_hash = chromosome + '' + physical_map + '' + end_physical_position + ''
+        if map_feature_end_hash not in map_feature_hash_table:
+            map_feature_hash_table[map_feature_end_hash] = map_feature_table_id
+            map_feature_new[(map_feature_table_id, chromosome, '', physical_map, '', end_physical_position, '')] = map_feature_table_id
+            map_feature_table_id = map_feature_table_id + 1
+        else:
+            map_feature_hash_exists[(chromosome, '', physical_map, '', end_physical_position, '')] = map_feature_table_id
+
+        map_feature_interval_hash = str(map_feature_hash_table[map_feature_start_hash]) + str(map_feature_hash_table[map_feature_end_hash]) + 'introgression' + interval_name + ''
+        if map_feature_interval_hash not in map_feature_hash_table:
+            map_feature_interval_hash_table[map_feature_interval_hash] = map_feature_interval_table_id
+            map_feature_interval_new[(map_feature_interval_table_id, map_feature_hash_table[map_feature_start_hash], map_feature_hash_table[map_feature_end_hash], 'introgression', interval_name, '')] = map_feature_interval_table_id
+            map_feature_interval_table_id = map_feature_interval_table_id + 1
+        else:
+            map_feature_interval_hash_exists[(map_feature_hash_table[map_feature_start_hash], map_feature_hash_table[map_feature_end_hash], 'introgression', interval_name, '')] = map_feature_interval_table_id
+
+    end = time.clock()
+    stats = {}
+    stats[("Time: %s" % (end-start), "Errors: %s" % (error_count))] = error_count
+
+    results_dict = {}
+    results_dict['map_feature_new'] = map_feature_new
+    results_dict['map_feature_interval_new'] = map_feature_interval_new
+    results_dict['map_feature_hash_exists'] = map_feature_hash_exists
+    results_dict['map_feature_interval_hash_exists'] = map_feature_interval_hash_exists
+    results_dict['stats'] = stats
+    return results_dict
