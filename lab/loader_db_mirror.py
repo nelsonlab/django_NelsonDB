@@ -779,7 +779,7 @@ def measurement_parameter_table_mirror():
 
     measurement_param_file = MeasurementParameter.objects.all()
     for row in measurement_param_file:
-        measurement_param_table[(row.id, row.parameter, row.parameter_type, row.unit_of_measure, row.protocol, row.trait_id_buckler)] = (row.id)
+        measurement_param_table[(row.id, row.parameter, row.parameter_type, row.unit_of_measure, row.protocol, row.trait_id_buckler, row.marker_id)] = (row.id)
     return measurement_param_table
 
 def measurement_parameter_hash_mirror():
@@ -789,7 +789,7 @@ def measurement_parameter_hash_mirror():
 
     measurement_param_file = MeasurementParameter.objects.all()
     for row in measurement_param_file:
-        param_hash = row.parameter + row.parameter_type + row.unit_of_measure + row.protocol + row.trait_id_buckler
+        param_hash = row.parameter + row.parameter_type + row.unit_of_measure + row.protocol + row.trait_id_buckler + str(row.marker_id)
         measurement_param_hash_table[param_hash] = row.id
     return measurement_param_hash_table
 

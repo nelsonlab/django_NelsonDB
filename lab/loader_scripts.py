@@ -5271,14 +5271,14 @@ def measurement_loader_prep(upload_file, user):
             parameter_error[(obs_id, parameter, username, time_of_measurement, value, comments)] = obs_id
             error_count = error_count + 1
 
-        measurement_hash = str(obs_tracker_id) + str(parameter_id) + str(user_id) + time_of_measurement + value + comments
+        measurement_hash = str(obs_tracker_id) + str(user_id) + str(parameter_id) + time_of_measurement + value + comments
         measurement_hash_fix = measurement_hash + '\r'
         if measurement_hash not in measurement_hash_table and measurement_hash_fix not in measurement_hash_table:
             measurement_hash_table[measurement_hash] = measurement_id
-            measurement_new[(measurement_id, obs_tracker_id, parameter_id, user_id, time_of_measurement, value, comments)] = measurement_id
+            measurement_new[(measurement_id, obs_tracker_id, user_id, parameter_id, time_of_measurement, value, comments)] = measurement_id
             measurement_id = measurement_id + 1
         else:
-            measurement_hash_exists[(measurement_id, obs_tracker_id, parameter_id, user_id, time_of_measurement, value, comments)] = measurement_id
+            measurement_hash_exists[(measurement_id, obs_tracker_id, user_id, parameter_id, time_of_measurement, value, comments)] = measurement_id
 
     end = time.clock()
     stats = {}
@@ -5303,7 +5303,7 @@ def measurement_loader_prep_output(results_dict, new_upload_exp, template_type):
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New Measurement Table'])
-    writer.writerow(['measurement_id', 'obs_tracker_id', 'measurement_parameter_id', 'user_id', 'time_of_measurement', 'value', 'comments'])
+    writer.writerow(['measurement_id', 'obs_tracker_id', 'user_id', 'measurement_parameter_id', 'time_of_measurement', 'value', 'comments'])
     for key in results_dict['measurement_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
@@ -5334,7 +5334,7 @@ def measurement_loader(results_dict):
         for key in results_dict['measurement_new'].keys():
             try:
                 with transaction.atomic():
-                    new_measurement = Measurement.objects.create(id=key[0], obs_tracker_id=key[1], measurement_parameter_id=key[2], user_id=key[3], time_of_measurement=key[4], value=key[5], comments=key[6])
+                    new_measurement = Measurement.objects.create(id=key[0], obs_tracker_id=key[1], user_id=key[2], measurement_parameter_id=key[3], time_of_measurement=key[4], value=key[5], comments=key[6])
             except Exception as e:
                 print("Measurement Error: %s %s" % (e.message, e.args))
                 return False
@@ -5756,62 +5756,53 @@ def nils_loader_prep(upload_file, user):
     stock_new = OrderedDict({})
     #--- Key = (stock_id, passport_id, seed_id, seed_name, cross_type, pedigree, stock_status, stock_date, inoculated, comments)
     #--- Value = (stock_id)
-    passport_new = OrderedDict({})
-    #--- Key = (passport_id, collecting_id, people_id, taxonomy_id)
-    #--- Value = (passport_id)
-    collecting_new = OrderedDict({})
-    #--- Key = (collecting_id, user_id, collection_date, collection_method, comments)
-    #--- Value = (collecting_id)
-    people_new = OrderedDict({})
-    #--- Key = (people_id, first_name, last_name, organization, phone, email, comments)
-    #--- Value = (people_id)
-    taxonomy_new = OrderedDict({})
-    #--- Key = (taxonomy_id, genus, species, population, common_name, alias, race, subtaxa)
-    #--- Value = (taxonomy_id)
     obs_tracker_new = OrderedDict({})
     #--- Key = (obs_tracker_id, obs_entity_type, experiment_id, field_id, glycerol_stock_id, isolate_id, location_id, maize_sample_id, obs_culture_id, obs_dna_id, obs_env_id, obs_extract_id, obs_microbe_id, obs_plant_id, obs_plate_id, obs_row_id, obs_sample_id, obs_tissue_id, obs_well_id, stock_id, user_id)
     #--- Value = (obs_tracker_id)
     obs_tracker_source_new = OrderedDict({})
     #--- Key = (obs_tracker_source_id, source_obs_id, target_obs_id)
     #--- Value = (obs_tracker_source_id)
+    marker_new = OrderedDict({})
+    #--- Key = (marker_table_id, map_feature_interval_id, marker_map_feature_id, primer_f_id, primer_r_id, marker_id, marker_name, length, bac, nam_marker, poly_type, ref_seq, comments, strand, allele)
+    #--- Value = (marker_table_id)
+    measurement_parameter_new = OrderedDict({})
+    #--- Key = (measurement_parameter_id, parameter, parameter_type, unit_of_measure, protocol, trait_id_buckler, marker_id)
+    #--- Value = (measurement_parameter_id)
+    measurement_new = OrderedDict({})
+    #--- Key = (measurement_id, obs_tracker_id, measurement_parameter_id, user_id, time_of_measurement, value, comments)
+    #--- Value = (measurement_id)
 
+    measurement_hash_table = loader_db_mirror.measurement_hash_mirror()
+    measurement_id = loader_db_mirror.measurement_id_mirror()
+    marker_hash_table = loader_db_mirror.marker_hash_mirror()
+    marker_id_table = loader_db_mirror.marker_id_mirror()
+    marker_table_id = loader_db_mirror.marker_table_id_mirror()
     user_hash_table = loader_db_mirror.user_hash_mirror()
     stock_hash_table = loader_db_mirror.stock_hash_mirror()
     stock_id = loader_db_mirror.stock_id_mirror()
-    row_id_table = loader_db_mirror.row_id_mirror()
-    plant_id_table = loader_db_mirror.plant_id_mirror()
     obs_tracker_hash_table = loader_db_mirror.obs_tracker_hash_mirror()
     obs_tracker_id = loader_db_mirror.obs_tracker_id_mirror()
-    collecting_hash_table = loader_db_mirror.collecting_hash_mirror()
-    collecting_id = loader_db_mirror.collecting_id_mirror()
-    people_hash_table = loader_db_mirror.people_hash_mirror()
-    people_id = loader_db_mirror.people_id_mirror()
-    taxonomy_hash_table = loader_db_mirror.taxonomy_hash_mirror()
-    taxonomy_id = loader_db_mirror.taxonomy_id_mirror()
-    passport_hash_table = loader_db_mirror.passport_hash_mirror()
-    passport_id = loader_db_mirror.passport_id_mirror()
-    experiment_name_table = loader_db_mirror.experiment_name_mirror()
     seed_id_table = loader_db_mirror.seed_id_mirror()
     obs_tracker_source_hash_table = loader_db_mirror.obs_tracker_source_hash_mirror()
     obs_tracker_source_id = loader_db_mirror.obs_tracker_source_id_mirror()
-    obs_tracker_obs_row_id_table = loader_db_mirror.obs_tracker_obs_row_id_mirror()
-    obs_tracker_obs_plant_id_table = loader_db_mirror.obs_tracker_obs_plant_id_mirror()
+    obs_tracker_seed_id_table = loader_db_mirror.obs_tracker_seed_id_mirror()
     map_feature_hash_table = loader_db_mirror.map_feature_hash_mirror()
     map_feature_interval_hash_table = loader_db_mirror.map_feature_interval_hash_mirror()
     map_feature_table_id = loader_db_mirror.map_feature_table_id_mirror()
     map_feature_interval_table_id = loader_db_mirror.map_feature_interval_table_id_mirror()
+    measurement_parameter_hash_table = loader_db_mirror.measurement_parameter_hash_mirror()
+    measurement_parameter_id = loader_db_mirror.measurement_parameter_id_mirror()
 
     error_count = 0
-    collecting_hash_exists = OrderedDict({})
-    people_hash_exists = OrderedDict({})
-    taxonomy_hash_exists = OrderedDict({})
-    passport_hash_exists = OrderedDict({})
     stock_hash_exists = OrderedDict({})
     seed_id_errors = OrderedDict({})
     obs_tracker_hash_exists = OrderedDict({})
     obs_tracker_source_hash_exists = OrderedDict({})
     map_feature_hash_exists = OrderedDict({})
     map_feature_interval_hash_exists = OrderedDict({})
+    marker_hash_exists = OrderedDict({})
+    measurement_parameter_hash_exists = OrderedDict({})
+    measurement_hash_exists = OrderedDict({})
 
     nils_file = csv.DictReader(codecs.iterdecode(upload_file, 'utf-8'))
     for row in nils_file:
@@ -5829,9 +5820,54 @@ def nils_loader_prep(upload_file, user):
         if (introgression_parent not in seed_id_table):
             seed_id_errors[(introgression_parent)] = stock_id
             error_count = error_count + 1
+        else:
+            introgression_parent_stock_id = seed_id_table[introgression_parent][0]
+        backcross_parent_stock_id = 1
         if (backcross_parent not in seed_id_table):
             seed_id_errors[(backcross_parent)] = stock_id
             error_count = error_count + 1
+        else:
+            backcross_parent_stock_id = seed_id_table[backcross_parent][0]
+
+        if nil_seed_id not in seed_id_table:
+            stock_hash = str(1) + nil_seed_id + nil_seed_id + 'introgression' + '' + 'available' + '' + '0' + ''
+            if stock_hash not in stock_hash_table:
+                stock_hash_table[stock_hash] = stock_id
+                stock_new[(stock_id, 1, nil_seed_id, nil_seed_id, 'introgression', '', 'available', '', '0', '')] = stock_id
+                seed_id_table[nil_seed_id] = (stock_id, 1, nil_seed_id, nil_seed_id, 'introgression', '', 'available', '', '0', '')
+                stock_id = stock_id + 1
+            else:
+                stock_hash_exists[(1, nil_seed_id, nil_seed_id, 'introgression', '', 'available', '', '0', '')] = stock_id
+
+        obs_tracker_stock_hash = 'stock' + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(1) + str(seed_id_table[nil_seed_id][0]) + str(user_hash_table[user.username])
+        if obs_tracker_stock_hash not in obs_tracker_hash_table:
+            obs_tracker_hash_table[obs_tracker_stock_hash] = obs_tracker_id
+            obs_tracker_new[(obs_tracker_id, 'stock', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, seed_id_table[nil_seed_id][0], user_hash_table[user.username])] = obs_tracker_id
+            obs_tracker_id = obs_tracker_id + 1
+        else:
+            obs_tracker_hash_exists[('stock', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, seed_id_table[nil_seed_id][0], user_hash_table[user.username])] = obs_tracker_id
+
+        if obs_tracker_stock_hash in obs_tracker_hash_table:
+            temp_targetobs_id = obs_tracker_hash_table[obs_tracker_stock_hash]
+        else:
+            temp_targetobs_id = 1
+            error_count = error_count + 1
+
+        obs_tracker_source_hash = str(introgression_parent_stock_id) + str(temp_targetobs_id) + 'stock_from_introgression_parent'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, introgression_parent_stock_id, temp_targetobs_id, 'stock_from_introgression_parent')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(introgression_parent_stock_id, temp_targetobs_id, 'stock_from_introgression_parent')] = obs_tracker_source_id
+
+        obs_tracker_source_hash = str(backcross_parent_stock_id) + str(temp_targetobs_id) + 'stock_from_backcross_parent'
+        if obs_tracker_source_hash not in obs_tracker_source_hash_table:
+            obs_tracker_source_hash_table[obs_tracker_source_hash] = obs_tracker_source_id
+            obs_tracker_source_new[(obs_tracker_source_id, backcross_parent_stock_id, temp_targetobs_id, 'stock_from_backcross_parent')] = obs_tracker_source_id
+            obs_tracker_source_id = obs_tracker_source_id + 1
+        else:
+            obs_tracker_source_hash_exists[(backcross_parent_stock_id, temp_targetobs_id, 'stock_from_backcross_parent')] = obs_tracker_source_id
 
         map_feature_start_hash = chromosome + '' + physical_map + '' + start_physical_position + ''
         if map_feature_start_hash not in map_feature_hash_table:
@@ -5857,6 +5893,34 @@ def nils_loader_prep(upload_file, user):
         else:
             map_feature_interval_hash_exists[(map_feature_hash_table[map_feature_start_hash], map_feature_hash_table[map_feature_end_hash], 'introgression', interval_name, '')] = map_feature_interval_table_id
 
+        length = int(end_physical_position) - int(start_physical_position)
+        marker_hash = str(map_feature_interval_hash_table[map_feature_interval_hash]) + str(1) + str(1) + str(1) + interval_name + interval_name + str(length) + '' + '' + 'introgression' + '' + '' + '' + ''
+        if marker_hash not in marker_hash_table and interval_name not in marker_id_table:
+            marker_hash_table[marker_hash] = marker_table_id
+            marker_id_table[interval_name] = (map_feature_interval_hash_table[map_feature_interval_hash], 1, 1, 1, interval_name, interval_name, length, '', '', 'introgression', '', '', '', '')
+            marker_new[(marker_table_id, map_feature_interval_hash_table[map_feature_interval_hash], 1, 1, 1, interval_name, interval_name, length, '', '', 'introgression', '', '', '', '')] = marker_table_id
+            marker_table_id = marker_table_id + 1
+        else:
+            marker_hash_exists[(map_feature_interval_hash_table[map_feature_interval_hash], 1, 1, 1, interval_name, interval_name, length, '', '', 'introgression', '', '', '', '')] = marker_table_id
+            if interval_name in marker_id_table:
+                marker_hash_table[marker_hash] = marker_id_table[interval_name][0]
+
+        measurement_parameter_hash = interval_name + 'introgression' + 'boolean' + '' + '' + str(marker_hash_table[marker_hash])
+        if measurement_parameter_hash not in measurement_parameter_hash_table:
+            measurement_parameter_hash_table[measurement_parameter_hash] = measurement_parameter_id
+            measurement_parameter_new[(measurement_parameter_id, interval_name, 'introgression', 'boolean', '', '', marker_hash_table[marker_hash])] = measurement_parameter_id
+            measurement_parameter_id = measurement_parameter_id + 1
+        else:
+            measurement_parameter_hash_exists[(interval_name, 'introgression', 'boolean', '', '', marker_hash_table[marker_hash])] = measurement_parameter_id
+
+        measurement_hash = str(obs_tracker_hash_table[obs_tracker_stock_hash]) + str(user_hash_table[user.username]) + str(measurement_parameter_hash_table[measurement_parameter_hash]) + '' + '1' + "Introgressions: %s" % (num_introgressions)
+        if measurement_hash not in measurement_hash_table:
+            measurement_hash_table[measurement_hash] = measurement_id
+            measurement_new[(measurement_id, obs_tracker_hash_table[obs_tracker_stock_hash], user_hash_table[user.username], measurement_parameter_hash_table[measurement_parameter_hash], '', '1', "Introgressions: %s" % (num_introgressions))] = measurement_id
+            measurement_id = measurement_id + 1
+        else:
+            measurement_hash_exists[(obs_tracker_hash_table[obs_tracker_stock_hash], user_hash_table[user.username], measurement_parameter_hash_table[measurement_parameter_hash], '', '1', "Introgressions: %s" % (num_introgressions))] = measurement_id
+
     end = time.clock()
     stats = {}
     stats[("Time: %s" % (end-start), "Errors: %s" % (error_count))] = error_count
@@ -5864,7 +5928,173 @@ def nils_loader_prep(upload_file, user):
     results_dict = {}
     results_dict['map_feature_new'] = map_feature_new
     results_dict['map_feature_interval_new'] = map_feature_interval_new
+    results_dict['stock_new'] = stock_new
+    results_dict['obs_tracker_new'] = obs_tracker_new
+    results_dict['obs_tracker_source_new'] = obs_tracker_source_new
+    results_dict['marker_new'] = marker_new
+    results_dict['measurement_parameter_new'] = measurement_parameter_new
+    results_dict['measurement_new'] = measurement_new
     results_dict['map_feature_hash_exists'] = map_feature_hash_exists
     results_dict['map_feature_interval_hash_exists'] = map_feature_interval_hash_exists
+    results_dict['stock_hash_exists'] = stock_hash_exists
+    results_dict['obs_tracker_hash_exists'] = obs_tracker_hash_exists
+    results_dict['obs_tracker_source_hash_exists'] = obs_tracker_source_hash_exists
+    results_dict['marker_hash_exists'] = marker_hash_exists
+    results_dict['measurement_parameter_hash_exists'] = measurement_parameter_hash_exists
+    results_dict['measurement_hash_exists'] = measurement_hash_exists
+    results_dict['seed_id_errors'] = seed_id_errors
     results_dict['stats'] = stats
     return results_dict
+
+def nils_loader_prep_output(results_dict, new_upload_exp, template_type):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_%s_prep.csv"' % (new_upload_exp, template_type)
+    writer = csv.writer(response)
+    writer.writerow(['Stats'])
+    writer.writerow([''])
+    for key in results_dict['stats'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Stock Table'])
+    writer.writerow(['stock_id', 'passport_id', 'seed_id', 'seed_name', 'cross_type', 'pedigree', 'stock_status', 'stock_date', 'inoculated', 'comments'])
+    for key in results_dict['stock_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New ObsTracker Table'])
+    writer.writerow(['obs_tracker_id', 'obs_entity_type', 'experiment_id', 'field_id', 'glycerol_stock_id', 'isolate_id', 'location_id', 'maize_sample_id', 'obs_culture_id', 'obs_dna_id', 'obs_env_id', 'obs_extract_id', 'obs_microbe_id', 'obs_plant_id', 'obs_plate_id', 'obs_row_id', 'obs_sample_id', 'obs_tissue_id', 'obs_well_id', 'stock_id', 'user_id'])
+    for key in results_dict['obs_tracker_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New ObsTrackerSource Table'])
+    writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
+    for key in results_dict['obs_tracker_source_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New MapFeature Table'])
+    writer.writerow(['map_feature_id', 'chromosome', 'genetic_bin', 'physical_map', 'genetic_position', 'physical_position', 'comments'])
+    for key in results_dict['map_feature_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New MapFeature Interval Table'])
+    writer.writerow(['map_feature_interval_id', 'map_feature_start_id', 'map_feature_end_id', 'interval_type', 'interval_name', 'comments'])
+    for key in results_dict['map_feature_interval_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Marker Table'])
+    writer.writerow(['marker_table_id', 'map_feature_interval_id', 'marker_map_feature_id', 'primer_f_id', 'primer_r_id', 'marker_id', 'marker_name', 'length', 'bac', 'nam_marker', 'poly_type', 'ref_seq', 'comments', 'strand', 'allele'])
+    for key in results_dict['marker_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New MeasurementParameter Table'])
+    writer.writerow(['measurement_parameter_id', 'parameter', 'parameter_type', 'unit_of_measure', 'protocol', 'trait_id_buckler', 'marker_id'])
+    for key in results_dict['measurement_parameter_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['New Measurement Table'])
+    writer.writerow(['measurement_id', 'obs_tracker_id', 'user_id', 'measurement_parameter_id', 'time_of_measurement', 'value', 'comments'])
+    for key in results_dict['measurement_new'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['---------------------------------------------------------------------------------------------------'])
+    writer.writerow([''])
+    writer.writerow(['Seed ID Errors'])
+    for key in results_dict['seed_id_errors'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['Stock Entries Already Exist'])
+    for key in results_dict['stock_hash_exists'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['ObsTracker Entries Already Exist'])
+    for key in results_dict['obs_tracker_hash_exists'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['ObsTrackerSource Entries Already Exist'])
+    for key in results_dict['obs_tracker_source_hash_exists'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['MapFeature Entries Already Exist'])
+    for key in results_dict['map_feature_hash_exists'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['MapFeatureInterval Entries Already Exist'])
+    for key in results_dict['map_feature_interval_hash_exists'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['Marker Entries Already Exist'])
+    for key in results_dict['marker_hash_exists'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['MeasurementParameter Entries Already Exist'])
+    for key in results_dict['measurement_parameter_hash_exists'].keys():
+        writer.writerow(key)
+    writer.writerow([''])
+    writer.writerow(['Measurement Entries Already Exist'])
+    for key in results_dict['measurement_hash_exists'].keys():
+        writer.writerow(key)
+
+    return response
+
+def nils_loader(results_dict):
+    try:
+        for key in results_dict['stock_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_stock, create = Stock.objects.update_or_create(id=key[0], seed_id=key[2], defaults= { 'passport_id':key[1], 'seed_name':key[3], 'cross_type':key[4], 'pedigree':key[5], 'stock_status':key[6], 'stock_date':key[7], 'inoculated':key[8], 'comments':key[9] } )
+            except Exception as e:
+                print("Stock Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['obs_tracker_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_stock = ObsTracker.objects.create(id=key[0], obs_entity_type=key[1], experiment_id=key[2], field_id=key[3], glycerol_stock_id=key[4], isolate_id=key[5], location_id=key[6], maize_sample_id=key[7], obs_culture_id=key[8], obs_dna_id=key[9], obs_env_id=key[10], obs_extract_id=key[11], obs_microbe_id=key[12], obs_plant_id=key[13], obs_plate_id=key[14], obs_row_id=key[15], obs_sample_id=key[16], obs_tissue_id=key[17], obs_well_id=key[18], stock_id=key[19], user_id=key[20])
+            except Exception as e:
+                print("ObsTracker Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['obs_tracker_source_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_stock = ObsTrackerSource.objects.create(id=key[0], source_obs_id=key[1], target_obs_id=key[2], relationship=key[3])
+            except Exception as e:
+                print("ObsTrackerSource Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['map_feature_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_mf = MapFeature.objects.create(id=key[0], chromosome=key[1], genetic_bin=key[2], physical_map=key[3], genetic_position=key[4], physical_position=key[5], comments=key[6])
+            except Exception as e:
+                print("MapFeature Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['map_feature_interval_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_mfi = MapFeatureInterval.objects.create(id=key[0], map_feature_start_id=key[1], map_feature_end_id=key[2], interval_type=key[3], interval_name=key[4], comments=key[5])
+            except Exception as e:
+                print("MapFeatureInterval Error: %s %s" % (e.message, e.args))
+                return False
+                'marker_table_id', 'map_feature_interval_id', 'marker_map_feature_id', 'primer_f_id', 'primer_r_id', 'marker_id', 'marker_name', 'length', 'bac', 'nam_marker', 'poly_type', 'ref_seq', 'comments', 'strand', 'allele'
+        for key in results_dict['marker_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_m = Marker.objects.create(id=key[0], map_feature_interval_id=key[1], marker_map_feature_id=key[2], primer_f_id=key[3], primer_r_id=key[4], marker_id=key[5], marker_name=key[6], length=key[7], bac=key[8], nam_marker=key[9], poly_type=key[10], ref_seq=key[11], comments=key[12], strand=key[13], allele=key[14])
+            except Exception as e:
+                print("Marker Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['measurement_parameter_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_m = MeasurementParameter.objects.create(id=key[0], parameter=key[1], parameter_type=key[2], unit_of_measure=key[3], protocol=key[4], trait_id_buckler=key[5], marker_id=key[6])
+            except Exception as e:
+                print("MeasurementParameter Error: %s %s" % (e.message, e.args))
+                return False
+        for key in results_dict['measurement_new'].keys():
+            try:
+                with transaction.atomic():
+                    new_m = Measurement.objects.create(id=key[0], obs_tracker_id=key[1], user_id=key[2], measurement_parameter_id=key[3], time_of_measurement=key[4], value=key[5], comments=key[6])
+            except Exception as e:
+                print("Measurement Error: %s %s" % (e.message, e.args))
+                return False
+    except Exception as e:
+        print("Error: %s %s" % (e.message, e.args))
+        return False
+    return True
