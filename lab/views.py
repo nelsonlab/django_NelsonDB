@@ -6144,15 +6144,14 @@ def upload_online(request, template_type):
 def download_markers(request, file_format):
 	context_dict = {}
 	if request.method == 'POST':
-		marker_ids_json = request.POST.get('marker_ids', '')
-		marker_ids = json.loads(marker_ids_json)
+		marker_ids = request.POST.getlist('marker_select_to_gff3', '')
 		markers = Marker.objects.filter(id__in=marker_ids)
 		response = HttpResponse(content_type='text/tsv')
 		response['Content-Disposition'] = 'attachment; filename="selected_marker_gff3.tsv"'
-		writer = csv.writer(response)
+		writer = csv.writer(response, delimiter='\t')
 		if file_format == 'gff3':
 			writer.writerow(['##gff-version 3'])
 			for m in markers:
 				line = "chr%s\tNelsonlab\t.\t%s\t%s\t.\t.\t.\tID=%s;Name=%s" % (m.map_feature_interval.map_feature_start.chromosome, m.map_feature_interval.map_feature_start.physical_position, m.map_feature_interval.map_feature_end.physical_position, m.marker_id, m.marker_name)
-				writer.writerow(line)
+				writer.writerow([line])
 	return response

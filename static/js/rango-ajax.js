@@ -1387,23 +1387,5 @@ $('#marker_select_to_gff3_submit').click(function(){
 	});
 	if (marker_ids.length == 0){
 		alert('No markers selected. Please select markers first.');
-	} else {
-		$.ajax({
-			"url": "/lab/download/markers/gff3/",
-			"type": "POST",
-			"data": {'marker_ids': JSON.stringify(marker_ids)},
-			beforeSend: function(xhr, settings) {
-				var csrftoken = getCookie('csrftoken');
-				if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-					xhr.setRequestHeader("X-CSRFToken", csrftoken);
-				}
-			},
-			success: function() {
-				alert('Complete');
-			},
-			error: function() {
-				alert("Error!");
-			}
-		});
 	}
 });
