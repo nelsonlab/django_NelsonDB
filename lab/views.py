@@ -998,7 +998,7 @@ def stock_page_measurement_plot(request):
 		m = Measurement.objects.filter(obs_tracker__experiment_id=exp.experiment_id, measurement_parameter_id=parameter_id)
 		measurements = list(chain(measurements, m))
 	for ms in measurements:
-		ms.obs_tracker = make_obs_tracker_info(ms.obs_tracker)
+		ms.obs_tracker = make_obs_tracker_info(ms.obs_tracker, '')
 		try:
 			value = int(ms.value)
 		except ValueError:
@@ -1010,7 +1010,7 @@ def stock_page_measurement_plot(request):
 
 	measurements = Measurement.objects.filter(obs_tracker__stock_id=stock_id, measurement_parameter_id=parameter_id)
 	for ms in measurements:
-		ms.obs_tracker = make_obs_tracker_info(ms.obs_tracker)
+		ms.obs_tracker = make_obs_tracker_info(ms.obs_tracker, '')
 		try:
 			value = int(ms.value)
 		except ValueError:
@@ -3285,7 +3285,7 @@ def sort_measurement_data(request):
 			measurement_data = list(Measurement.objects.all())[:1000]
 
 	for data in measurement_data:
-		data = make_obs_tracker_info(data.obs_tracker)
+		data = make_obs_tracker_info(data.obs_tracker, '')
 	return measurement_data
 
 @login_required
@@ -3405,7 +3405,7 @@ def measurement_data_from_experiment(request, experiment_name):
 	context_dict = {}
 	measurement_data = find_measurement_from_experiment(experiment_name)
 	for m in measurement_data:
-		m = make_obs_tracker_info(m.obs_tracker)
+		m = make_obs_tracker_info(m.obs_tracker, '')
 
 	context_dict['measurement_data'] = measurement_data
 	context_dict['experiment_name'] = experiment_name
@@ -3438,7 +3438,7 @@ def download_measurement_experiment(request, experiment_name):
 	response['Content-Disposition'] = 'attachment; filename="%s_measurements.csv"' % (experiment_name)
 	measurement_data = find_measurement_from_experiment(experiment_name)
 	for m in measurement_data:
-		m = make_obs_tracker_info(m.obs_tracker)
+		m = make_obs_tracker_info(m.obs_tracker, '')
 	writer = csv.writer(response)
 	writer.writerow(['Obs', 'User', 'Time', 'Parameter Type', 'Parameter', 'Value', 'Units', 'TraitID Buckler', 'Comments'])
 	for row in measurement_data:
@@ -3573,7 +3573,7 @@ def download_isolates_experiment(request, experiment_name):
 		writer.writerow([i.isolate_id, i.isolate.isolate_name, i.isolate.plant_organ, i.isolate.comments, i.isolate.passport.taxonomy.genus, i.isolate.passport.taxonomy.species, i.isolate.passport.taxonomy.alias, i.isolate.passport.taxonomy.race, i.isolate.passport.taxonomy.subtaxa, i.isolate.disease_info, i.isolate.location.location_name, i.isolate.location.box_name])
 	return response
 
-def make_obs_tracker_info(tracker):
+def make_obs_tracker_info(tracker, relationship):
 	obs_entity_type = tracker.obs_entity_type
 	if obs_entity_type == 'stock':
 		try:
@@ -3663,6 +3663,7 @@ def make_obs_tracker_info(tracker):
 	else:
 		obs_tracker_id_info = ['None', 'No Type', 1]
 
+	tracker.relationship = relationship
 	tracker.obs_id = obs_tracker_id_info[0]
 	tracker.obs_id_url = '/lab/%s/%s/' % (obs_tracker_id_info[1], obs_tracker_id_info[2])
 	return tracker
@@ -3679,9 +3680,7 @@ def get_obs_relationships(obs_type, obs_id, relationships):
 			obs_tracker_source = None
 		if obs_tracker_source is not None:
 			for s in obs_tracker_source:
-				o = s
-				s = make_obs_tracker_info(s.source_obs)
-				s.relationship = o.relationship
+				s = make_obs_tracker_info(s.source_obs, s.relationship)
 				obs_trackers.append(s)
 	return obs_trackers
 
@@ -3693,7 +3692,7 @@ def get_obs_tracker(obs_type, obs_id):
 		obs_tracker = None
 	if obs_tracker is not None:
 		for tracker in obs_tracker:
-			tracker = make_obs_tracker_info(tracker)
+			tracker = make_obs_tracker_info(tracker, '')
 	return obs_tracker
 
 def get_obs_source(obs_type, obs_id, relationship):
@@ -3708,7 +3707,7 @@ def get_obs_source(obs_type, obs_id, relationship):
 		obs_source = None
 	if obs_source is not None:
 		for tracker in obs_source:
-			tracker = make_obs_tracker_info(tracker.source_obs)
+			tracker = make_obs_tracker_info(tracker.source_obs, tracker.relationship)
 	return obs_source
 
 def get_obs_target(obs_type, obs_id):
@@ -3720,7 +3719,7 @@ def get_obs_target(obs_type, obs_id):
 		obs_target = None
 	if obs_target is not None:
 		for tracker in obs_target:
-			tracker = make_obs_tracker_info(tracker.target_obs)
+			tracker = make_obs_tracker_info(tracker.target_obs, tracker.relationship)
 	return obs_target
 
 def get_seed_collected_from_row(obs_type, obs_id):
@@ -3732,7 +3731,7 @@ def get_seed_collected_from_row(obs_type, obs_id):
 		obs_source = None
 	if obs_source is not None:
 		for tracker in obs_source:
-			tracker = make_obs_tracker_info(tracker.target_obs)
+			tracker = make_obs_tracker_info(tracker.target_obs, tracker.relationship)
 	return obs_source
 
 @login_required
@@ -3740,6 +3739,7 @@ def single_stock_info(request, stock_id):
 	context_dict = {}
 	obs_tracker_seed = []
 	obs_source = []
+	obs_targets = []
 	try:
 		stock_info = Stock.objects.get(id=stock_id)
 	except Stock.DoesNotExist:
@@ -3749,10 +3749,22 @@ def single_stock_info(request, stock_id):
 		for t in obs_tracker:
 			if t.obs_id != stock_info.seed_id:
 				obs_tracker_seed.append(t)
+				obs_targets.append(t)
 		obs_source_row = get_obs_source('stock_id', stock_id, 'stock_from_row')
 		obs_source_plant = get_obs_source('stock_id', stock_id, 'stock_from_plant')
-		obs_source.append(obs_source_row)
-		obs_source.append(obs_source_plant)
+		obs_source_introgression = get_obs_source('stock_id', stock_id, 'stock_from_introgression_parent')
+		obs_source_backcross = get_obs_source('stock_id', stock_id, 'stock_from_backcross_parent')
+		for t in obs_source_row:
+			obs_source.append(t)
+		for t in obs_source_plant:
+			obs_source.append(t)
+		for t in obs_source_introgression:
+			obs_source.append(t)
+		for t in obs_source_backcross:
+			obs_source.append(t)
+		obs_source_targets = get_obs_target('stock_id', stock_id)
+		for t in obs_source_targets:
+			obs_targets.append(t.target_obs)
 		obs_measurements = get_obs_measurements('stock_id', stock_id)
 		measured_parameters = {}
 		for mp in obs_measurements:
@@ -3770,6 +3782,7 @@ def single_stock_info(request, stock_id):
 	context_dict['stock_info'] = stock_info
 	context_dict['obs_tracker'] = obs_tracker_seed
 	context_dict['obs_source'] = obs_source
+	context_dict['obs_targets'] = obs_targets
 	context_dict['obs_measurements'] = obs_measurements
 	context_dict['stock_packets'] = stock_packets
 	context_dict['measured_parameters'] = measured_parameters
@@ -3785,7 +3798,7 @@ def get_obs_measurements(obs_type, obs_id):
 		obs_measurements = None
 	if obs_measurements is not None:
 		for measurement in obs_measurements:
-			measurement = make_obs_tracker_info(measurement.obs_tracker)
+			measurement = make_obs_tracker_info(measurement.obs_tracker, '')
 	return obs_measurements
 
 @login_required
@@ -5938,7 +5951,7 @@ def measurement_data_keyword_browse(request, keyword):
 	context_dict = {}
 	measurement_data = Measurement.objects.filter(obs_tracker__experiment__name='15RK')
 	for m in measurement_data:
-		m = make_obs_tracker_info(m.obs_tracker)
+		m = make_obs_tracker_info(m.obs_tracker, '')
 	context_dict['measurement_data'] = measurement_data
 	context_dict['logged_in_user'] = request.user.username
 	return render_to_response('lab/measurement_data.html', context_dict, context)

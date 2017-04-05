@@ -193,17 +193,17 @@
         <th>Obs Type</th>
         <th>Obs ID</th>
         <th>Experiment</th>
+        <th>Relationship</th>
       </tr>
     </thead>
     <tbody>
       {% for t in obs_source %}
-        {% if t.source_obs.obs_entity_type != "stock" and t.source_obs.stock.seed_id != stock_info.seed_id %}
           <tr>
             <td>{{ t.source_obs.obs_entity_type }}</td>
             <td><a href='{{ t.source_obs.obs_id_url }}'>{{ t.source_obs.obs_id }}</a></td>
             <td><a href='/lab/experiment/{{t.source_obs.experiment}}/'>{{ t.source_obs.experiment }}</a></td>
+            <td>{{ t.source_obs.relationship }}</td>
           </tr>
-        {% endif %}
       {% endfor %}
     </tbody>
   </table>
@@ -221,14 +221,16 @@
         <th>Obs Type</th>
         <th>Obs ID</th>
         <th>Experiment</th>
+        <th>Relationship</th>
       </tr>
     </thead>
     <tbody>
-      {% for t in obs_tracker %}
+      {% for t in obs_targets %}
         <tr>
           <td>{{ t.obs_entity_type }}</td>
           <td><a href='{{ t.obs_id_url }}'>{{ t.obs_id }}</a></td>
           <td><a href='/lab/experiment/{{t.experiment}}/'>{{ t.experiment }}</a></td>
+          <td>{{ t.relationship }}</td>
         </tr>
       {% endfor %}
     </tbody>

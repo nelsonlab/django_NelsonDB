@@ -5966,7 +5966,7 @@ def nils_loader_prep_output(results_dict, new_upload_exp, template_type):
         writer.writerow(key)
     writer.writerow([''])
     writer.writerow(['New ObsTrackerSource Table'])
-    writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'targe_obs_id', 'relationship'])
+    writer.writerow(['obs_tracker_source_id', 'source_obs_id', 'target_obs_id', 'relationship'])
     for key in results_dict['obs_tracker_source_new'].keys():
         writer.writerow(key)
     writer.writerow([''])
