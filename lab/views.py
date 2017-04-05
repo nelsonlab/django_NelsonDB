@@ -6139,3 +6139,20 @@ def upload_online(request, template_type):
 	context_dict['template_type'] = template_type
 	context_dict['logged_in_user'] = request.user.username
 	return render(request, 'lab/upload_online.html', context=context_dict)
+
+@login_required
+def download_markers(request, file_format):
+	context_dict = {}
+	if request.method == 'POST':
+		marker_ids_json = request.POST.get('marker_ids', '')
+		marker_ids = json.loads(marker_ids_json)
+		markers = Marker.objects.filter(id__in=marker_ids)
+		response = HttpResponse(content_type='text/tsv')
+		response['Content-Disposition'] = 'attachment; filename="selected_marker_gff3.tsv"'
+		writer = csv.writer(response)
+		if file_format == 'gff3':
+			writer.writerow(['##gff-version 3'])
+			for m in markers:
+				line = "chr%s\tNelsonlab\t.\t%s\t%s\t.\t.\t.\tID=%s;Name=%s" % (m.map_feature_interval.map_feature_start.chromosome, m.map_feature_interval.map_feature_start.physical_position, m.map_feature_interval.map_feature_end.physical_position, m.marker_id, m.marker_name)
+				writer.writerow(line)
+	return response

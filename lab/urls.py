@@ -236,6 +236,7 @@ urlpatterns = [
     url(r'^download/stockpackets/collected/(?P<experiment_name>\w+)/', views.download_stockpackets_collected_experiment, name='download_stockpackets_collected_experiment'),
     url(r'^download/isolates/(?P<experiment_name>\w+)/', views.download_isolates_experiment, name='download_isolates_experiment'),
     url(r'^download/glycerol_stock/(?P<experiment_name>\w+)/', views.download_glycerol_stocks_experiment, name='download_glycerol_stocks_experiment'),
+    url(r'^download/markers/(?P<file_format>\w+)/', views.download_markers, name='download_markers'),
 
     url(r'^download/data/row/$', views.download_row_data, name='download_row_data'),
     url(r'^download/data/tissue/$', views.download_tissue_data, name='download_tissue_data'),

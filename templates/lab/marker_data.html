@@ -10,6 +10,7 @@
         <table id="selected_stocks" class="table table-striped table-bordered" cellspacing="0" width="100%">
           <thead>
           <tr>
+              <th>Select</th>
             <th>Marker ID</th>
             <th>Marker Name</th>
             <th>Primer F</th>
@@ -23,7 +24,8 @@
           <tbody>
           {% for data in marker_data %}
           <tr>
-            <td>{{data.marker_id}}</td>
+              <td><input type="checkbox" name="marker_select_to_gff3" value="{{data.id}}"/></td>
+            <td><a href="http://ensembl.gramene.org/Zea_mays/Location/View?r={{data.map_feature_interval.map_feature_start.chromosome}}:{{data.map_feature_interval.map_feature_start.physical_position}}-{{data.map_feature_interval.map_feature_end.physical_position}}" target="_blank">{{data.marker_id}}</a></td>
             <td>{{data.marker_name}}</td>
             <td>{{data.primer_f.primer_id}}</td>
             <td>{{data.primer_r.primer_id}}</td>
@@ -36,6 +38,7 @@
           </tbody>
         </table>
         <br/>
+        <button class="btn btn-primary" id="marker_select_to_gff3_submit">Create GFF3 For Selected Markers</button>
 
 
 
